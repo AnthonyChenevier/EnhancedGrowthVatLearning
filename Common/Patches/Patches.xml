@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>		
+	<!--Check for techprintCount > 0-->
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>*/ResearchProjectDef[techprintCount>0]</xpath>
+		<value>
+			<li Class="ConfigurableTechprints.DataTypes.NativeTechprint_DefModExtension" />
+		</value> 
+	</Operation>
+</Patch>

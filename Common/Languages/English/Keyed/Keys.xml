@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- General stuff -->
+    <ConfigurableTechprintsModName>Configurable Techprints</ConfigurableTechprintsModName>
+    <ModSettingsChanged_Message>Configurable techprints settings have changed and a restart is required to apply them. Restart now?</ModSettingsChanged_Message>
+    <RestartRequired_Note>NOTE: Game restart is required for most changes to take effect.</RestartRequired_Note>
+    <ResetAll_Button>Reset all settings</ResetAll_Button>
+    <ResetAll_Tooltip>Reset all settings to the mod's default values</ResetAll_Tooltip>
+    <ViewReport_Button>View debug reports</ViewReport_Button>
+    <ViewReport_Tooltip>Select and view various debugging processing reports</ViewReport_Tooltip>
+    <ReportButtonDialog_Message>Report has also been posted to game log. Some reports may look better in a fixed-width font:</ReportButtonDialog_Message>
+    <DeleteCustomSettings_Tooltip>Delete custom settings</DeleteCustomSettings_Tooltip>
+    <GeneralTechprintSettings_Tab>Gen. Techprint Settings</GeneralTechprintSettings_Tab>
+    <CustomTechprintsSettings_Tab>Custom Techprints</CustomTechprintsSettings_Tab>
+    <GeneralTraderSettings_Tab>Gen. Trader Settings</GeneralTraderSettings_Tab>
+    <CustomTradersSettings_Tab>Custom Traders</CustomTradersSettings_Tab>
+
+    <!-- General techprint settings page -->
+    <!--Basic generation settings-->
+    <TechLevelsWithTechprints_Label>Generate techprints for projects at tech level:</TechLevelsWithTechprints_Label>
+    <TechLevelsWithTechprints_Tooltip>Research projects at selected tech levels will have techprints automatically generated for them, using the settings below</TechLevelsWithTechprints_Tooltip>
+    <TechLevelProjectCount_Label>{0} projects</TechLevelProjectCount_Label>
+    <TechLevelsWithTechprints_TechSelectTooltip>Generate techprints for all {0} research projects. </TechLevelsWithTechprints_TechSelectTooltip>
+
+    <!-- Advanced techprint settings -->
+    <TechprintGenerationSetting_Heading>Techprint generation settings</TechprintGenerationSetting_Heading>
+    <TechprintPerResearchPoints_Label>Generate a techprint for every X research points:</TechprintPerResearchPoints_Label>
+    <TechprintPerResearchPoints_Tooltip>Use this setting to tweak the number of techprints each research will require. The number of techprints generated for a research project is completely determined by this value; For every multiple (or part thereof) of this value that the unmodified research costs, one extra techprint is generated and required. \n\nExample: At the default value of 4000, if a project's base cost is between 0-3999 it will require 1 techprint; between 4000-7999 it will require 2; and so on</TechprintPerResearchPoints_Tooltip>
+    <MarketPriceMultiplier_Label>Market value final modifer:</MarketPriceMultiplier_Label>
+    <MarketPriceMultiplier_Tooltip>This modifier is used to tweak the base market value of generated techprints. The market value of a techprint is calculated for each project as (half base research cost / techprint count * this modifier).\n\nExample: At the default value of 0.5, a techprint for a project with a research cost of 1000 and 1 techprint will cost (500 / 1) * 0.5 = 250 silver, one that cost 4000 with 2 techprints, each would cost (2000 / 2) * 0.5 = 500 silver</MarketPriceMultiplier_Tooltip>
+    <BaseCommonality_Label>Commonality: </BaseCommonality_Label>
+    <BaseCommonality_Tooltip>Set the base level commonality for all generated techprints. A techprint's commonality determines how often it will show up in techprint trader's inventories (only traders who stock techprints by default, or have them added in the customs settings) or as quest rewards and gifts. For reference, vanilla values are 3 for Cataphract Armour, 2 for JumpPacks and 1 for all implants (rarest) before modifiers are applied.</BaseCommonality_Tooltip>
+    <ProjectModifications_Heading>Research project modifications</ProjectModifications_Heading>
+    <ModifyBaseCosts_Label>(Optional) Reduce research cost by number of techprints required:</ModifyBaseCosts_Label>
+    <ModifyBaseCosts_Tooltip>The base research points cost for a projects can optionally be reduced by an amount proportional to the number of techprints it requires. Check this to apply research cost reduction modifiers during load.</ModifyBaseCosts_Tooltip>
+    <ResearchBaseCostMultiplier_Label>(Optional) Base research cost final modifier: </ResearchBaseCostMultiplier_Label>
+    <ResearchBaseCostMultiplier_Tooltip>This optional modifier tweaks the final calculated base cost for all techprinted research projects; Higher values here means higher overall research point costs, lower values will lower costs. The base research cost (the cost before other gameplay modifiers like player tech level are applied) is reduced by an amount proportional to its original cost, and the number of techprints now required.The base cost is calculated as (half base cost + (half base cost * (1 / techprint count), rounded to nearest 50) * final modifier).\n\nExample: with a default modifier of 1, for a project costing 4000 points with 2 techprints it's final research base cost is 2000 + (2000 * (1 / 2)) * 1 = 3000 points, with a modifier of 0.5 the same project would cost 1500 points, with a modifier of 2 it would cost 6000 points</ResearchBaseCostMultiplier_Tooltip>
+
+    <!-- Custom techprint settings page-->
+    <CustomTechprintSettings_Note>NOTE: Customizing a techprint bypasses any other changes made by this mod (modifiers etc)</CustomTechprintSettings_Note>
+    <TechprintCount_Label>Techprint count: </TechprintCount_Label>
+    <ResearchBaseCost_Label>Research base cost: </ResearchBaseCost_Label>
+    <TechprintMarketValue_Label>Techprint market values: </TechprintMarketValue_Label>
+    <TechprintCommonality_Label>Techprint commonality: </TechprintCommonality_Label>
+    <EnableCategory_Label>Enable tag</EnableCategory_Label>
+    <CustomTechprintAddNew_Button>Add new customized techprint settings for research project</CustomTechprintAddNew_Button>
+
+    <!-- General trader settings page -->
+    <NativeCommonalityMultiplier_Label>Native techprint commonality modifier: </NativeCommonalityMultiplier_Label>
+    <NativeCommonalityMultiplier_Tooltip>Use this to tweak the appearance rate of Techprints that are natively defined in ResearchProjectDef XMLs, either from Royalty/other DLC or added by mods. These native techprints are handled separately to other research projects during load - all of the below modifiers and calculations are skipped, and this modifier is applied to the commonality of all of these techprints. It attempts to balance the commonality of native techprints with the amount added by this mod. \n\nExample: With the default value of 1.5, jump pack techprint commonality increase to 3, which compared to the default commonality of 3 for generated techprints makes them equally likely to generate.</NativeCommonalityMultiplier_Tooltip>
+    <TechEqualCommonalityMultiplier_Label>'Trader and project tech-level equal' stock selection modifier: </TechEqualCommonalityMultiplier_Label>
+    <TechEqualCommonalityMultiplier_Tooltip>This setting affects the final selection of techprints offered by a particular trader, making the techprint more likely to generate if it's tech level is the same as the trader's own. It is evaluated every time a trader generates their stock and increases the chance of the techprint spawning by this amount.\n\nExample: At the default value of 2, techprints at the same level as the trader are twice as likely to generate than their base level.</TechEqualCommonalityMultiplier_Tooltip>
+    <TechDifferenceCommonalityMultiplier_Label>'Trader and project tech-level difference' stock selection modifier: </TechDifferenceCommonalityMultiplier_Label>
+    <TechDifferenceCommonalityMultiplier_Tooltip>This setting affects the final selection of techprints offered by a particular trader, making techprints less likely to generate as their tech levels get further from the trader's own. It is evaluated every time a trader generates their stock and is calculated as the number of tech levels difference * this modifier.\n\nExample: At the default value of 0.2, a tribal trader will be 20% less likely to offer medieval techprints over Neolithic ones, 40% less if the tech is Industrial and so on.</TechDifferenceCommonalityMultiplier_Tooltip>
+    <TraderStockCountMultiplier_Label>Techprint trader stock count multiplier: </TraderStockCountMultiplier_Label>
+    <TraderStockCountMultiplier_Tooltip>Use this to tweak the amount of stock all techprint traders have. The modifier is applied to the stock counts for all non-ignored and non-custom techprint traders during load, and attempts to balance trader's native counts with the number of new techprints on offer\n\nExample: With the default value of 3, traders will stock 3x the number of techprints they usually would.</TraderStockCountMultiplier_Tooltip>
+    <IgnoreTraders_Heading>Ignore existing techprint traders during load (Warning: Customized traders will be lost):</IgnoreTraders_Heading>
+    <IgnoredTrader_Tooltip>Prevent this trader from being modified during load</IgnoredTrader_Tooltip>
+
+    <!-- Custom trader settings page-->
+    <CustomTraders_Note>NOTE: Customizing a trader bypasses any other changes made by this mod (modifiers etc)</CustomTraders_Note>
+    <CustomTraderCount_Label>Count: </CustomTraderCount_Label>
+    <CustomTraderChance_Label>Chance {%}: </CustomTraderChance_Label>
+    <CustomTraderChance_Tooltip>The maximum chance for all combined entries is limited to 100</CustomTraderChance_Tooltip>
+    <CustomTradersAddCountChance_Button>Add new CountChance</CustomTradersAddCountChance_Button>
+    <CustomTradersRemoveLastCountChance_Button>Remove last CountChance</CustomTradersRemoveLastCountChance_Button>
+    <CustomTradersAddNew_Button>Add new customized trader settings</CustomTradersAddNew_Button>
+</LanguageData>

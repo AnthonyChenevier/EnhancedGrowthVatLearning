@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<ResearchProjectDef>
+		<defName>BetterGrowthVats</defName>
+		<label>enhanced growth vat learning software</label>
+		<description>Upgrade the software of all growth vat to increase occupant learning rate</description>
+		<techLevel>Spacer</techLevel>
+		<baseCost>3000</baseCost>
+		<prerequisites>
+			<li>GrowthVats</li>
+		</prerequisites>
+		<researchViewX>14.00</researchViewX>
+		<researchViewY>1.50</researchViewY>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+	</ResearchProjectDef>
+
+	<HediffDef>
+		<defName>BetterVatLearning</defName>
+		<label>enhanced vat learning</label>
+		<description>The growth vat is rapidly stimulating this person's brain with electicity to induce skill development. This enhanced process is nearly as effective as growing in the outside world.</description>
+		<hediffClass>Hediff_VatLearning</hediffClass>
+		<everCurableByItem>false</everCurableByItem>
+		<initialSeverity>0.001</initialSeverity>
+		<maxSeverity>1</maxSeverity>
+		<isBad>false</isBad>
+		<comps>
+			<li Class="HediffCompProperties_SeverityPerDay">
+				<severityPerDay>0.5</severityPerDay>
+			</li>
+		</comps>
+	</HediffDef>
+</Defs>
