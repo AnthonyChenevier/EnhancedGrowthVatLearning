@@ -1,7 +1,9 @@
 # Enhanced Growth Vats
-Adds a togglable enhanced learning mode to Biotech's growth vats. Enhanced learning requires an expensive research, slows down the growth multiplier and requires much more power, but the quality of growth outcomes and skills gained is vastly improved.
+A small mod that adds a feature to increase the learning rate of children being grown in growth pods to be nearly as good as growing in the real (Rim)world!
 
-Not enough? Well if you want to focus on soldiers, labourers or leaders then you can unlock those researches and set the growth vat to a specific mode. Each mode will focus on training specific skills, with the downside of lower growth outcomes or longer growth times for leaders.
+Vanilla/unenhanced growth vats only provide a piddly 2 growth points per day. This is also not adjusted for the extra growth speed in the vat, meaning vat grown kiddos have really low growth scores. Additionally growth pod occupants receive a small 8000xp skill boost in a random skill, once every 3 days. Meh!
+
+The 'Enhanced Growth Vat Learning' Research project allows players to toggle an optional 'Enhanced Learning' mode that greatly increases these values to be more comparable of what you would expect from a naturally-grown pawn, at a cost of high power consumption and reduced growth speed (requiring more food & power for the vat overall). Extra researches also allows players to broadly focus the skills that are trained by the software, including combat, labor and leadership skill packages.
 
 Also makes the growth gizmo visible for pawns in vats so you can see how they are doing, enhanced mode or not.
 

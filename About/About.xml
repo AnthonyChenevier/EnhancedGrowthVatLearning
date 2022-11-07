@@ -3,7 +3,7 @@
     <name>Enhanced Growth Vats</name>
     <author>MakeItSo</author>
     <packageId>com.makeitso.enhancedgrowthvats</packageId>
-    <url>https://github.com/AnthonyChenevier/BetterGrowthVatLearning</url>
+    <url>https://github.com/AnthonyChenevier/EnhancedGrowthVats</url>
     <supportedVersions>
         <li>1.4</li>
     </supportedVersions>
@@ -15,6 +15,11 @@
 			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
 		</li>
     </modDependencies>
-    <description>A small mod that adds a few expensive researches that increases the learning rate of children being grown in growth pods to be nearly as good as growing in the real world. 
-Vanilla (unenhanced) growth vats only provide 2 growth points per day, unadjusted for the extra growth speed, meaning vat occupants have low growth scores. Additionally, vanilla growth pod occupants receive a small random skill every so often. The 'Enhanced Growth Vat Learning' Research project allows players to turn on an optional 'Enhanced Learning' mode that greatly increases these values to approximately 70% of what you would expect from a naturally-grown pawn, at a cost of 25% reduced growth speed, requiring more food overall, and 4x the power consumption. Extra researches also allows players to broadly focus the skills that are trained by the software, including combat, labor and leadership skill packages</description>
+    <description><![CDATA[A small mod that adds a feature to increase the learning rate of children being grown in growth pods to be nearly as good as growing in the real (Rim)world!
+
+Vanilla/unenhanced growth vats only provide a piddly 2 growth points per day. This is also not adjusted for the extra growth speed in the vat, meaning vat grown kiddos have really low growth scores. Additionally growth pod occupants receive a small 8000xp skill boost in a random skill, once every 3 days. Meh!
+
+The 'Enhanced Growth Vat Learning' Research project allows players to toggle an optional 'Enhanced Learning' mode that greatly increases these values to be more comparable of what you would expect from a naturally-grown pawn, at a cost of high power consumption and reduced growth speed (requiring more food & power for the vat overall). Extra researches also allows players to broadly focus the skills that are trained by the software, including combat, labor and leadership skill packages.
+
+Also makes the growth gizmo visible for pawns in vats so you can see how they are doing, enhanced mode or not.]]></description>
 </ModMetaData>
