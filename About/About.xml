@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-    <name>Enhanced Growth Vat Learning Research</name>
+    <name>Enhanced Growth Vats</name>
     <author>MakeItSo</author>
-    <packageId>com.makeitso.bettergrothvatlearning</packageId>
+    <packageId>com.makeitso.enhancedgrowthvats</packageId>
     <url>https://github.com/AnthonyChenevier/BetterGrowthVatLearning</url>
     <supportedVersions>
         <li>1.4</li>
@@ -15,5 +15,6 @@
 			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
 		</li>
     </modDependencies>
-    <description>A small mod that adds an expensive reseach that increases the learning rate of children being grown in growth pods to be nearly as good as growing in the real world.</description>
+    <description>A small mod that adds a few expensive researches that increases the learning rate of children being grown in growth pods to be nearly as good as growing in the real world. 
+Vanilla (unenhanced) growth vats only provide 2 growth points per day, unadjusted for the extra growth speed, meaning vat occupants have low growth scores. Additionally, vanilla growth pod occupants receive a small random skill every so often. The 'Enhanced Growth Vat Learning' Research project allows players to turn on an optional 'Enhanced Learning' mode that greatly increases these values to approximately 70% of what you would expect from a naturally-grown pawn, at a cost of 25% reduced growth speed, requiring more food overall, and 4x the power consumption. Extra researches also allows players to broadly focus the skills that are trained by the software, including combat, labor and leadership skill packages</description>
 </ModMetaData>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ResearchTabDef>
+        <defName>EnhancedGrowthVat_ResearchTab</defName>
+        <label>Enhanced Growth Vat</label>
+    </ResearchTabDef>
+
+    <!-- Research projects -->
+    <ResearchProjectDef>
+        <tab>EnhancedGrowthVat_ResearchTab</tab>
+        <defName>EnhancedGrowthVatResearch</defName>
+        <label>enhanced growth vat learning</label>
+        <description>Upgrades the software of all growth vats to enable better quality skill learning and growth. Growth vats can be set to 'enhanced learning' mode, which greatly enhances their learning outcomes by running them through high quality simulations, but slows down growth of the occupant and requires much more power.</description>
+        <techLevel>Spacer</techLevel>
+        <baseCost>2000</baseCost>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <requiredResearchFacilities>
+            <li>MultiAnalyzer</li>
+        </requiredResearchFacilities>
+        <prerequisites>
+            <li>GrowthVats</li>
+        </prerequisites>
+        <researchViewX>0.00</researchViewX>
+        <researchViewY>0.70</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef Abstract="True" Name="VatLearningMode_Base">
+        <tab>EnhancedGrowthVat_ResearchTab</tab>
+        <techLevel>Spacer</techLevel>
+        <baseCost>500</baseCost>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <requiredResearchFacilities>
+            <li>MultiAnalyzer</li>
+        </requiredResearchFacilities>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef ParentName="VatLearningMode_Base">
+        <defName>VatLearningSoldierResearch</defName>
+        <label>Learning modes - Soldier</label>
+        <description>Enables combat mode for enhanced learning software. Occupants are put through a training program that simulates a violent environment. Occupants in this mode gain more skills related to combat and combat operations and will achieve okay growth scores. This will result in vat grown soldiers that are only slightly less capable than naturally-grown children.</description>
+        <prerequisites>
+            <li>EnhancedGrowthVatResearch</li>
+        </prerequisites>
+        <researchViewX>1.00</researchViewX>
+        <researchViewY>0.30</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef ParentName="VatLearningMode_Base">
+        <defName>VatLearningLaborResearch</defName>
+        <label>Learning modes - Labor</label>
+        <description>Enables laborer mode for enhanced learning software. Occupants are put through a training program that simulates a rural or crafting focused environment. Occupants in this mode gain more skills related to manual and skilled labor and will achieve ok growth scores. This will result in vat grown laborers that are only slightly less capable than naturally-grown children.</description>
+        <prerequisites>
+            <li>EnhancedGrowthVatResearch</li>
+        </prerequisites>
+        <researchViewX>1.00</researchViewX>
+        <researchViewY>1.05</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef ParentName="VatLearningMode_Base">
+        <defName>VatLearningLeaderResearch</defName>
+        <label>Learning modes - Leader</label>
+        <description>Enable leadership mode for enhanced learning software. Occupants are put through a training program that simulates a comfortable, intellectually focused and highly competitive environment. Occupants in this mode gain skills related to leading, health and maintaining morale and will achieve middling growth scores. This will result in vat grown officers that are nearly as capable as naturally-grown children. Due to the extra load required by this mode growth is slowed further than normal.</description>
+        <prerequisites>
+            <li>VatLearningLaborResearch</li>
+            <li>VatLearningSoldierResearch</li>
+        </prerequisites>
+        <researchViewX>2.00</researchViewX>
+        <researchViewY>0.70</researchViewY>
+    </ResearchProjectDef>
+
+    <!-- Hediffs -->
+	<HediffDef>
+		<defName>EnhancedVatLearningHediff</defName>
+		<label>enhanced vat learning</label>
+		<description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
+		<hediffClass>EnhancedGrowthVat.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
+		<everCurableByItem>false</everCurableByItem>
+		<initialSeverity>0.001</initialSeverity>
+		<maxSeverity>1</maxSeverity>
+		<isBad>false</isBad>
+	</HediffDef>
+
+    <HediffDef>
+        <defName>EnhancedVatGrowingHediff</defName>
+        <label>vat growing (reduced speed)</label>
+        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for the learning software</description>
+        <hediffClass>HediffWithComps</hediffClass>
+        <everCurableByItem>false</everCurableByItem>
+        <isBad>false</isBad>
+        <comps>
+            <li>
+                <compClass>EnhancedGrowthVat.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
+            </li>
+        </comps>
+    </HediffDef>
+</Defs>

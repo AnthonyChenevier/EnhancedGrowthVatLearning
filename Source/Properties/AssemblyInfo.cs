@@ -1,16 +1,23 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿// AssemblyInfo.cs
+// 
+// Part of EnhancedGrowthVat - EnhancedGrowthVat
+// 
+// Created by: Anthony Chenevier on 2022/11/03 2:57 AM
+// Last edited by: Anthony Chenevier on 2022/11/06 4:21 PM
+
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
 // 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
-[assembly: AssemblyTitle("lostTechnologyCore")]
+[assembly: AssemblyTitle("EnhancedGrowthVat")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("lostTechnologyCore")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyProduct("EnhancedGrowthVat")]
+[assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

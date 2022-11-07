@@ -7,8 +7,8 @@
     <ProjectGuid>{FC41E232-A864-437B-8A66-32A408DC6EB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BetterGrowthVatLearning</RootNamespace>
-    <AssemblyName>BetterGrowthVatLearning</AssemblyName>
+    <RootNamespace>EnhancedGrowthVat</RootNamespace>
+    <AssemblyName>EnhancedGrowthVat</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -48,8 +48,18 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EnhancedGrowthVatMod.cs" />
+    <Compile Include="EnhancedGrowthVatSettings.cs" />
+    <Compile Include="Data\LearningMode.cs" />
+    <Compile Include="Data\ModDefOf.cs" />
+    <Compile Include="ThingComps\CompProperties_EnhancedGrowthVat.cs" />
+    <Compile Include="ThingComps\CompProperties_PowerMulti.cs" />
+    <Compile Include="ThingComps\EnhancedGrowthVatComp.cs" />
+    <Compile Include="Hediffs\HediffComp_EnhancedVatGrowing.cs" />
+    <Compile Include="Hediffs\Hediff_EnhancedVatLearning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="ThingComps\CompPowerMulti.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -80,6 +90,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>

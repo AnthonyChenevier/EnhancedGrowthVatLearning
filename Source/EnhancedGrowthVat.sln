@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.3.32922.545
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterGrowthVatLearning", "Source\BetterGrowthVatLearning.csproj", "{FC41E232-A864-437B-8A66-32A408DC6EB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedGrowthVat", "EnhancedGrowthVat.csproj", "{FC41E232-A864-437B-8A66-32A408DC6EB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{986808F8-336F-4491-8A8D-D69634ABC21E}"
+	ProjectSection(SolutionItems) = preProject
+		..\About\About.xml = ..\About\About.xml
+		..\Common\Languages\English\Keyed\Keys.xml = ..\Common\Languages\English\Keyed\Keys.xml
+		..\Common\Defs\EnhancedGrowthVats_Defs.xml = ..\Common\Defs\EnhancedGrowthVats_Defs.xml
+		..\Common\Patches\Patches.xml = ..\Common\Patches\Patches.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +31,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8B0EA526-2CAA-44D9-AC19-63620B445C5C}
+		SolutionGuid = {463FA201-6352-4AD6-93FF-2404C780B7EE}
 	EndGlobalSection
 EndGlobal

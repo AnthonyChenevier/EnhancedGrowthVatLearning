@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Patch>		
-	<!--Check for techprintCount > 0-->
-	<Operation Class="PatchOperationAddModExtension">
-		<xpath>*/ResearchProjectDef[techprintCount>0]</xpath>
-		<value>
-			<li Class="ConfigurableTechprints.DataTypes.NativeTechprint_DefModExtension" />
-		</value> 
-	</Operation>
+<Patch>
+    <!-- Modify GrowthVat to add our comps -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
+        <value>
+            <li Class="EnhancedGrowthVat.ThingComps.CompProperties_EnhancedGrowthVat" />
+        </value>
+    </Operation>
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/ThingDef[defName="GrowthVat"]/comps/li[@Class="CompProperties_Power"]</xpath>
+        <value>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+            </li>
+            <li Class="EnhancedGrowthVat.ThingComps.CompProperties_PowerMulti">
+                <powerProfiles>
+                    <li>
+                        <key>Default</key>
+                        <value>
+                            <basePowerConsumption>200</basePowerConsumption>
+                            <idlePowerDraw>80</idlePowerDraw>
+                        </value>
+                    </li>
+                    <li>
+                        <key>EnhancedLearning</key>
+                        <value>
+                            <basePowerConsumption>800</basePowerConsumption>
+                            <idlePowerDraw>80</idlePowerDraw>
+                        </value>
+                    </li>
+                </powerProfiles>
+            </li>
+        </value>
+    </Operation>
 </Patch>
