@@ -27,7 +27,22 @@ public static class HarmonyPatcher
     }
 }
 
-//makes the growth tier gizmo visible for all children in growth vats
+//TODO: implement more complex child vat backstories
+//[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted")]
+//public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
+//{
+//    public static void Postfix(Pawn pawn, LifeStageDef previousLifeStage, Pawn_AgeTracker __instance)
+//    {
+//        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist)
+//            return;
+
+//        BackstoryDef backstory = pawn.story.Childhood;
+//        if (backstory.defName == "VatgrownChild11")
+//            //FINISH ME
+//    }
+//}
+
+//makes the growth tier gizmo visible for children in growth vats.
 [HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
 public static class Gizmo_GrowthTier_Visible_HP
 {
@@ -35,6 +50,31 @@ public static class Gizmo_GrowthTier_Visible_HP
     {
         Pawn child = Traverse.Create(__instance).Field("child").GetValue<Pawn>();
         return __result || (child.ParentHolder is Building_GrowthVat && (child.IsColonist || child.IsPrisonerOfColony || child.IsSlaveOfColony));
+    }
+}
+
+//Override to pause vat growth while waiting for growth moment letter to be completed.
+[HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "ConfigureGrowthLetter")]
+public static class ChoiceLetter_GrowthMoment_ConfigureGrowthLetter_HP
+{
+    public static void Postfix(Pawn pawn, ChoiceLetter_GrowthMoment __instance)
+    {
+        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+            comp.PausedForLetter = true;
+    }
+}
+
+//Override to unpause vat growth once the growth moment is completed.
+[HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "MakeChoices")]
+public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
+{
+    public static void Postfix(ChoiceLetter_GrowthMoment __instance)
+    {
+        if (__instance.pawn.ParentHolder is not Building_GrowthVat growthVat)
+            return;
+
+        if (growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+            comp.PausedForLetter = false;
     }
 }
 
@@ -47,30 +87,43 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
     public static float Postfix(float __result, Pawn_AgeTracker __instance)
     {
         Traverse traverse = Traverse.Create(__instance);
-        if (traverse.Field("pawn").GetValue<Pawn>().ParentHolder is not Building_GrowthVat growthVat)
+        Pawn pawn = traverse.Field("pawn").GetValue<Pawn>();
+        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
             return __result;
 
-        //override if enabled. Use Pawn_AgeTracker's private GrowthPointsPerDayAtLearningLevel
-        //method to adjust result for age and storyteller growth multiplier
-        return growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp
-                   ? traverse.Method("GrowthPointsPerDayAtLearningLevel", comp.GrowthPointsPerDay).GetValue<float>()
-                   : __result;
+        //get normal growth point value for learning need level, storyteller settings and age.
+        float growthPointsPerDay = traverse.Method("GrowthPointsPerDayAtLearningLevel", pawn.needs.learning.CurLevel).GetValue<float>();
+        //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat aging speed
+        return growthPointsPerDay * (comp.VatAgingFactor / Find.Storyteller.difficulty.childAgingRate);
     }
 }
 
-//override the input to the original function to use our growth
-//factor. Check for 20 so dev gizmo and other direct accessors still work
+//override the input to the original function to use our growth factor.
 [HarmonyPatch(typeof(Pawn_AgeTracker), "Notify_TickedInGrowthVat")]
 public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 {
-    public static void Prefix(ref int ticks, Pawn_AgeTracker __instance)
+    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance)
     {
-        if (ticks == 20 && Traverse.Create(__instance).Field("pawn").GetValue<Pawn>().ParentHolder is Building_GrowthVat growthVat)
-            ticks = growthVat.GetComp<EnhancedGrowthVatComp>().GrowthFactor;
+        //Check for 20 (default value used by growth vat only)
+        //so dev gizmo and other direct accessors still work
+        if (ticks != 20 ||
+            Traverse.Create(__instance).Field("pawn").GetValue<Pawn>().ParentHolder is not Building_GrowthVat growthVat ||
+            growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+            return true;
+
+        if (!comp.PausedForLetter)
+        {
+            ticks = comp.VatAgingFactor;
+            return true;
+        }
+
+        //Prevent original from running if aging is paused for a growth moment letter
+        ticks = 0;
+        return false;
     }
 }
 
-//Destructive prefix to prevent a loop of referencing and re-caching the original VatLearning hediff
+//Override to get our property instead. Destructive prefix to prevent a loop of referencing and re-caching the original VatLearning hediff
 [HarmonyPatch(typeof(Building_GrowthVat), "VatLearning", MethodType.Getter)]
 public static class Building_GrowthVat_VatLearning_HP
 {
@@ -83,36 +136,28 @@ public static class Building_GrowthVat_VatLearning_HP
     }
 }
 
-//Override to turn off enhanced mode on exit
+//Override to turn off enhanced mode on pawn exit
 [HarmonyPatch(typeof(Building_GrowthVat), "Notify_PawnRemoved")]
 public static class Building_GrowthVat_Notify_PawnRemoved_HP
 {
     public static void Postfix(Building_GrowthVat __instance) { __instance.GetComp<EnhancedGrowthVatComp>().SetEnabled(false); }
 }
 
-//Override to fix gizmos
+//Override to fix DEV gizmos
 [HarmonyPatch(typeof(Building_GrowthVat), "GetGizmos")]
 public static class Building_GrowthVat_GetGizmos_HP
 {
     public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Building_GrowthVat __instance)
     {
         foreach (Gizmo gizmo in gizmos)
-        {
             //rebuild the dev:learn gizmo to use the right class
-            if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command)
-            {
-                if (__instance.GetComp<EnhancedGrowthVatComp>().VatLearning is not Hediff_EnhancedVatLearning learnBetter)
-                    yield return gizmo;
-                else
-                    yield return new Command_Action
-                    {
-                        defaultLabel = command.defaultLabel + "Enhanced",
-                        action = learnBetter.Learn
-                    };
-            }
-
-            //send the rest through untouched
-            yield return gizmo;
-        }
+            if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command && __instance.GetComp<EnhancedGrowthVatComp>().VatLearning is Hediff_EnhancedVatLearning learnBetter)
+                yield return new Command_Action
+                {
+                    defaultLabel = $"{command.defaultLabel} Enhanced",
+                    action = learnBetter.EnhancedLearn
+                };
+            else //send the rest through untouched
+                yield return gizmo;
     }
 }

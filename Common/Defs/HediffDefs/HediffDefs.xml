@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!-- Hediffs -->
+	<HediffDef>
+		<defName>EnhancedVatLearningHediff</defName>
+		<label>enhanced vat learning</label>
+		<description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
+		<hediffClass>EnhancedGrowthVat.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
+		<everCurableByItem>false</everCurableByItem>
+		<initialSeverity>0.001</initialSeverity>
+		<maxSeverity>1</maxSeverity>
+		<isBad>false</isBad>
+	</HediffDef>
+
+    <HediffDef>
+        <defName>EnhancedVatGrowingHediff</defName>
+        <label>vat growing (reduced speed)</label>
+        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for enhanced learning software.</description>
+        <hediffClass>HediffWithComps</hediffClass>
+        <everCurableByItem>false</everCurableByItem>
+        <isBad>false</isBad>
+        <comps>
+            <li>
+                <compClass>EnhancedGrowthVat.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
+            </li>
+        </comps>
+    </HediffDef>
+
+    <!-- TBD Backstories 
+    <BackstoryDef>
+        <defName>VatgrownSoliderColonist</defName>
+        <title>vatgrown soldier</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] was drilled in combat skills. This has left them less developed in other ways.</baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownSoldier</li>
+        </spawnCategories>
+    </BackstoryDef>
+    <BackstoryDef>
+        <defName>VatgrownLaborerColonist</defName>
+        <title>vatgrown laborer</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] learned manual laboring skills. This has left them less developed in other ways.</baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownLabor</li>
+        </spawnCategories>
+    </BackstoryDef>
+    <BackstoryDef>
+        <defName>VatgrownOfficerColonist</defName>
+        <title>vatgrown officer</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] was extensively trained in leadership skills. </baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownLeader</li>
+        </spawnCategories>
+    </BackstoryDef>-->
+</Defs>

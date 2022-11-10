@@ -14,8 +14,17 @@ namespace EnhancedGrowthVat.Hediffs;
 
 public class HediffComp_EnhancedVatGrowing : HediffComp
 {
-    public override bool CompShouldRemove => Pawn.Spawned || !(Pawn.ParentHolder is Building_GrowthVat);
+    public override bool CompShouldRemove => Pawn.Spawned || Pawn.ParentHolder is not Building_GrowthVat;
 
-    public override string CompTipStringExtra =>
-        $"{"AgingSpeed".Translate()}: x{(Pawn.ParentHolder is Building_GrowthVat growthVat ? growthVat.GetComp<EnhancedGrowthVatComp>().GrowthFactor : 1)}";
+    public override string CompTipStringExtra
+    {
+        get
+        {
+            int vatAgingFactor = 5318008; //shouldn't be seen if everything is working
+            if (Pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+                vatAgingFactor = comp.PausedForLetter ? 0 : comp.VatAgingFactor;
+
+            return $"{"AgingSpeed".Translate()}: x{vatAgingFactor}";
+        }
+    }
 }

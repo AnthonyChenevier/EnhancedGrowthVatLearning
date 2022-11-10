@@ -8,12 +8,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{986808F8-336F-4491-8A8D-D69634ABC21E}"
 	ProjectSection(SolutionItems) = preProject
 		..\About\About.xml = ..\About\About.xml
-		..\Common\Defs\EnhancedGrowthVats_Defs.xml = ..\Common\Defs\EnhancedGrowthVats_Defs.xml
 		..\Common\Languages\English\Keyed\Keys.xml = ..\Common\Languages\English\Keyed\Keys.xml
+		..\Common\Defs\HediffDefs\HediffDefs.xml = ..\Common\Defs\HediffDefs\HediffDefs.xml
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\LoadFolders.xml = ..\LoadFolders.xml
 		..\Common\Patches\Patches.xml = ..\Common\Patches\Patches.xml
 		..\README.md = ..\README.md
+		..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml = ..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml
 	EndProjectSection
 EndProject
 Global

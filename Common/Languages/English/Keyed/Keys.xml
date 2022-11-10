@@ -2,31 +2,46 @@
 <LanguageData>
     <!-- Settings -->
     <EnhancedGrowthVatSettings>Enhanced Growth Vat</EnhancedGrowthVatSettings>
-    <VatLearningRate_SettingsLabel>Growth points per day from enhanced learning</VatLearningRate_SettingsLabel>
-    <VatLearningRate_Tooltip>The number of growth points provided to a vat occupant per day. If you modify this take into account that vat occupants only have a few days in the vat overall due to the faster growth speed, so this value should be balanced with growth factor. Default value provides enough growth points to reach level 5 at each growth moment if they are kept in the vat the entire time</VatLearningRate_Tooltip>
-    <VatGrowthFactor_SettingsLabel>Enhanced learning mode growth factor</VatGrowthFactor_SettingsLabel>
-    <VatGrowthFactor_Tooltip>The multiplier for how fast vat occupants grow. Vanilla vat occupants grow at a rate of 20x, this should be lower to provide a balance to the enhanced learning mode.</VatGrowthFactor_Tooltip>
-    <VatPowerModifier_SettingsLabel>Enhanced learning mode vat power modifier</VatPowerModifier_SettingsLabel>
-    <VatPowerModifier_Tooltip>The power consumption of a growth vat in enhanced learning mode is multiplied by this number.</VatPowerModifier_Tooltip>
-    <VatLearningHediffSeverity_SettingsLabel>Vat Learning hediff severity per day</VatLearningHediffSeverity_SettingsLabel>
-    <VatLearningHediffSeverity_Tooltip>When severity reaches 1, the vat occupant receives 8000xp in a random skill (on default mode). Change this to modify how often vat occupants get that boost. Higher values means more skills, but not better growth outcomes. Can easily lead to overskilled pawns if abused :P</VatLearningHediffSeverity_Tooltip>
+    <ResetToDefaults_Button>Reset to defaults</ResetToDefaults_Button>
+    <vatGrowthPointMultiplier_SettingsLabel>Vat growth point multiplier</vatGrowthPointMultiplier_SettingsLabel>
+    <vatGrowthPointMultiplier_Tooltip>Multiplier used to modify the final growth points given to vat occupants based on their learning need. Default value provides enough growth points to reach level 5 at each growth moment if they are kept in the vat the entire time</vatGrowthPointMultiplier_Tooltip>
 
-    <!-- Learning modes -->
-    <CurrentLearningMode>Current mode: {0}</CurrentLearningMode>
-    <TrainingPriorities_Label>Training priorities</TrainingPriorities_Label>
-    <NextLearningMode>Next mode: {0}</NextLearningMode>
+    <defaultModeLearningNeed_SettingsLabel>Default mode learning need</defaultModeLearningNeed_SettingsLabel>
+    <defaultModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'default' enhanced learning mode.</defaultModeLearningNeed_Tooltip>
 
-    <LearningModes_Default>Default</LearningModes_Default>
-    <DefaultMode_Desc>In default mode occupants are put through a training program that simulates a fairly normal, pleasant childhood.\nOccupants in this mode gain random skills across the board and will achieve middling growth scores.\nThis will result in vat grown colonists that are nearly as capable as naturally-grown children.</DefaultMode_Desc>
+    <specializedModesLearningNeed_SettingsLabel>Labor and combat modes learning need</specializedModesLearningNeed_SettingsLabel>
+    <specializedModesLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'labor' or 'combat' enhanced learning modes.</specializedModesLearningNeed_Tooltip>
 
-    <LearningModes_Combat>Combat</LearningModes_Combat>
-    <CombatMode_Desc>Combat mode for enhanced learning software. Occupants are put through a training program that simulates a violent environment. Occupants in this mode gain more skills related to combat and combat operations and will achieve okay growth scores. This will result in vat grown soldiers that are only slightly less capable than naturally-grown children.</CombatMode_Desc>
-    <LearningModes_Labor>Labor</LearningModes_Labor>
+    <leaderModeLearningNeed_SettingsLabel>Leader mode learning need</leaderModeLearningNeed_SettingsLabel>
+    <leaderModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'leader' enhanced learning mode.</leaderModeLearningNeed_Tooltip>
 
-    <LaborMode_Desc>Laborer mode for enhanced learning software. Occupants are put through a training program that simulates a rural or crafting focused environment. Occupants in this mode gain more skills related to manual and skilled labor and will achieve ok growth scores. This will result in vat grown laborers that are only slightly less capable than naturally-grown children.</LaborMode_Desc>
-    <LearningModes_Leader>Leadership</LearningModes_Leader>
+    <learningNeedVariance_SettingsLabel>Learning need random variance</learningNeedVariance_SettingsLabel>
+    <learningNeedVariance_Tooltip>Learning need fluctuates by a random percentage at a number of points during the day, to simulate the occupant doing different things within the simulation. The final learning need for the occupant is calculated as (base learning need for mode *  +/- random value up to this amount)</learningNeedVariance_Tooltip>
 
-    <LeaderMode_Desc>Leadership mode for enhanced learning software. Occupants are put through a training program that simulates a comfortable, intellectually focused and highly competitive environment. Occupants in this mode gain skills related to leading, health and maintaining morale and will achieve middling growth scores. This will result in vat grown officers that are nearly as capable as naturally-grown children. Due to the extra load required by this mode growth is slowed further than normal.</LeaderMode_Desc>
+    <learningNeedDailyChangeRate_SettingsLabel>Learning need change rate</learningNeedDailyChangeRate_SettingsLabel>
+    <learningNeedDailyChangeRate_Tooltip>How many times a day to recalculate the learning need for vat occupants in enhanced learning mode.</learningNeedDailyChangeRate_Tooltip>
+
+    <vatLearningHediffSeverityPerDay_SettingsLabel>Enhanced skill Learning speed</vatLearningHediffSeverityPerDay_SettingsLabel>
+    <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When 'Enhanced Vat Learning' hits 100%, the vat occupant receives an amount XP in a random skill, both selected by the learning mode. Change this to modify how often vat occupants get that boost. Higher values means more skills gained.</vatLearningHediffSeverityPerDay_Tooltip>
+
+    <xpToAward_SettingsLabel>Skill XP awarded for mode</xpToAward_SettingsLabel>
+    <xpToAward_Tooltip>How much skill experience to award each time the Enhanced Vat Learning hediff reaches 100% for each mode</xpToAward_Tooltip>
+    <DefaultXP_SettingsLabel>Default mode skill XP</DefaultXP_SettingsLabel>
+    <LaborXP_SettingsLabel>Labor mode skill XP</LaborXP_SettingsLabel>
+    <CombatXP_SettingsLabel>Combat mode skill XP</CombatXP_SettingsLabel>
+    <LeaderXP_SettingsLabel>Leader mode skill XP</LeaderXP_SettingsLabel>
+
+    <vatAgingFactor_SettingsLabel>Enhanced mode aging factor</vatAgingFactor_SettingsLabel>
+    <vatAgingFactor_Tooltip>The multiplier for how fast vat occupants grow in enhanced learning mode. Vanilla vat occupants grow at a rate of 20x normal, this should be lower to provide a balance to the enhanced learning mode, and provide more time to accumulate growth points.</vatAgingFactor_Tooltip>
+
+    <leaderAgingFactorModifier_SettingsLabel>Leader mode aging factor modifier</leaderAgingFactorModifier_SettingsLabel>
+    <leaderAgingFactorModifier_Tooltip>Leader learning mode reduces aging factor by this amount, so that leaders have more time to mature and gain more skills and growth points.</leaderAgingFactorModifier_Tooltip>
+
+    <defaultSkills_SettingsLabel>Default Skills selection weights</defaultSkills_SettingsLabel>
+    <laborSkills_SettingsLabel>Labor Skills selection weights</laborSkills_SettingsLabel>
+    <combatSkills_SettingsLabel>Combat Skills selection weights</combatSkills_SettingsLabel>
+    <leaderSkills_SettingsLabel>Leader Skills selection weights</leaderSkills_SettingsLabel>
+    <skillsMatrix_Tooltip>Selection weights for each skill in this learning mode. Change this to influence which skills are randomly selected for in training.</skillsMatrix_Tooltip>
 
     <!-- Gizmos - toggle enhance learning -->
     <ToggleLearning_Label>enhance learning</ToggleLearning_Label>
@@ -39,9 +54,27 @@
     <!-- Gizmos - switch program -->
     <LearningModeSwitch_Label>switch program</LearningModeSwitch_Label>
     <LearningModeSwitch_Desc>Switch between available training programs.</LearningModeSwitch_Desc>
+    <LearningModeDisabled_Notice>Training programs effects are only active if enhanced learning is enabled.</LearningModeDisabled_Notice>
 
-    <EnhancedLearningDisabled_DisableReason>Enhanced learning is disabled.</EnhancedLearningDisabled_DisableReason>
     <LearningModeResearchRequired_DisabledReason>{0} or {1} research required.</LearningModeResearchRequired_DisabledReason>
+    
+    
+    <!-- Learning modes -->
+    <CurrentLearningMode>Current mode: {0}</CurrentLearningMode>
+    <TrainingPriorities_Label>Training priorities</TrainingPriorities_Label>
+    <NextLearningMode>Next mode: {0}</NextLearningMode>
+
+    <LearningModes_Default>Default</LearningModes_Default>
+    <DefaultMode_Desc>The default training suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
+
+    <LearningModes_Combat>Combat</LearningModes_Combat>
+    <CombatMode_Desc>The combat training suite is configured to provide a heavily structured learning environment in an urbworld military cadet school. Vat occupants will gain more knowledge of combat and combat-related operations such as building defenses, breaching entrenched positions and triage. As more focus is put on certain skills being trained vat occupants have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</CombatMode_Desc>
+
+    <LearningModes_Labor>Labor</LearningModes_Labor>
+    <LaborMode_Desc>The labor training suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</LaborMode_Desc>
+
+    <LearningModes_Leader>Leadership</LearningModes_Leader>
+    <LeaderMode_Desc>The leadership training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
 
 
 </LanguageData>

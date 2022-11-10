@@ -52,6 +52,7 @@
     <Compile Include="EnhancedGrowthVatSettings.cs" />
     <Compile Include="Data\LearningMode.cs" />
     <Compile Include="Data\ModDefOf.cs" />
+    <Compile Include="ListingHelper.cs" />
     <Compile Include="ThingComps\CompProperties_EnhancedGrowthVat.cs" />
     <Compile Include="ThingComps\CompProperties_PowerMulti.cs" />
     <Compile Include="ThingComps\EnhancedGrowthVatComp.cs" />

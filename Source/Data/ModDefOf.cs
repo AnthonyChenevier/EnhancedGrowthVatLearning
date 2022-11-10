@@ -21,4 +21,9 @@ public static class ModDefOf
 
     public readonly static HediffDef EnhancedVatGrowingHediffDef = HediffDef.Named("EnhancedVatGrowingHediff");
     public readonly static HediffDef EnhancedVatLearningHediffDef = HediffDef.Named("EnhancedVatLearningHediff");
+
+    //TODO: implement backstories
+    //public readonly static HediffDef VatGrownSoldierBackgroundDef = HediffDef.Named("VatgrownSoldierColonist");
+    //public readonly static HediffDef VatGrownLaborerBackgroundDef = HediffDef.Named("VatgrownLaborerColonist");
+    //public readonly static HediffDef VatGrownLeaderBackgroundDef = HediffDef.Named("VatgrownOfficerColonist");
 }
