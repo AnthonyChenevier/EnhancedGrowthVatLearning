@@ -39,7 +39,7 @@ Otherwise it overrides the Hediffs given to vat occupants so any mod that relies
 Should be safe to remove from an existing game as long as all growth vats have enhanced learning disabled (Check the hediffs of the pawn to make sure they are back to default values first)
 
 ### Links:
-Github: https://github.com/AnthonyChenevier/EnhancedGrowthVats
-Configurable Techprints (My other mod): https://steamcommunity.com/sharedfiles/filedetails/?id=2876747024
+- Github: https://github.com/AnthonyChenevier/EnhancedGrowthVats
+- Configurable Techprints (My other mod): https://steamcommunity.com/sharedfiles/filedetails/?id=2876747024
 
 Thanks for using my mods :D
