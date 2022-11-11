@@ -66,7 +66,7 @@
 
     <ResearchProjectDef ParentName="VatLearningMode_Base">
         <defName>VatLearningLeaderResearch</defName>
-        <label>Learning modes - Leader</label>
+        <label>Learning suite - Leader</label>
         <description>Unlocks the leader training suite for growth vats with enhanced learning. The leadership training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes.</description>
         <prerequisites>
             <li>VatLearningLaborResearch</li>
