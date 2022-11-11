@@ -52,7 +52,7 @@ How it works:
 
 Plans:
 ------
-I would like to add in custom backstories for the different learning modes. (just as light and unrestrictive as the vat child backstory from biotech, not like the original vat soldier one). All of the defs are pretty much ready but I need to come up with a good way of tracking the time spent in each mode without adding a bunch of extra overhead or breaking into vanilla code I don't want to touch in this mod. It really wouldn't add much, but maybe it becomes a thing down the track if it's popular enough.
+I would like to add in custom backstories for the different learning modes. (just as light and unrestrictive as the vatgrown child backstory from biotech, not like the original vatgrown soldier one). All of the defs are pretty much ready but I need to come up with a good way of tracking the time spent in each mode without adding a bunch of extra overhead or breaking into vanilla code I don't want to touch in this mod. It really wouldn't add much, but maybe it becomes a thing down the track if it's popular enough.
 
 Technical & Compatibility:
 --------------------------

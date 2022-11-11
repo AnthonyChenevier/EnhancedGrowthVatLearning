@@ -2,14 +2,14 @@
 <Defs>
 
     <ResearchTabDef>
-        <defName>EnhancedGrowthVat_ResearchTab</defName>
-        <label>Enhanced Growth Vat</label>
+        <defName>EnhancedGrowthVatLearning_ResearchTab</defName>
+        <label>Enhanced Growth Vat Learning</label>
     </ResearchTabDef>
 
     <!-- Research projects -->
     <ResearchProjectDef>
-        <tab>EnhancedGrowthVat_ResearchTab</tab>
-        <defName>EnhancedGrowthVatResearch</defName>
+        <tab>EnhancedGrowthVatLearning_ResearchTab</tab>
+        <defName>EnhancedGrowthVatLearningResearch</defName>
         <label>enhanced growth vat learning</label>
         <description>Upgrades the software of all growth vats to enable better quality skill learning and growth. Enables 'enhanced learning' mode for Growth Vats, which enhances occupant growth and skill outcomes with higher quality simulations, at a cost of slower growth and high power requirements.</description>
         <techLevel>Spacer</techLevel>
@@ -33,7 +33,7 @@
     </ResearchProjectDef>
 
     <ResearchProjectDef Abstract="True" Name="VatLearningMode_Base">
-        <tab>EnhancedGrowthVat_ResearchTab</tab>
+        <tab>EnhancedGrowthVatLearning_ResearchTab</tab>
         <techLevel>Spacer</techLevel>
         <baseCost>500</baseCost>
         <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>

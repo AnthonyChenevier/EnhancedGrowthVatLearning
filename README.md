@@ -1,5 +1,6 @@
 # Enhanced Growth Vat Learning
 A mod that adds features to increase the learning rate of children being grown in growth pods to be nearly as good as growing in the real (Rim)world, and optionally train them in specific skill sets.
+
 ### Intro:
 Growth Vats are a great idea with the introduction of children in Biotech, but I felt that they were a little lackluster in their implementation. I get that vat grown kids shouldn't be as... well adjusted as their free-range counterparts, but the fact that they never gained growth tiers when that was a major feature of the child growth system bugged me. So a couple of weeks later here we are.    
 
@@ -30,7 +31,7 @@ Additional training suites can also be researched, allowing for more fine-graine
 - Profit
 
 ### Plans:
-I would like to add in custom backstories for the different learning modes. (just as light and unrestrictive as the vat child backstory from biotech, not like the original vat soldier one). All of the defs are pretty much ready but I need to come up with a good way of tracking the time spent in each mode without adding a bunch of extra overhead or breaking into vanilla code I don't want to touch in this mod. It really wouldn't add much, but maybe it becomes a thing down the track if it's popular enough.
+I would like to add in custom backstories for the different learning modes. (just as light and unrestrictive as the vatgrown child backstory from biotech, not like the original vatgrown soldier one). All of the defs are pretty much ready but I need to come up with a good way of tracking the time spent in each mode without adding a bunch of extra overhead or breaking into vanilla code I don't want to touch in this mod. It really wouldn't add much, but maybe it becomes a thing down the track if it's popular enough.
 
 ### Technical & Compatibility:
 I built and tested this with a bunch of the usual suspect mods running and nothing caught on fire IRL. 
