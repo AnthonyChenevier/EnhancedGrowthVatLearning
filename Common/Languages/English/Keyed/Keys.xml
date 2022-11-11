@@ -52,8 +52,8 @@
     <VatBabiesForbidden_DisabledReason>Babies cannot use enhanced learning</VatBabiesForbidden_DisabledReason>
     
     <!-- Gizmos - switch program -->
-    <LearningModeSwitch_Label>switch program</LearningModeSwitch_Label>
-    <LearningModeSwitch_Desc>Switch between available training programs.</LearningModeSwitch_Desc>
+    <LearningModeSwitch_Label>Cycle program</LearningModeSwitch_Label>
+    <LearningModeSwitch_Desc>Cycle between available training programs.</LearningModeSwitch_Desc>
     <LearningModeDisabled_Notice>Training programs effects are only active if enhanced learning is enabled.</LearningModeDisabled_Notice>
 
     <LearningModeResearchRequired_DisabledReason>{0} or {1} research required.</LearningModeResearchRequired_DisabledReason>
