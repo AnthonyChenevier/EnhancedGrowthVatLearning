@@ -7,8 +7,8 @@
     <ProjectGuid>{FC41E232-A864-437B-8A66-32A408DC6EB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EnhancedGrowthVat</RootNamespace>
-    <AssemblyName>EnhancedGrowthVat</AssemblyName>
+    <RootNamespace>EnhancedGrowthVatLearning</RootNamespace>
+    <AssemblyName>EnhancedGrowthVatLearning</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

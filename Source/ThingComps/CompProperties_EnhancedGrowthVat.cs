@@ -8,7 +8,7 @@
 
 using Verse;
 
-namespace EnhancedGrowthVat.ThingComps;
+namespace EnhancedGrowthVatLearning.ThingComps;
 
 public class CompProperties_EnhancedGrowthVat : CompProperties
 {

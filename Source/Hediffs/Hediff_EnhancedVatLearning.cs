@@ -8,12 +8,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EnhancedGrowthVat.ThingComps;
+using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVat.Hediffs;
+namespace EnhancedGrowthVatLearning.Hediffs;
 
 public class Hediff_EnhancedVatLearning : Hediff_VatLearning
 {

@@ -6,7 +6,7 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 10:00 PM
 
 
-namespace EnhancedGrowthVat.Data;
+namespace EnhancedGrowthVatLearning.Data;
 
 public enum LearningMode
 {

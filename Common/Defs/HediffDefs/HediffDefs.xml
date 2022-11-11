@@ -5,7 +5,7 @@
 		<defName>EnhancedVatLearningHediff</defName>
 		<label>enhanced vat learning</label>
 		<description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
-		<hediffClass>EnhancedGrowthVat.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
+		<hediffClass>EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
 		<everCurableByItem>false</everCurableByItem>
 		<initialSeverity>0.001</initialSeverity>
 		<maxSeverity>1</maxSeverity>
@@ -21,7 +21,7 @@
         <isBad>false</isBad>
         <comps>
             <li>
-                <compClass>EnhancedGrowthVat.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
+                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
             </li>
         </comps>
     </HediffDef>

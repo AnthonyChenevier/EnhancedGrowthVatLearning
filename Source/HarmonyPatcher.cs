@@ -8,13 +8,13 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using EnhancedGrowthVat.Hediffs;
-using EnhancedGrowthVat.ThingComps;
+using EnhancedGrowthVatLearning.Hediffs;
+using EnhancedGrowthVatLearning.ThingComps;
 using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVat;
+namespace EnhancedGrowthVatLearning;
 
 [StaticConstructorOnStartup]
 public static class HarmonyPatcher

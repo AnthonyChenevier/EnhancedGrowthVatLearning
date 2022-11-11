@@ -4,7 +4,7 @@
     <Operation Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
         <value>
-            <li Class="EnhancedGrowthVat.ThingComps.CompProperties_EnhancedGrowthVat" />
+            <li Class="EnhancedGrowthVatLearning.ThingComps.CompProperties_EnhancedGrowthVat" />
         </value>
     </Operation>
     <Operation Class="PatchOperationReplace">
@@ -13,7 +13,7 @@
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
             </li>
-            <li Class="EnhancedGrowthVat.ThingComps.CompProperties_PowerMulti">
+            <li Class="EnhancedGrowthVatLearning.ThingComps.CompProperties_PowerMulti">
                 <powerProfiles>
                     <li>
                         <key>Default</key>

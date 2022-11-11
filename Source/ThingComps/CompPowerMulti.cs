@@ -10,7 +10,7 @@ using System.Linq;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVat.ThingComps;
+namespace EnhancedGrowthVatLearning.ThingComps;
 
 public class CompPowerMulti : ThingComp
 {

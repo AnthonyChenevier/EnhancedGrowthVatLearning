@@ -9,7 +9,7 @@
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVat;
+namespace EnhancedGrowthVatLearning;
 
 public class EnhancedGrowthVatMod : Mod
 {

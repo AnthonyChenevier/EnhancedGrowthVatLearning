@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using RimWorld;
 
-namespace EnhancedGrowthVat.ThingComps;
+namespace EnhancedGrowthVatLearning.ThingComps;
 
 public class CompProperties_PowerMulti : CompProperties_Power
 {

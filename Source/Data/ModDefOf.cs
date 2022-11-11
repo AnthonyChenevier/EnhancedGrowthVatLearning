@@ -8,7 +8,7 @@
 
 using Verse;
 
-namespace EnhancedGrowthVat.Data;
+namespace EnhancedGrowthVatLearning.Data;
 
 [StaticConstructorOnStartup]
 public static class ModDefOf

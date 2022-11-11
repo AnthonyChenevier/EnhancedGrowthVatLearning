@@ -3,7 +3,7 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace EnhancedGrowthVat;
+namespace EnhancedGrowthVatLearning;
 
 internal static class ListingHelper
 {

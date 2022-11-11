@@ -7,12 +7,12 @@
 
 
 using System.Collections.Generic;
-using EnhancedGrowthVat.Data;
+using EnhancedGrowthVatLearning.Data;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVat.ThingComps;
+namespace EnhancedGrowthVatLearning.ThingComps;
 
 public class EnhancedGrowthVatComp : ThingComp
 {
