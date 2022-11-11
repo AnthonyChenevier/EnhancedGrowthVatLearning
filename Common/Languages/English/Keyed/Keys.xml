@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
     <!-- Settings -->
-    <EnhancedGrowthVatSettings>Enhanced Growth Vat</EnhancedGrowthVatSettings>
+    <EnhancedGrowthVatSettings>Enhanced Growth Vat Learning</EnhancedGrowthVatSettings>
     <ResetToDefaults_Button>Reset to defaults</ResetToDefaults_Button>
     <vatGrowthPointMultiplier_SettingsLabel>Vat growth point multiplier</vatGrowthPointMultiplier_SettingsLabel>
     <vatGrowthPointMultiplier_Tooltip>Multiplier used to modify the final growth points given to vat occupants based on their learning need. Default value provides enough growth points to reach level 5 at each growth moment if they are kept in the vat the entire time</vatGrowthPointMultiplier_Tooltip>
