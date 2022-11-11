@@ -3,7 +3,7 @@
     <name>Enhanced Growth Vat Learning</name>
     <author>MakeItSo</author>
     <packageId>com.makeitso.enhancedgrowthvatlearning</packageId>
-    <url>https://github.com/AnthonyChenevier/EnhancedGrowthVats</url>
+    <url>https://github.com/AnthonyChenevier/EnhancedGrowthVatLearning</url>
     <supportedVersions>
         <li>1.4</li>
     </supportedVersions>
@@ -39,7 +39,7 @@ Additional training suites can also be researched, allowing for more fine-graine
 How it works:
 -------------
 - Find or purchase from traders the enhanched growth vat learning techprints (or use my <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2876747024">Configurable Techprints</a> mod to remove techprint restrictions :D).
-- Unlock the new research project 'Enhanced growth vat learning' (in the Enhanced Growth Vat research tab).
+- Unlock the new research project 'Enhanced growth vat learning' (in the Enhanced Vat Learning research tab).
 - (Optional) Unlock the different learning mode researches. Leader mode requires a further techprint purchase becuase of it's POWAH.
 - Make a baby (natural or embryo) and put it in the vat.
 - Wait for baby to age into a child (a good reason to keep the original 20x speed mode).
@@ -63,7 +63,7 @@ Should be safe to remove from an existing game as long as all growth vats have e
 
 Links:
 ------
-Github: https://github.com/AnthonyChenevier/EnhancedGrowthVats
+Github: https://github.com/AnthonyChenevier/EnhancedGrowthVatLearning
 Configurable Techprints (My other mod): https://steamcommunity.com/sharedfiles/filedetails/?id=2876747024
 
 Thanks for using my mods :D

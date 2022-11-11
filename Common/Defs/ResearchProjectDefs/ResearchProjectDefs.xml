@@ -3,7 +3,7 @@
 
     <ResearchTabDef>
         <defName>EnhancedGrowthVatLearning_ResearchTab</defName>
-        <label>Enhanced Growth Vat Learning</label>
+        <label>Enhanced Vat Learning</label>
     </ResearchTabDef>
 
     <!-- Research projects -->
@@ -47,7 +47,7 @@
         <label>Learning suite - Combat</label>
         <description>Unlocks the combat training suite for growth vats with enhanced learning. The combat training suite is configured to provide a heavily structured learning environment in an urbworld military cadet school. Vat occupants will gain more knowledge of combat and combat-related operations such as building defenses, breaching entrenched positions and triage. As more focus is put on certain skills being trained vat occupants have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</description>
         <prerequisites>
-            <li>EnhancedGrowthVatResearch</li>
+            <li>EnhancedGrowthVatLearningResearch</li>
         </prerequisites>
         <researchViewX>1.00</researchViewX>
         <researchViewY>0.30</researchViewY>
@@ -58,7 +58,7 @@
         <label>Learning suite - Labor</label>
         <description>Unlocks the labor training suite for growth vats with enhanced learning. The labor training suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</description>
         <prerequisites>
-            <li>EnhancedGrowthVatResearch</li>
+            <li>EnhancedGrowthVatLearningResearch</li>
         </prerequisites>
         <researchViewX>1.00</researchViewX>
         <researchViewY>1.05</researchViewY>
