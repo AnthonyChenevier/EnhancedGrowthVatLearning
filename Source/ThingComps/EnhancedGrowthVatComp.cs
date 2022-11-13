@@ -59,6 +59,23 @@ public class EnhancedGrowthVatComp : ThingComp
         }
     }
 
+    public VatGrowthTrackerComp GrowthTracker
+    {
+        get
+        {
+            if (GrowthVat.SelectedPawn.GetComp<VatGrowthTrackerComp>() is { } trackerComp)
+                return trackerComp;
+
+            trackerComp = new VatGrowthTrackerComp
+            {
+                parent = GrowthVat.SelectedPawn,
+            };
+
+            //GrowthVat.SelectedPawn.AllComps.Add(trackerComp);
+            return trackerComp;
+        }
+    }
+
 
     private static float LearningNeedForModeWithVariance(LearningMode currentMode)
     {

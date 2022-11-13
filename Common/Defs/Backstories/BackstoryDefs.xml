@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <BackstoryDef>
+        <defName>VatgrownSoldierColonist</defName>
+        <title>vatgrown cadet</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] was drilled in combat skills. This has left them less developed in other ways.</baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownSoldier</li>
+        </spawnCategories>
+    </BackstoryDef>
+
+    <BackstoryDef>
+        <defName>VatgrownLaborerColonist</defName>
+        <title>vatgrown laborer</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] learned manual laboring skills. This has left them less developed in other ways.</baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownLabor</li>
+        </spawnCategories>
+    </BackstoryDef>
+
+    <BackstoryDef>
+        <defName>VatgrownLeaderColonist</defName>
+        <title>vatgrown leader</title>
+        <titleShort>child</titleShort>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] was extensively trained in leadership skills. </baseDesc>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownLeader</li>
+        </spawnCategories>
+    </BackstoryDef>
+</Defs>

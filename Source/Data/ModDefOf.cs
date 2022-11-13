@@ -6,6 +6,7 @@
 // Last edited by: Anthony Chenevier on 2022/11/03 3:02 PM
 
 
+using RimWorld;
 using Verse;
 
 namespace EnhancedGrowthVatLearning.Data;
@@ -22,8 +23,10 @@ public static class ModDefOf
     public readonly static HediffDef EnhancedVatGrowingHediffDef = HediffDef.Named("EnhancedVatGrowingHediff");
     public readonly static HediffDef EnhancedVatLearningHediffDef = HediffDef.Named("EnhancedVatLearningHediff");
 
-    //TODO: implement backstories
-    //public readonly static HediffDef VatGrownSoldierBackgroundDef = HediffDef.Named("VatgrownSoldierColonist");
-    //public readonly static HediffDef VatGrownLaborerBackgroundDef = HediffDef.Named("VatgrownLaborerColonist");
-    //public readonly static HediffDef VatGrownLeaderBackgroundDef = HediffDef.Named("VatgrownOfficerColonist");
+
+    public readonly static StatDef VatGrowthStatDef = StatDef.Named("VatGrowthTime");
+
+    public readonly static BackstoryDef VatGrownSoldierBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownSoldierColonist");
+    public readonly static BackstoryDef VatGrownLaborerBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLaborerColonist");
+    public readonly static BackstoryDef VatGrownLeaderBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLeaderColonist");
 }

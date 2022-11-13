@@ -12,6 +12,7 @@ using EnhancedGrowthVatLearning.Hediffs;
 using EnhancedGrowthVatLearning.ThingComps;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace EnhancedGrowthVatLearning;
@@ -27,7 +28,6 @@ public static class HarmonyPatcher
     }
 }
 
-//TODO: implement more complex child vat backstories
 //[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted")]
 //public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 //{
@@ -102,25 +102,40 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "Notify_TickedInGrowthVat")]
 public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 {
-    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance)
+    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance, out EnhancedGrowthVatComp __state)
     {
-        //Check for 20 (default value used by growth vat only)
-        //so dev gizmo and other direct accessors still work
-        if (ticks != 20 ||
-            Traverse.Create(__instance).Field("pawn").GetValue<Pawn>().ParentHolder is not Building_GrowthVat growthVat ||
-            growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+        //store the learning comp for later
+        __state = null;
+        Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
+        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { } learningComp)
+            __state = learningComp;
+
+        //Check for default value used by growth vat
+        //so dev gizmo and other direct accessors can bypass 
+        //check for new ideo modifier too and add it to ticks
+        if (ticks != Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)) || __state is null)
             return true;
 
-        if (!comp.PausedForLetter)
+        switch (__state.Enabled)
         {
-            ticks = comp.VatAgingFactor;
-            return true;
+            //Prevent original (and postfix) from running if aging is paused for a growth moment letter
+            case true when __state.PausedForLetter:
+                __state = null;
+                ticks = 0;
+                return false;
+            case true:
+                ticks = Mathf.FloorToInt(__state.VatAgingFactor * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)); //run our factor and ideo factor
+                break;
         }
 
-        //Prevent original from running if aging is paused for a growth moment letter
-        ticks = 0;
-        return false;
+        return true;
     }
+
+    //also postfix to track growth ticks in our own comp
+    //public static void Postfix(int ticks, Pawn_AgeTracker __instance, EnhancedGrowthVatComp __state)
+    //{
+    //    __state?.GrowthTracker.TrackGrowthTicks(ticks, __instance.CurLifeStageIndex, __state.Mode);
+    //}
 }
 
 //Override to get our property instead. Destructive prefix to prevent a loop of referencing and re-caching the original VatLearning hediff

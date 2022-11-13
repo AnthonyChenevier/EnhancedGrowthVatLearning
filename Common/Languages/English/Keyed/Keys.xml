@@ -60,9 +60,9 @@
     
     
     <!-- Learning modes -->
-    <CurrentLearningMode>Current mode: {0}</CurrentLearningMode>
+    <CurrentLearningMode>Current: {0} training suite</CurrentLearningMode>
     <TrainingPriorities_Label>Training priorities</TrainingPriorities_Label>
-    <NextLearningMode>Next mode: {0}</NextLearningMode>
+    <NextLearningMode>Next: {0} training suite</NextLearningMode>
 
     <LearningModes_Default>Default</LearningModes_Default>
     <DefaultMode_Desc>The default training suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
@@ -74,7 +74,10 @@
     <LaborMode_Desc>The labor training suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</LaborMode_Desc>
 
     <LearningModes_Leader>Leader</LearningModes_Leader>
-    <LeaderMode_Desc>The leadership training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
+    <LeaderMode_Desc>The leader training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
 
-
+    <!-- Stats -->
+    <StatsReport_LifeStageGrowTime>Percentage of {0} spent in vat: {1}</StatsReport_LifeStageGrowTime>
+    <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {1}</StatsReport_VatNoLearningTime>
+    <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
 </LanguageData>
