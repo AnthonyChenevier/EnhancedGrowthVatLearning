@@ -79,6 +79,6 @@ public class Hediff_EnhancedVatLearning : Hediff_VatLearning
         Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(learningMode);
         SkillRecord randomSkill = pawn.skills.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
-        randomSkill.Learn(EnhancedGrowthVatMod.Settings.XpToAward[learningMode], true);
+        randomSkill.Learn(EnhancedGrowthVatMod.Settings.XpToAward[learningMode] * LearningUtility.LearningRateFactor(pawn), true);
     }
 }
