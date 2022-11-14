@@ -8,6 +8,7 @@
 
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace EnhancedGrowthVatLearning.Hediffs;
@@ -22,9 +23,14 @@ public class HediffComp_EnhancedVatGrowing : HediffComp
         {
             int vatAgingFactor = 5318008; //shouldn't be seen if everything is working
             if (Pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
-                vatAgingFactor = comp.PausedForLetter ? 0 : comp.VatAgingFactor;
+                vatAgingFactor = comp.PausedForLetter ? 0 : comp.VatAgingFactor; //show base value or 0 if paused
 
-            return $"{"AgingSpeed".Translate()}: x{vatAgingFactor}";
+            //explain final growth speed (if growStat matters)
+            float growStat = Pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
+            int finalSpeed = Mathf.FloorToInt(vatAgingFactor * growStat);
+            string growthStatMod = growStat == 1f ? "" : $" {"AgingSpeedWithOccupantStatModifier".Translate(finalSpeed, growStat.ToStringPercent())}";
+
+            return $"{"AgingSpeed".Translate()}: x{vatAgingFactor}{growthStatMod}";
         }
     }
 }

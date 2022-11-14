@@ -76,6 +76,8 @@ public class EnhancedGrowthVatComp : ThingComp
         }
     }
 
+    public int VatAgingFactorWithStatModifier(Pawn pawn) { return Mathf.FloorToInt(VatAgingFactor * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)); }
+
 
     private static float LearningNeedForModeWithVariance(LearningMode currentMode)
     {
@@ -98,9 +100,9 @@ public class EnhancedGrowthVatComp : ThingComp
         //vary learning need by small random amount a number of times daily
         if (enabled &&
             GrowthVat.SelectedPawn is { } pawn &&
-            pawn.ageTracker.CurLifeStage.developmentalStage == DevelopmentalStage.Child &&
+            pawn.needs.learning is { } learning &&
             parent.IsHashIntervalTick(60000 / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
-            pawn.needs.learning.CurLevel = LearningNeedForModeWithVariance(mode);
+            learning.CurLevel = LearningNeedForModeWithVariance(mode);
     }
 
 
@@ -123,11 +125,12 @@ public class EnhancedGrowthVatComp : ThingComp
 
     private static string ColorByWeight(SkillDef skill, string learningMode)
     {
+        //use hex colors instead of .Colorize();
         return EnhancedGrowthVatMod.Settings.SkillsMatrix(learningMode)[skill.defName] switch
         {
-            > 5f and <= 10f => $"<color=#5c7d59>{skill.LabelCap}: +</color>", //dark green
-            > 10f and <= 15f => $"<color=#57b94d>{skill.LabelCap}: ++</color>", //mid green
-            >= 20f => $"<color=#18ea03>{skill.LabelCap}: +++</color>", //light green
+            > 5f and <= 10f => $"<color=#5c7d59>{skill.LabelCap}: +</color>", //muted green
+            > 10f and <= 15f => $"<color=#57b94d>{skill.LabelCap}: ++</color>", //midGreen
+            >= 20f => $"<color=#18ea03>{skill.LabelCap}: +++</color>", //brightGreen
             _ => $"<color=#434343>{skill.LabelCap}: -</color>", //grey
         };
     }
@@ -150,7 +153,7 @@ public class EnhancedGrowthVatComp : ThingComp
             enhancedLearningGizmo.Disable("EnhancedLearningResearchRequired_DisabledReason".Translate(vatResearch.LabelCap));
         else if (GrowthVat.SelectedPawn == null)
             enhancedLearningGizmo.Disable("VatOccupantRequired_DisabledReason".Translate());
-        else if (GrowthVat.SelectedPawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby)
+        else if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageIndex == 0)
             enhancedLearningGizmo.Disable("VatBabiesForbidden_DisabledReason".Translate());
 
         yield return enhancedLearningGizmo;
@@ -161,7 +164,7 @@ public class EnhancedGrowthVatComp : ThingComp
 
         string mainDesc = "LearningModeSwitch_Desc".Translate();
 
-        string modeDescription = enabled ? ModeDisplay : $"<color=red>{"LearningModeDisabled_Notice".Translate()}</color>\n\n{ModeDisplay}";
+        string modeDescription = enabled ? ModeDisplay : $"{"LearningModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}\n\n{ModeDisplay}";
 
         LearningMode nextUnlockedMode = mode switch
         {
@@ -183,8 +186,8 @@ public class EnhancedGrowthVatComp : ThingComp
             {
                 //change mode and update growth point rate for occupant
                 mode = nextUnlockedMode;
-                if (GrowthVat.SelectedPawn != null && GrowthVat.SelectedPawn.ageTracker.CurLifeStage.developmentalStage == DevelopmentalStage.Child)
-                    GrowthVat.SelectedPawn.needs.learning.CurLevel = LearningNeedForModeWithVariance(mode);
+                if (GrowthVat.SelectedPawn?.needs.learning is { } learning)
+                    learning.CurLevel = LearningNeedForModeWithVariance(mode);
             },
         };
 
@@ -202,14 +205,15 @@ public class EnhancedGrowthVatComp : ThingComp
 
         SetPowerProfile(enabled);
 
-        if (GrowthVat.SelectedPawn == null || GrowthVat.SelectedPawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby)
+        //babies and nulls get nothing
+        if (GrowthVat.SelectedPawn == null || GrowthVat.SelectedPawn.ageTracker.CurLifeStageIndex == 0)
             return;
 
-        //13-18 any non-baby) can still benefit from skill learning and growth speed hediffs
+        //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
         SetVatHediffs(GrowthVat.SelectedPawn.health);
 
         //but only children have learning need
-        if (GrowthVat.SelectedPawn.ageTracker.CurLifeStage.developmentalStage == DevelopmentalStage.Child)
+        if (GrowthVat.SelectedPawn.needs.learning != null)
             GrowthVat.SelectedPawn.needs.learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) : 0.2f;
     }
 

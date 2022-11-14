@@ -80,4 +80,8 @@
     <StatsReport_LifeStageGrowTime>Percentage of {0} spent in vat: {1}</StatsReport_LifeStageGrowTime>
     <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {1}</StatsReport_VatNoLearningTime>
     <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
+
+
+    <!-- Ideo -->
+    <AgingSpeedWithOccupantStatModifier>base speed x{1}(Occupant growth bonus). Final speed: x{0}</AgingSpeedWithOccupantStatModifier>
 </LanguageData>

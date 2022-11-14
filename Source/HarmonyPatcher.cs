@@ -93,8 +93,8 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 
         //get normal growth point value for learning need level, storyteller settings and age.
         float growthPointsPerDay = traverse.Method("GrowthPointsPerDayAtLearningLevel", pawn.needs.learning.CurLevel).GetValue<float>();
-        //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat aging speed
-        return growthPointsPerDay * (comp.VatAgingFactor / Find.Storyteller.difficulty.childAgingRate);
+        //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat (and vat grow stat) aging speed
+        return growthPointsPerDay * (comp.VatAgingFactorWithStatModifier(pawn) / Find.Storyteller.difficulty.childAgingRate);
     }
 }
 
@@ -124,7 +124,7 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
                 ticks = 0;
                 return false;
             case true:
-                ticks = Mathf.FloorToInt(__state.VatAgingFactor * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)); //run our factor and ideo factor
+                ticks = __state.VatAgingFactorWithStatModifier(pawn); //run our factor and ideo factor
                 break;
         }
 
