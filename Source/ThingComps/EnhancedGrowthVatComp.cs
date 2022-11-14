@@ -206,15 +206,15 @@ public class EnhancedGrowthVatComp : ThingComp
         SetPowerProfile(enabled);
 
         //babies and nulls get nothing
-        if (GrowthVat.SelectedPawn == null || GrowthVat.SelectedPawn.ageTracker.CurLifeStageIndex == 0)
+        if (GrowthVat.SelectedPawn is not { } pawn || pawn.ageTracker.CurLifeStageIndex == 0)
             return;
 
         //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
-        SetVatHediffs(GrowthVat.SelectedPawn.health);
+        SetVatHediffs(pawn.health);
 
         //but only children have learning need
-        if (GrowthVat.SelectedPawn.needs.learning != null)
-            GrowthVat.SelectedPawn.needs.learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) : 0.2f;
+        if (pawn.needs.learning != null)
+            pawn.needs.learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) * LearningUtility.LearningRateFactor(pawn) : 0.02f;
     }
 
     private void SetPowerProfile(bool enable)

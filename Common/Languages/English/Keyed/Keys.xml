@@ -81,7 +81,6 @@
     <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {1}</StatsReport_VatNoLearningTime>
     <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
 
-
-    <!-- Ideo -->
+    <!-- Hediffs -->
     <AgingSpeedWithOccupantStatModifier>base speed x{1}(Occupant growth bonus). Final speed: x{0}</AgingSpeedWithOccupantStatModifier>
 </LanguageData>
