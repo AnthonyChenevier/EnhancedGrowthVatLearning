@@ -26,6 +26,8 @@ public class EnhancedGrowthVatSettings : ModSettings
     private int vatAgingFactor;
     private int leaderAgingFactorModifier;
 
+    private float enhancedModePowerModifer;
+
     private float vatLearningHediffSeverityPerDay;
     public Dictionary<string, float> xpToAward;
 
@@ -45,14 +47,34 @@ public class EnhancedGrowthVatSettings : ModSettings
     public int VatAgingFactor => vatAgingFactor;
     public int LeaderAgingFactorModifier => leaderAgingFactorModifier;
 
+    public float EnhancedModePowerModifer => enhancedModePowerModifer;
+
     public float VatLearningHediffSeverityPerDay => vatLearningHediffSeverityPerDay;
     public Dictionary<string, float> XpToAward => xpToAward;
+
+
+    //Settings page stuff
+    private float contentHeight = float.MaxValue;
+    private Vector2 scrollPosition;
+    private string[] settingBuffers = new string[9];
+    private string[] skillXPBuffers = new string[4];
+    private string[] defaultSkillBuffers = new string[12];
+    private string[] laborSkillBuffers = new string[12];
+    private string[] combatSkillBuffers = new string[12];
+    private string[] leaderSkillBuffers = new string[12];
 
 
     public EnhancedGrowthVatSettings() { SetDefaults(); }
 
     private void SetDefaults()
     {
+        settingBuffers = new string[9];
+        skillXPBuffers = new string[4];
+        defaultSkillBuffers = new string[12];
+        laborSkillBuffers = new string[12];
+        combatSkillBuffers = new string[12];
+        leaderSkillBuffers = new string[12];
+
         defaultModeLearningNeed = 0.7f;
         specializedModesLearningNeed = 0.6f;
         leaderModeLearningNeed = 0.85f;
@@ -62,6 +84,8 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         vatAgingFactor = 18;
         leaderAgingFactorModifier = 2;
+
+        enhancedModePowerModifer = 4f;
 
         vatLearningHediffSeverityPerDay = 3f;
         xpToAward = new Dictionary<string, float>
@@ -160,6 +184,8 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref vatAgingFactor, nameof(vatAgingFactor));
         Scribe_Values.Look(ref leaderAgingFactorModifier, nameof(leaderAgingFactorModifier));
 
+        Scribe_Values.Look(ref enhancedModePowerModifer, nameof(enhancedModePowerModifer));
+
         Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
         Scribe_Collections.Look(ref xpToAward, nameof(xpToAward), LookMode.Value, LookMode.Value);
 
@@ -168,17 +194,6 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Collections.Look(ref laborSkills, nameof(laborSkills), LookMode.Value, LookMode.Value);
         Scribe_Collections.Look(ref leaderSkills, nameof(leaderSkills), LookMode.Value, LookMode.Value);
     }
-
-
-    //Settings page stuff
-    private float contentHeight = float.MaxValue;
-    private Vector2 scrollPosition;
-    private string[] settingBuffers = new string[9];
-    private string[] skillXPBuffers = new string[4];
-    private string[] defaultSkillBuffers = new string[12];
-    private string[] laborSkillBuffers = new string[12];
-    private string[] combatSkillBuffers = new string[12];
-    private string[] leaderSkillBuffers = new string[12];
 
     public void DoSettingsWindowContents(Rect inRect)
     {
@@ -205,14 +220,14 @@ public class EnhancedGrowthVatSettings : ModSettings
         scrollView.Gap();
 
         DoSetting(scrollView, nameof(learningNeedVariance), ref learningNeedVariance, ref settingBuffers[i++], 0f, 1f);
-        DoSetting(scrollView, nameof(learningNeedDailyChangeRate), ref learningNeedDailyChangeRate, ref settingBuffers[i++], 1, 100);
+        DoSetting(scrollView, nameof(learningNeedDailyChangeRate), ref learningNeedDailyChangeRate, ref settingBuffers[i++], 1, 100000);
         scrollView.Gap();
 
-        DoSetting(scrollView, nameof(vatAgingFactor), ref vatAgingFactor, ref settingBuffers[i++], 1, 20);
-        DoSetting(scrollView, nameof(leaderAgingFactorModifier), ref leaderAgingFactorModifier, ref settingBuffers[i++], 0, 10);
+        DoSetting(scrollView, nameof(vatAgingFactor), ref vatAgingFactor, ref settingBuffers[i++], 1, 100000);
+        DoSetting(scrollView, nameof(leaderAgingFactorModifier), ref leaderAgingFactorModifier, ref settingBuffers[i++], 0, 1000000);
         scrollView.Gap();
 
-        DoSetting(scrollView, nameof(vatLearningHediffSeverityPerDay), ref vatLearningHediffSeverityPerDay, ref settingBuffers[i], 0.001f, 10f);
+        DoSetting(scrollView, nameof(vatLearningHediffSeverityPerDay), ref vatLearningHediffSeverityPerDay, ref settingBuffers[i], 0.001f, 100000f);
         i = 0;
         scrollView.Label($"{$"{nameof(xpToAward)}_SettingsLabel".Translate()} ", -1f, $"{nameof(xpToAward)}_Tooltip".Translate());
         List<string> keys = xpToAward.Keys.ToList();
