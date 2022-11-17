@@ -41,29 +41,29 @@
         <value>
             <li Class="PreceptComp_SituationalThought">
                 <thought>ChildLabor_Encouraged_EnhancedVatLearning</thought>
-                <description>Vat children using enhanced learning</description>
+                <description>My vat child is learning</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Encouraged_EnhancedVatPlay</thought>
-                <description>Vat children using play mode</description>
+                <thought>ChildLabor_Encouraged_EnhancedVatPlaying</thought>
+                <description>My vat child is playing</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
                 <thought>ChildLabor_Encouraged_TeenInGrowthVat</thought>
-                <description>Teenagers in growth vats</description>
+                <description>My teenager is in a growth vat</description>
             </li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationAdd">
-        <xpath>*/ThingDef[defName="ChildLabor_Disapproved"]/comps</xpath>
+        <xpath>*/PreceptDef[defName="ChildLabor_Disapproved"]/comps</xpath>
         <value>
             <li Class="PreceptComp_SituationalThought">
                 <thought>ChildLabor_Disapproved_EnhancedVatLearning</thought>
-                <description>Vat children using enhanced learning</description>
+                <description>My vat child is learning</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Disapproved_EnhancedVatPlay</thought>
-                <description>Vat children using play mode</description>
+                <thought>ChildLabor_Disapproved_EnhancedVatPlaying</thought>
+                <description>My vat child is playing</description>
             </li>
         </value>
     </Operation>

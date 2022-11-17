@@ -3,7 +3,7 @@
 // Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
 // 
 // Created by: Anthony Chenevier on 2022/11/17 9:28 PM
-// Last edited by: Anthony Chenevier on 2022/11/17 9:28 PM
+// Last edited by: Anthony Chenevier on 2022/11/18 12:29 AM
 
 
 using EnhancedGrowthVatLearning.Data;
@@ -16,7 +16,7 @@ namespace EnhancedGrowthVatLearning.Thoughts;
 
 public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
 {
-    protected abstract LearningMode ActiveForModes { get; }
+    protected abstract bool ActiveForMode(LearningMode mode);
 
     public override string PostProcessLabel(Pawn p, string label)
     {
@@ -34,21 +34,11 @@ public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
                 child.DevelopmentalStage.Child() &&
                 child.ParentHolder is Building_GrowthVat growthVat &&
                 growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } vatComp &&
-                ActiveForModes.HasMode(vatComp.Mode))
+                ActiveForMode(vatComp.Mode))
                 count++;
 
         return count;
     }
 
     public override float MoodMultiplier(Pawn p) => Mathf.Min(def.stackLimit, VatChildrenInActiveModes(p));
-}
-
-class ThoughtWorker_Precept_EnhancedVatLearning : ThoughtWorker_Precept_EnhancedVat
-{
-    protected override LearningMode ActiveForModes => LearningMode.Default | LearningMode.Combat | LearningMode.Labor | LearningMode.Leader;
-}
-
-class ThoughtWorker_Precept_EnhancedVatPlaying : ThoughtWorker_Precept_EnhancedVat
-{
-    protected override LearningMode ActiveForModes => LearningMode.Play;
 }

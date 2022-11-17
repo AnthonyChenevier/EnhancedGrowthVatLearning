@@ -4,11 +4,11 @@
     <!-- Encouraged -->
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_EnhancedVatLearning</defName>
-        <workerClass>>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatLearning</workerClass>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
+        <!--<minExpectation>Moderate</minExpectation>-->
         <stages>
             <li>
                 <label>vat children using enhanced learning suites</label>
@@ -20,11 +20,11 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatPlaying</workerClass>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
+        <!--<minExpectation>Moderate</minExpectation>-->
         <stages>
             <li>
                 <label>vat children using play suite</label>
@@ -36,11 +36,11 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
-        <workerClass>ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
+        <!--<minExpectation>Moderate</minExpectation>-->
         <stages>
             <li>
                 <label>teenagers in growth vats</label>
@@ -53,11 +53,11 @@
     <!-- Disapproved -->
     <ThoughtDef>
         <defName>ChildLabor_Disapproved_EnhancedVatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatLearning</workerClass>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
+        <!--<minExpectation>Moderate</minExpectation>-->
         <stages>
             <li>
                 <label>vat children using enhanced learning suites</label>
@@ -69,11 +69,11 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Disapproved_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatPlaying</workerClass>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
+        <!--<minExpectation>Moderate</minExpectation>-->
         <stages>
             <li>
                 <label>vat children using play suite</label>

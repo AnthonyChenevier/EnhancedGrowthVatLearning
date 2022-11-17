@@ -63,6 +63,8 @@
     <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="ThingComps\CompPowerMulti.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_EnhancedVat.cs" />
+    <Compile Include="Thoughts\ThoughtWorker_Precept_VatLearning.cs" />
+    <Compile Include="Thoughts\ThoughtWorker_Precept_VatPlaying.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_TeenInGrowthVat.cs" />
     <Compile Include="ThingComps\VatGrowthTrackerComp.cs" />
   </ItemGroup>
