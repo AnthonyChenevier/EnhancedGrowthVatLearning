@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml = ..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml
 		..\Common\Defs\Stats\StatDefs.xml = ..\Common\Defs\Stats\StatDefs.xml
 		..\steam formatted description.txt = ..\steam formatted description.txt
+		..\Common\Defs\Thoughts\ThoughtDefs.xml = ..\Common\Defs\Thoughts\ThoughtDefs.xml
 	EndProjectSection
 EndProject
 Global

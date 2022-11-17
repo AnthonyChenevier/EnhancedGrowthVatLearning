@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!-- child labor thoughts -->
+    <!-- Encouraged -->
+    <ThoughtDef>
+        <defName>ChildLabor_Encouraged_VatLearning</defName>
+        <workerClass>>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>vat children using enhanced learning suites</label>
+                <description>Our children are growing very quickly into productive members of the colony.</description>
+                <baseMoodEffect>+2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <ThoughtDef>
+        <defName>ChildLabor_Encouraged_VatPlayMode</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlayMode</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>vat children using play suite</label>
+                <description>Our children are wasting their limited vat growth time playing instead of learning how to help the colony.</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <!-- Discouraged -->
+    <ThoughtDef>
+        <defName>ChildLabor_Discouraged_VatLearning</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>vat children using enhanced learning suites</label>
+                <description>Our children are being grown and programmed like meat robots instead of experiencing childhood.</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <ThoughtDef>
+        <defName>ChildLabor_Discouraged_VatPlayMode</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlayMode</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>vat children using play suite</label>
+                <description>Our children's personal growth isn't being stifled even though they are growing so fast.</description>
+                <baseMoodEffect>+2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <!-- not needed? <ThoughtDef>
+        <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
+        <workerClass>ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>teenagers in growth vats</label>
+                <description>Why are we wasting teens in growth vats when they could be out here working!</description>
+                <baseMoodEffect>-8</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>-->
+</Defs>
