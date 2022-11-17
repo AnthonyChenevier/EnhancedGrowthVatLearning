@@ -45,8 +45,9 @@
     <LaborXP_SettingsLabel>Labor mode skill XP</LaborXP_SettingsLabel>
     <CombatXP_SettingsLabel>Combat mode skill XP</CombatXP_SettingsLabel>
     <LeaderXP_SettingsLabel>Leader mode skill XP</LeaderXP_SettingsLabel>
+    <PlayXP_SettingsLabel>Play mode skill XP</PlayXP_SettingsLabel>
 
-    <defaultSkills_SettingsLabel>Default Skills selection weights</defaultSkills_SettingsLabel>
+    <defaultSkills_SettingsLabel>Default (and Play) Skills selection weights</defaultSkills_SettingsLabel>
     <laborSkills_SettingsLabel>Labor Skills selection weights</laborSkills_SettingsLabel>
     <combatSkills_SettingsLabel>Combat Skills selection weights</combatSkills_SettingsLabel>
     <leaderSkills_SettingsLabel>Leader Skills selection weights</leaderSkills_SettingsLabel>

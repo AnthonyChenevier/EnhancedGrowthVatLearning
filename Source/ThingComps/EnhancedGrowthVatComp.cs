@@ -144,7 +144,12 @@ public class EnhancedGrowthVatComp : ThingComp
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
         ResearchProjectDef vatResearch = ModDefOf.EnhancedGrowthVatResearchProjectDef;
+        ResearchProjectDef soldierResearch = ModDefOf.VatLearningSoldierProjectDef;
+        ResearchProjectDef laborResearch = ModDefOf.VatLearningLaborProjectDef;
+        ResearchProjectDef leaderResearch = ModDefOf.VatLearningLeaderProjectDef;
+        ResearchProjectDef playResearch = ModDefOf.VatLearningPlayProjectDef;
 
+        //enhanced learning toggle
         Command_Toggle enhancedLearningGizmo = new()
         {
             defaultLabel = "ToggleLearning_Label".Translate(),
@@ -164,21 +169,14 @@ public class EnhancedGrowthVatComp : ThingComp
 
         yield return enhancedLearningGizmo;
 
-
+        //learning mode switch
         string mainDesc = "LearningModeSwitch_Desc".Translate();
-
         string modeDescription = enabled ? ModeDisplay : $"{"LearningModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}\n\n{ModeDisplay}";
-
-
-        ResearchProjectDef soldierResearch = ModDefOf.VatLearningSoldierProjectDef;
-        ResearchProjectDef laborResearch = ModDefOf.VatLearningLaborProjectDef;
-        ResearchProjectDef leaderResearch = ModDefOf.VatLearningLeaderProjectDef;
-        ResearchProjectDef playResearch = ModDefOf.VatLearningPlayProjectDef;
 
         Command_Action learningModeGizmo = new()
         {
             defaultLabel = "LearningModeSwitch_Label".Translate(),
-            defaultDesc = $"{mainDesc}\n\n{modeDescription}", //\n\n{nextMode}",
+            defaultDesc = $"{mainDesc}\n\n{modeDescription}",
             icon = ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{mode}"),
             activateSound = SoundDefOf.Designate_Claim,
             action = () => { Find.WindowStack.Add(new FloatMenu(ModeMenuOptions(playResearch, soldierResearch, laborResearch, leaderResearch))); },
