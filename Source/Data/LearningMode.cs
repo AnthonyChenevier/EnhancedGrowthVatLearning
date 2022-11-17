@@ -14,4 +14,5 @@ public enum LearningMode
     Combat,
     Labor,
     Leader,
+    Play,
 }

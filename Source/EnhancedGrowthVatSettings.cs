@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -19,6 +20,7 @@ public class EnhancedGrowthVatSettings : ModSettings
     private float defaultModeLearningNeed;
     private float specializedModesLearningNeed;
     private float leaderModeLearningNeed;
+    private float playModeLearningNeed;
 
     private float learningNeedVariance;
     private int learningNeedDailyChangeRate;
@@ -26,7 +28,9 @@ public class EnhancedGrowthVatSettings : ModSettings
     private int vatAgingFactor;
     private int leaderAgingFactorModifier;
 
-    private float enhancedModePowerModifer;
+    private float enhancedModePowerConsumption;
+
+    private float vatDaysForBackstory;
 
     private float vatLearningHediffSeverityPerDay;
     public Dictionary<string, float> xpToAward;
@@ -41,13 +45,17 @@ public class EnhancedGrowthVatSettings : ModSettings
     public float SpecializedModesLearningNeed => specializedModesLearningNeed;
     public float LeaderModeLearningNeed => leaderModeLearningNeed;
 
+    public float PlayModeLearningNeed => playModeLearningNeed;
+
     public float LearningNeedVariance => learningNeedVariance;
     public int LearningNeedDailyChangeRate => learningNeedDailyChangeRate;
 
     public int VatAgingFactor => vatAgingFactor;
     public int LeaderAgingFactorModifier => leaderAgingFactorModifier;
 
-    public float EnhancedModePowerModifer => enhancedModePowerModifer;
+    public float EnhancedModePowerConsumption => enhancedModePowerConsumption;
+
+    public float VatDaysForBackstory => vatDaysForBackstory;
 
     public float VatLearningHediffSeverityPerDay => vatLearningHediffSeverityPerDay;
     public Dictionary<string, float> XpToAward => xpToAward;
@@ -56,20 +64,22 @@ public class EnhancedGrowthVatSettings : ModSettings
     //Settings page stuff
     private float contentHeight = float.MaxValue;
     private Vector2 scrollPosition;
-    private string[] settingBuffers = new string[9];
-    private string[] skillXPBuffers = new string[4];
+    private string[] settingBuffers = new string[11];
+    private string[] skillXPBuffers = new string[5];
     private string[] defaultSkillBuffers = new string[12];
     private string[] laborSkillBuffers = new string[12];
     private string[] combatSkillBuffers = new string[12];
     private string[] leaderSkillBuffers = new string[12];
+    internal float? initPowerConsumptionValue;
+    internal bool SettingPowerDirty;
 
 
     public EnhancedGrowthVatSettings() { SetDefaults(); }
 
     private void SetDefaults()
     {
-        settingBuffers = new string[9];
-        skillXPBuffers = new string[4];
+        settingBuffers = new string[11];
+        skillXPBuffers = new string[5];
         defaultSkillBuffers = new string[12];
         laborSkillBuffers = new string[12];
         combatSkillBuffers = new string[12];
@@ -78,6 +88,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         defaultModeLearningNeed = 0.7f;
         specializedModesLearningNeed = 0.6f;
         leaderModeLearningNeed = 0.85f;
+        playModeLearningNeed = 0.98f;
 
         learningNeedVariance = 0.15f;
         learningNeedDailyChangeRate = 8;
@@ -85,15 +96,19 @@ public class EnhancedGrowthVatSettings : ModSettings
         vatAgingFactor = 18;
         leaderAgingFactorModifier = 2;
 
-        enhancedModePowerModifer = 4f;
+        enhancedModePowerConsumption = 800f;
+
+        vatDaysForBackstory = 400f;
 
         vatLearningHediffSeverityPerDay = 3f;
+
         xpToAward = new Dictionary<string, float>
         {
             { "Default", 2000f },
             { "Combat", 2000f },
             { "Labor", 2000f },
             { "Leader", 2200f },
+            { "Play", 200f }
         };
 
         defaultSkills = new Dictionary<string, float>
@@ -165,6 +180,7 @@ public class EnhancedGrowthVatSettings : ModSettings
     {
         return mode switch
         {
+            "Play" => defaultSkills,
             "Combat" => combatSkills,
             "Labor" => laborSkills,
             "Leader" => leaderSkills,
@@ -177,6 +193,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref defaultModeLearningNeed, nameof(defaultModeLearningNeed));
         Scribe_Values.Look(ref specializedModesLearningNeed, nameof(specializedModesLearningNeed));
         Scribe_Values.Look(ref leaderModeLearningNeed, nameof(leaderModeLearningNeed));
+        Scribe_Values.Look(ref playModeLearningNeed, nameof(playModeLearningNeed));
 
         Scribe_Values.Look(ref learningNeedVariance, nameof(learningNeedVariance));
         Scribe_Values.Look(ref learningNeedDailyChangeRate, nameof(learningNeedDailyChangeRate));
@@ -184,7 +201,9 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref vatAgingFactor, nameof(vatAgingFactor));
         Scribe_Values.Look(ref leaderAgingFactorModifier, nameof(leaderAgingFactorModifier));
 
-        Scribe_Values.Look(ref enhancedModePowerModifer, nameof(enhancedModePowerModifer));
+        Scribe_Values.Look(ref enhancedModePowerConsumption, nameof(enhancedModePowerConsumption));
+
+        Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
 
         Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
         Scribe_Collections.Look(ref xpToAward, nameof(xpToAward), LookMode.Value, LookMode.Value);
@@ -193,10 +212,17 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Collections.Look(ref combatSkills, nameof(combatSkills), LookMode.Value, LookMode.Value);
         Scribe_Collections.Look(ref laborSkills, nameof(laborSkills), LookMode.Value, LookMode.Value);
         Scribe_Collections.Look(ref leaderSkills, nameof(leaderSkills), LookMode.Value, LookMode.Value);
+
+        //update all defs with power multi comp if setting is not default on load
+        if (Scribe.mode == LoadSaveMode.LoadingVars && enhancedModePowerConsumption != 800f)
+            CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", enhancedModePowerConsumption);
     }
 
     public void DoSettingsWindowContents(Rect inRect)
     {
+        //set initial power consumption for dirty setting check if it's unset (once per opening setting screen)
+        initPowerConsumptionValue ??= enhancedModePowerConsumption;
+
         Rect resetButtonRect = new(inRect)
         {
             xMin = inRect.xMax - 200f,
@@ -217,6 +243,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         DoSetting(scrollView, nameof(defaultModeLearningNeed), ref defaultModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
         DoSetting(scrollView, nameof(specializedModesLearningNeed), ref specializedModesLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
         DoSetting(scrollView, nameof(leaderModeLearningNeed), ref leaderModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
+        DoSetting(scrollView, nameof(playModeLearningNeed), ref playModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
         scrollView.Gap();
 
         DoSetting(scrollView, nameof(learningNeedVariance), ref learningNeedVariance, ref settingBuffers[i++], 0f, 1f);
@@ -225,6 +252,15 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         DoSetting(scrollView, nameof(vatAgingFactor), ref vatAgingFactor, ref settingBuffers[i++], 1, 100000);
         DoSetting(scrollView, nameof(leaderAgingFactorModifier), ref leaderAgingFactorModifier, ref settingBuffers[i++], 0, 1000000);
+        scrollView.Gap();
+        DoSetting(scrollView, nameof(vatDaysForBackstory), ref vatDaysForBackstory, ref settingBuffers[i++], 1f, 780f);
+        scrollView.Gap();
+        DoSetting(scrollView, nameof(enhancedModePowerConsumption), ref enhancedModePowerConsumption, ref settingBuffers[i++], 80f, 100000f);
+        //handle setting power consumption if it's not the initial value
+        if (enhancedModePowerConsumption != initPowerConsumptionValue)
+            SettingPowerDirty = true;
+
+
         scrollView.Gap();
 
         DoSetting(scrollView, nameof(vatLearningHediffSeverityPerDay), ref vatLearningHediffSeverityPerDay, ref settingBuffers[i], 0.001f, 100000f);

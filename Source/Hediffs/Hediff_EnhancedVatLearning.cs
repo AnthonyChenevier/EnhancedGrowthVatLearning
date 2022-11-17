@@ -52,7 +52,7 @@ public class Hediff_EnhancedVatLearning : Hediff_VatLearning
     //Hediff_VatLearning and override PostTick() to prevent bugs elsewhere
     //and I still need to call base.PostTick(). This will break if
     //HediffWithComp.PostTick() changes in any way and is bad OOP practice,
-    //but I couldn't think of a better way to get past a invalid cast bug
+    //but I couldn't think of a better way to get past an invalid cast bug
     //in code I can't touch.
     private void PostTickBase()
     {
@@ -75,10 +75,10 @@ public class Hediff_EnhancedVatLearning : Hediff_VatLearning
         if (pawn.skills == null || pawn.ParentHolder is not Building_GrowthVat vat)
             return;
 
-        string learningMode = vat.GetComp<EnhancedGrowthVatComp>().Mode.ToString();
-        Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(learningMode);
+        string learningModeName = vat.GetComp<EnhancedGrowthVatComp>().Mode.ToString();
+        Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(learningModeName);
         SkillRecord randomSkill = pawn.skills.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
-        randomSkill.Learn(EnhancedGrowthVatMod.Settings.XpToAward[learningMode] * LearningUtility.LearningRateFactor(pawn), true);
+        randomSkill.Learn(EnhancedGrowthVatMod.Settings.XpToAward[learningModeName] * LearningUtility.LearningRateFactor(pawn), true);
     }
 }

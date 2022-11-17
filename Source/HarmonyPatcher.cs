@@ -6,8 +6,10 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 2:41 PM
 
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
+using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.Hediffs;
 using EnhancedGrowthVatLearning.ThingComps;
 using HarmonyLib;
@@ -28,19 +30,51 @@ public static class HarmonyPatcher
     }
 }
 
-//[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted")]
-//public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
-//{
-//    public static void Postfix(Pawn pawn, LifeStageDef previousLifeStage, Pawn_AgeTracker __instance)
-//    {
-//        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist)
-//            return;
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted")]
+public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
+{
+    public static void Postfix(Pawn pawn)
+    {
+        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || pawn.GetComp<VatGrowthTrackerComp>() is not { } tracker)
+            return;
 
-//        BackstoryDef backstory = pawn.story.Childhood;
-//        if (backstory.defName == "VatgrownChild11")
-//            //FINISH ME
-//    }
-//}
+        if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
+            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
+
+        //remove the tracker now we're done with the backstory. No littering!
+        pawn.AllComps.Remove(tracker);
+    }
+}
+
+//add the tracker comp to every pawn with vat growth ticks > 0 on init
+//so values can be loaded from save file if they exist. We will remove
+//any comps that get added here that don't actually have any tracked vat
+//time in the comp ExposeData() method
+[HarmonyPatch(typeof(ThingWithComps), "InitializeComps")]
+public static class ThingWithComps_InitializeComps_HP
+{
+    public static void Postfix(ThingWithComps __instance)
+    {
+        if (__instance is not Pawn pawn || !pawn.RaceProps.Humanlike || !(pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
+            return;
+        //agetracker is null at this point so we can't check for this :(
+        //if (pawn.ageTracker is not { vatGrowTicks: > 0 })
+        //    return;
+
+        ThingComp trackerComp = null;
+        try
+        {
+            trackerComp = (ThingComp)Activator.CreateInstance(typeof(VatGrowthTrackerComp));
+            trackerComp.parent = pawn;
+            pawn.AllComps.Add(trackerComp);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Could not instantiate or initialize a ThingComp: " + ex);
+            pawn.AllComps.Remove(trackerComp);
+        }
+    }
+}
 
 //makes the growth tier gizmo visible for children in growth vats.
 [HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
@@ -73,8 +107,15 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
         if (__instance.pawn.ParentHolder is not Building_GrowthVat growthVat)
             return;
 
-        if (growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
-            comp.PausedForLetter = false;
+        if (growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+            return;
+
+        comp.PausedForLetter = false;
+        if (!__instance.pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
+            return;
+
+        Messages.Message($"{__instance.pawn.LabelCap} cannot use the play suite now they are no longer a child.", MessageTypeDefOf.RejectInput);
+        comp.SetMode(LearningMode.Default);
     }
 }
 
@@ -102,40 +143,30 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "Notify_TickedInGrowthVat")]
 public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 {
-    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance, out EnhancedGrowthVatComp __state)
+    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance)
     {
-        //store the learning comp for later
-        __state = null;
         Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { } learningComp)
-            __state = learningComp;
 
-        //Check for default value used by growth vat
-        //so dev gizmo and other direct accessors can bypass 
-        //check for new ideo modifier too and add it to ticks
-        if (ticks != Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)) || __state is null)
-            return true;
+        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { } learningComp)
+            return true; //should not happen unless I missed a call to this method
 
-        switch (__state.Enabled)
+        //Check for default value used by growth vat so dev gizmo and other direct accessors can bypass
+        int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
+        if (ticks == defaultTicks && learningComp.Enabled)
         {
-            //Prevent original (and postfix) from running if aging is paused for a growth moment letter
-            case true when __state.PausedForLetter:
-                __state = null;
+            //Prevent original from running if aging is paused for a growth moment letter
+            if (learningComp.PausedForLetter)
+            {
                 ticks = 0;
                 return false;
-            case true:
-                ticks = __state.VatAgingFactorWithStatModifier(pawn); //run our factor and ideo factor
-                break;
+            }
+
+            ticks = learningComp.VatAgingFactorWithStatModifier(pawn); //run our factor and ideo factor
         }
 
+        learningComp.GrowthTracker?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
     }
-
-    //also postfix to track growth ticks in our own comp
-    //public static void Postfix(int ticks, Pawn_AgeTracker __instance, EnhancedGrowthVatComp __state)
-    //{
-    //    __state?.GrowthTracker.TrackGrowthTicks(ticks, __instance.CurLifeStageIndex, __state.Mode);
-    //}
 }
 
 //Override to get our property instead. Destructive prefix to prevent a loop of referencing and re-caching the original VatLearning hediff

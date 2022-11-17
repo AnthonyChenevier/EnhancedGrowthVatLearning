@@ -15,6 +15,9 @@
     <leaderModeLearningNeed_SettingsLabel>Leader mode learning need</leaderModeLearningNeed_SettingsLabel>
     <leaderModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'leader' enhanced learning mode.</leaderModeLearningNeed_Tooltip>
 
+    <playModeLearningNeed_SettingsLabel>Play mode learning need</playModeLearningNeed_SettingsLabel>
+    <playModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'play' enhanced learning mode.</playModeLearningNeed_Tooltip>
+
     <learningNeedVariance_SettingsLabel>Learning need random variance</learningNeedVariance_SettingsLabel>
     <learningNeedVariance_Tooltip>Learning need fluctuates by a random percentage at a number of points during the day, to simulate the occupant doing different things within the simulation. The final learning need for the occupant is calculated as (base learning need for mode *  +/- random value up to this amount)</learningNeedVariance_Tooltip>
 
@@ -24,18 +27,24 @@
     <vatLearningHediffSeverityPerDay_SettingsLabel>Enhanced skill Learning speed</vatLearningHediffSeverityPerDay_SettingsLabel>
     <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When 'Enhanced Vat Learning' hits 100%, the vat occupant receives an amount XP in a random skill, both selected by the learning mode. Change this to modify how often vat occupants get that boost. Higher values means more skills gained.</vatLearningHediffSeverityPerDay_Tooltip>
 
+    <vatAgingFactor_SettingsLabel>Enhanced mode aging factor</vatAgingFactor_SettingsLabel>
+    <vatAgingFactor_Tooltip>The multiplier for how fast vat occupants grow in enhanced learning mode. Vanilla vat occupants grow at a rate of 20x normal, this should be lower to provide a balance to the enhanced learning mode, and provide more time to accumulate growth points.</vatAgingFactor_Tooltip>
+
+    <leaderAgingFactorModifier_SettingsLabel>Leader mode aging factor modifier</leaderAgingFactorModifier_SettingsLabel>
+    <leaderAgingFactorModifier_Tooltip>Leader learning mode reduces aging factor by this amount, so that leaders have more time to mature and gain more skills and growth points.</leaderAgingFactorModifier_Tooltip>
+
+    <enhancedModePowerConsumption_SettingsLabel>Power consumption for enhanced modes (Watts)</enhancedModePowerConsumption_SettingsLabel>
+    <enhancedModePowerConsumption_Tooltip>Set the power consumption for when enhanced mode is enabled in watts.</enhancedModePowerConsumption_Tooltip>
+
+    <vatDaysForBackstory_SettingsLabel>Simulated days required for mode backstory</vatDaysForBackstory_SettingsLabel>
+    <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment. The default value of 400 days matches the vanilla vatgrown child backstory requirement. Maximum of 780 days is equal to 13 RW years, or the max age a child could reach spending all their time in a vat from birth.</vatDaysForBackstory_Tooltip>
+
     <xpToAward_SettingsLabel>Skill XP awarded for mode</xpToAward_SettingsLabel>
     <xpToAward_Tooltip>How much skill experience to award each time the Enhanced Vat Learning hediff reaches 100% for each mode</xpToAward_Tooltip>
     <DefaultXP_SettingsLabel>Default mode skill XP</DefaultXP_SettingsLabel>
     <LaborXP_SettingsLabel>Labor mode skill XP</LaborXP_SettingsLabel>
     <CombatXP_SettingsLabel>Combat mode skill XP</CombatXP_SettingsLabel>
     <LeaderXP_SettingsLabel>Leader mode skill XP</LeaderXP_SettingsLabel>
-
-    <vatAgingFactor_SettingsLabel>Enhanced mode aging factor</vatAgingFactor_SettingsLabel>
-    <vatAgingFactor_Tooltip>The multiplier for how fast vat occupants grow in enhanced learning mode. Vanilla vat occupants grow at a rate of 20x normal, this should be lower to provide a balance to the enhanced learning mode, and provide more time to accumulate growth points.</vatAgingFactor_Tooltip>
-
-    <leaderAgingFactorModifier_SettingsLabel>Leader mode aging factor modifier</leaderAgingFactorModifier_SettingsLabel>
-    <leaderAgingFactorModifier_Tooltip>Leader learning mode reduces aging factor by this amount, so that leaders have more time to mature and gain more skills and growth points.</leaderAgingFactorModifier_Tooltip>
 
     <defaultSkills_SettingsLabel>Default Skills selection weights</defaultSkills_SettingsLabel>
     <laborSkills_SettingsLabel>Labor Skills selection weights</laborSkills_SettingsLabel>
@@ -52,17 +61,20 @@
     <VatBabiesForbidden_DisabledReason>Babies cannot use enhanced learning</VatBabiesForbidden_DisabledReason>
     
     <!-- Gizmos - switch program -->
-    <LearningModeSwitch_Label>Cycle program</LearningModeSwitch_Label>
-    <LearningModeSwitch_Desc>Cycle between available training programs.</LearningModeSwitch_Desc>
+    <LearningModeSwitch_Label>Switch program...</LearningModeSwitch_Label>
+    <LearningModeSwitch_Desc>Switch between available training suites.</LearningModeSwitch_Desc>
     <LearningModeDisabled_Notice>Training programs effects are only active if enhanced learning is enabled.</LearningModeDisabled_Notice>
 
-    <LearningModeResearchRequired_DisabledReason>{0} or {1} research required.</LearningModeResearchRequired_DisabledReason>
+    <LearningModeResearchRequired_DisabledReason>'{0}', '{1}' or '{2}' research required to switch training suite.</LearningModeResearchRequired_DisabledReason>
     
     
     <!-- Learning modes -->
     <CurrentLearningMode>Current: {0} training suite</CurrentLearningMode>
     <TrainingPriorities_Label>Training priorities</TrainingPriorities_Label>
-    <NextLearningMode>Next: {0} training suite</NextLearningMode>
+    <!--<NextLearningMode>Next: {0} training suite</NextLearningMode>-->
+
+    <LearningModes_Play>Play</LearningModes_Play>
+    <PlayMode_Desc>The playland suite is configured to provide a completely unstructured environment in an imaginary world. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</PlayMode_Desc>
 
     <LearningModes_Default>Default</LearningModes_Default>
     <DefaultMode_Desc>The default training suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
@@ -77,8 +89,8 @@
     <LeaderMode_Desc>The leader training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
 
     <!-- Stats -->
-    <StatsReport_LifeStageGrowTime>Percentage of {0} spent in vat: {1}</StatsReport_LifeStageGrowTime>
-    <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {1}</StatsReport_VatNoLearningTime>
+    <StatsReport_TotalVatTime>Simulated time experienced: {0}</StatsReport_TotalVatTime>
+    <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {0}</StatsReport_VatNoLearningTime>
     <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
 
     <!-- Hediffs -->

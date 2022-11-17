@@ -65,6 +65,17 @@
     </ResearchProjectDef>
 
     <ResearchProjectDef ParentName="VatLearningMode_Base">
+        <defName>VatLearningPlayResearch</defName>
+        <label>Learning suite - Play</label>
+        <description>Unlocks the playland suite for growth vats with enhanced learning. The playland suite is configured to provide a completely unstructured environment in an imaginary world based on a popular child's cartoon. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</description>
+        <prerequisites>
+            <li>EnhancedGrowthVatLearningResearch</li>
+        </prerequisites>
+        <researchViewX>1.00</researchViewX>
+        <researchViewY>1.80</researchViewY>
+    </ResearchProjectDef>
+
+    <ResearchProjectDef ParentName="VatLearningMode_Base">
         <defName>VatLearningLeaderResearch</defName>
         <label>Learning suite - Leader</label>
         <description>Unlocks the leader training suite for growth vats with enhanced learning. The leadership training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes.</description>

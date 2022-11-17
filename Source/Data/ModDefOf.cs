@@ -19,6 +19,7 @@ public static class ModDefOf
     public readonly static ResearchProjectDef VatLearningLaborProjectDef = ResearchProjectDef.Named("VatLearningLaborResearch");
     public readonly static ResearchProjectDef VatLearningSoldierProjectDef = ResearchProjectDef.Named("VatLearningSoldierResearch");
     public readonly static ResearchProjectDef VatLearningLeaderProjectDef = ResearchProjectDef.Named("VatLearningLeaderResearch");
+    public static ResearchProjectDef VatLearningPlayProjectDef = ResearchProjectDef.Named("VatLearningPlayResearch");
 
     public readonly static HediffDef EnhancedVatGrowingHediffDef = HediffDef.Named("EnhancedVatGrowingHediff");
     public readonly static HediffDef EnhancedVatLearningHediffDef = HediffDef.Named("EnhancedVatLearningHediff");
@@ -29,4 +30,6 @@ public static class ModDefOf
     public readonly static BackstoryDef VatGrownSoldierBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownSoldierColonist");
     public readonly static BackstoryDef VatGrownLaborerBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLaborerColonist");
     public readonly static BackstoryDef VatGrownLeaderBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLeaderColonist");
+    public readonly static BackstoryDef VatGrownEnhancedBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownEnhancedColonist");
+    public readonly static BackstoryDef VatGrownPlaylandBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownPlaylandColonist");
 }

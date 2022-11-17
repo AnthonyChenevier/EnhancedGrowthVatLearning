@@ -7,93 +7,65 @@
 
 
 using System.Collections.Generic;
-using System.Linq;
 using EnhancedGrowthVatLearning.Data;
+using RimWorld;
 using Verse;
 
 namespace EnhancedGrowthVatLearning.ThingComps;
 
 public class VatGrowthTrackerComp : ThingComp
 {
-    private Pawn Pawn => (Pawn)parent;
-    private long VatTicks => Pawn.ageTracker.vatGrowTicks;
+    private long _vatTicksBiological;
+    public long VatTicksBiological => _vatTicksBiological;
 
-    private Dictionary<int, long> _biologicalTicks = new();
-    public long BiologicalTicksTotal => _biologicalTicks.Values.Sum();
-
-
-    private Dictionary<LearningMode, long> _modeVatTicks = new()
+    private Dictionary<LearningMode, long> _modeTicks = new()
     {
         { LearningMode.Default, 0 },
         { LearningMode.Labor, 0 },
         { LearningMode.Combat, 0 },
         { LearningMode.Leader, 0 },
+        { LearningMode.Play, 0 },
     };
 
-    public Dictionary<LearningMode, long> ModeVatTicks => _modeVatTicks;
+    public Dictionary<LearningMode, long> ModeTicks => _modeTicks;
 
+    public float NormalGrowthPercent =>
+        1f -
+        LearningModePercent(LearningMode.Default) -
+        LearningModePercent(LearningMode.Labor) -
+        LearningModePercent(LearningMode.Combat) -
+        LearningModePercent(LearningMode.Leader) -
+        LearningModePercent(LearningMode.Play);
 
-    private Dictionary<LearningMode, long> _modeBiologicalTicks = new()
+    public LearningMode MostUsedMode => _modeTicks.Keys.MaxBy(p => _modeTicks[p]);
+    public float MostUsedModePercent => LearningModePercent(MostUsedMode);
+    public bool RequiresVatBackstory => VatTicksBiological >= EnhancedGrowthVatMod.Settings.VatDaysForBackstory * GenDate.TicksPerDay;
+
+    public float LearningModePercent(LearningMode mode) { return 1f / _vatTicksBiological * _modeTicks[mode]; }
+
+    public void TrackGrowthTicks(int ticks, bool enhancedEnabled, LearningMode mode)
     {
-        { LearningMode.Default, 0 },
-        { LearningMode.Labor, 0 },
-        { LearningMode.Combat, 0 },
-        { LearningMode.Leader, 0 },
-    };
-
-    public Dictionary<LearningMode, long> BiologicalTicksModeBiologicalicks => _modeBiologicalTicks;
-
-    public long DefaultModeVatTicks => _modeVatTicks[LearningMode.Default];
-    public long LaborModeVatTicks => _modeVatTicks[LearningMode.Labor];
-    public long SoldierModeVatTicks => _modeVatTicks[LearningMode.Combat];
-    public long LeaderModeVatTicks => _modeVatTicks[LearningMode.Leader];
-    public long EnhancedModesNonLeaderTicks => DefaultModeVatTicks + LaborModeVatTicks + SoldierModeVatTicks;
-
-    private float DefaultModePercent => LearningModePercent(LearningMode.Default);
-    private float LaborModePercent => LearningModePercent(LearningMode.Labor);
-    private float SoldierModePercent => LearningModePercent(LearningMode.Combat);
-    private float LeaderModePercent => LearningModePercent(LearningMode.Leader);
-    private float LearningModesNonLeaderPercent => DefaultModePercent + LaborModePercent + SoldierModePercent;
-    private float AllEnhancedModesPercent => LeaderModePercent + LearningModesNonLeaderPercent;
-    public float NormalGrowthPercent => 1f - AllEnhancedModesPercent;
-
-    public float LearningModePercent(LearningMode mode) { return 1f / BiologicalTicksTotal * _modeBiologicalTicks[mode]; }
-
-
-    public float TicksToAdulthoodPercent(long adultMinAgeTicks) { return 1f / adultMinAgeTicks * BiologicalTicksTotal; }
-
-    public float TicksForLifeStagePercent(int lifeStageIndex, long minAge, long maxAge)
-    {
-        long lifeStageTotalTicks = maxAge - minAge;
-        if (!_biologicalTicks.ContainsKey(lifeStageIndex))
-            return 0f;
-
-        if (_biologicalTicks[lifeStageIndex] >= lifeStageTotalTicks)
-            return 1f;
-
-        return 1f / lifeStageTotalTicks * (_biologicalTicks[lifeStageIndex] - minAge);
-    }
-
-
-    public void TrackGrowthTicks(int ticks, int lifeStageIndex, LearningMode mode)
-    {
-        //track vat ticks like Pawn_AgeTracker, but for each mode
-        _modeVatTicks[mode]++;
-        //also track biological ticks (note: biological ticks in vat are
+        //track biological ticks (note: biological ticks in vat are
         //not adjusted for storyteller growth speed so this should track 1:1)
-        if (!_biologicalTicks.ContainsKey(lifeStageIndex))
-            _biologicalTicks.Add(lifeStageIndex, ticks);
-        else
-            _biologicalTicks[lifeStageIndex] += ticks;
-
-        _modeBiologicalTicks[mode] += ticks;
+        _vatTicksBiological += ticks;
+        if (enhancedEnabled)
+            _modeTicks[mode] += ticks;
     }
 
     public override void PostExposeData()
     {
-        base.PostExposeData();
-        Scribe_Collections.Look(ref _biologicalTicks, nameof(_biologicalTicks), LookMode.Value, LookMode.Value);
-        Scribe_Collections.Look(ref _modeVatTicks, nameof(_modeVatTicks), LookMode.Value, LookMode.Value);
-        Scribe_Collections.Look(ref _modeBiologicalTicks, nameof(_modeBiologicalTicks), LookMode.Value, LookMode.Value);
+        //if we are loading then make sure we have data so we don't keep ourselves attached to every colonist
+        long tempValue = _vatTicksBiological;
+        Scribe_Values.Look(ref tempValue, nameof(_vatTicksBiological));
+        if (Scribe.mode == LoadSaveMode.PostLoadInit && tempValue == 0)
+        {
+            //Log.Message("EnhancedGrowthVatLearningMod:: VatGrowthTrackerComp was added to untracked pawn to try and load values - _vatTicksBiological was 0. Removing now.");
+            parent.AllComps.Remove(this);
+            return;
+        }
+
+        //keep loading/saving as normal if we have data
+        _vatTicksBiological = tempValue;
+        Scribe_Collections.Look(ref _modeTicks, nameof(_modeTicks), LookMode.Value, LookMode.Value);
     }
 }

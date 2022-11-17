@@ -54,8 +54,8 @@ public class EnhancedGrowthVatComp : ThingComp
         {
             string currentMode = "CurrentLearningMode".Translate($"LearningModes_{mode}".Translate());
             string modeDescription = $"{mode}Mode_Desc".Translate();
-            string modeTrainingPriorities = ModeTrainingPriorities(mode.ToString());
-            return $"{currentMode}\n{modeDescription}\n\n{modeTrainingPriorities}";
+            string modeTrainingPriorities = mode == LearningMode.Play ? "" : $"\n\n{ModeTrainingPriorities(mode.ToString())}";
+            return $"{currentMode}\n{modeDescription}{modeTrainingPriorities}";
         }
     }
 
@@ -66,12 +66,17 @@ public class EnhancedGrowthVatComp : ThingComp
             if (GrowthVat.SelectedPawn.GetComp<VatGrowthTrackerComp>() is { } trackerComp)
                 return trackerComp;
 
+            //don't add trackers to adults
+            if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageRace.minAge > GrowthUtility.GrowthMomentAges[GrowthUtility.GrowthMomentAges.Length - 1])
+                return null;
+
+            //setup a new growth tracker for our held pawn
             trackerComp = new VatGrowthTrackerComp
             {
                 parent = GrowthVat.SelectedPawn,
             };
 
-            //GrowthVat.SelectedPawn.AllComps.Add(trackerComp);
+            GrowthVat.SelectedPawn.AllComps.Add(trackerComp);
             return trackerComp;
         }
     }
@@ -84,6 +89,7 @@ public class EnhancedGrowthVatComp : ThingComp
         float modeLearningNeed = currentMode switch
         {
             LearningMode.Combat or LearningMode.Labor => EnhancedGrowthVatMod.Settings.SpecializedModesLearningNeed,
+            LearningMode.Play => EnhancedGrowthVatMod.Settings.PlayModeLearningNeed,
             LearningMode.Leader => EnhancedGrowthVatMod.Settings.LeaderModeLearningNeed,
             _ => EnhancedGrowthVatMod.Settings.DefaultModeLearningNeed
         };
@@ -101,7 +107,7 @@ public class EnhancedGrowthVatComp : ThingComp
         if (enabled &&
             GrowthVat.SelectedPawn is { } pawn &&
             pawn.needs.learning is { } learning &&
-            parent.IsHashIntervalTick(60000 / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
+            parent.IsHashIntervalTick(GenDate.TicksPerDay / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
             learning.CurLevel = LearningNeedForModeWithVariance(mode);
     }
 
@@ -125,7 +131,7 @@ public class EnhancedGrowthVatComp : ThingComp
 
     private static string ColorByWeight(SkillDef skill, string learningMode)
     {
-        //use hex colors instead of .Colorize();
+        //use hex colors instead of .Colorize(), hard to get good color scale with that
         return EnhancedGrowthVatMod.Settings.SkillsMatrix(learningMode)[skill.defName] switch
         {
             > 5f and <= 10f => $"<color=#5c7d59>{skill.LabelCap}: +</color>", //muted green
@@ -143,7 +149,7 @@ public class EnhancedGrowthVatComp : ThingComp
         {
             defaultLabel = "ToggleLearning_Label".Translate(),
             defaultDesc = "ToggleLearning_Desc".Translate(),
-            icon = ContentFinder<Texture2D>.Get("UI/Icons/Learning/Lessontaking"),
+            icon = ContentFinder<Texture2D>.Get("UI/Gizmos/EnhancedLearningGizmo"),
             activateSound = enabled ? SoundDefOf.Checkbox_TurnedOff : SoundDefOf.Checkbox_TurnedOn,
             isActive = () => enabled,
             toggleAction = () => { SetEnabled(!enabled); },
@@ -158,43 +164,78 @@ public class EnhancedGrowthVatComp : ThingComp
 
         yield return enhancedLearningGizmo;
 
-        ResearchProjectDef soldierResearch = ModDefOf.VatLearningSoldierProjectDef;
-        ResearchProjectDef laborResearch = ModDefOf.VatLearningLaborProjectDef;
-        ResearchProjectDef leaderResearch = ModDefOf.VatLearningLeaderProjectDef;
 
         string mainDesc = "LearningModeSwitch_Desc".Translate();
 
         string modeDescription = enabled ? ModeDisplay : $"{"LearningModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}\n\n{ModeDisplay}";
 
-        LearningMode nextUnlockedMode = mode switch
-        {
-            LearningMode.Combat => laborResearch.IsFinished ? LearningMode.Labor : LearningMode.Default,
-            LearningMode.Labor => leaderResearch.IsFinished ? LearningMode.Leader : LearningMode.Default,
-            LearningMode.Leader => LearningMode.Default,
-            _ => soldierResearch.IsFinished ? LearningMode.Combat : LearningMode.Labor
-        };
 
-        string nextMode = "NextLearningMode".Translate($"LearningModes_{nextUnlockedMode}".Translate());
+        ResearchProjectDef soldierResearch = ModDefOf.VatLearningSoldierProjectDef;
+        ResearchProjectDef laborResearch = ModDefOf.VatLearningLaborProjectDef;
+        ResearchProjectDef leaderResearch = ModDefOf.VatLearningLeaderProjectDef;
+        ResearchProjectDef playResearch = ModDefOf.VatLearningPlayProjectDef;
 
-        Command_Action cycleLearningModeGizmo = new()
+        Command_Action learningModeGizmo = new()
         {
             defaultLabel = "LearningModeSwitch_Label".Translate(),
-            defaultDesc = $"{mainDesc}\n\n{modeDescription}\n\n{nextMode}",
+            defaultDesc = $"{mainDesc}\n\n{modeDescription}", //\n\n{nextMode}",
             icon = ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{mode}"),
             activateSound = SoundDefOf.Designate_Claim,
-            action = () =>
-            {
-                //change mode and update growth point rate for occupant
-                mode = nextUnlockedMode;
-                if (GrowthVat.SelectedPawn?.needs.learning is { } learning)
-                    learning.CurLevel = LearningNeedForModeWithVariance(mode);
-            },
+            action = () => { Find.WindowStack.Add(new FloatMenu(ModeMenuOptions(playResearch, soldierResearch, laborResearch, leaderResearch))); },
         };
 
-        if (!laborResearch.IsFinished && !soldierResearch.IsFinished)
-            cycleLearningModeGizmo.Disable("LearningModeResearchRequired_DisabledReason".Translate(laborResearch.LabelCap, soldierResearch.LabelCap));
+        if (!laborResearch.IsFinished && !soldierResearch.IsFinished && !playResearch.IsFinished)
+            learningModeGizmo.Disable("LearningModeResearchRequired_DisabledReason".Translate(laborResearch.LabelCap, soldierResearch.LabelCap, playResearch.LabelCap));
 
-        yield return cycleLearningModeGizmo;
+        yield return learningModeGizmo;
+    }
+
+    private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,
+                                                  ResearchProjectDef soldierResearch,
+                                                  ResearchProjectDef laborResearch,
+                                                  ResearchProjectDef leaderResearch)
+    {
+        List<FloatMenuOption> floatMenuOptions = new();
+
+        if (playResearch.IsFinished)
+            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Play}".Translate(),
+                                                     () => SetMode(LearningMode.Play),
+                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Play}"),
+                                                     Color.white));
+
+        if (soldierResearch.IsFinished)
+            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Combat}".Translate(),
+                                                     () => SetMode(LearningMode.Combat),
+                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Combat}"),
+                                                     Color.white));
+
+        if (laborResearch.IsFinished)
+            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Labor}".Translate(),
+                                                     () => SetMode(LearningMode.Labor),
+                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Labor}"),
+                                                     Color.white));
+
+        if (leaderResearch.IsFinished)
+            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Leader}".Translate(),
+                                                     () => SetMode(LearningMode.Leader),
+                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Leader}"),
+                                                     Color.white));
+
+        //default always visible
+        floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Default}".Translate(),
+                                                 () => SetMode(LearningMode.Default),
+                                                 ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Default}"),
+                                                 Color.white));
+
+        return floatMenuOptions;
+    }
+
+    public void SetMode(LearningMode learningMode)
+    {
+        //change mode and update growth point rate for occupant
+        mode = learningMode;
+        if (GrowthVat.SelectedPawn?.needs.learning is { } learning)
+            learning.CurLevel = LearningNeedForModeWithVariance(mode);
     }
 
     public void SetEnabled(bool enable)
