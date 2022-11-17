@@ -7,6 +7,7 @@
             <li Class="EnhancedGrowthVatLearning.ThingComps.CompProperties_EnhancedGrowthVat" />
         </value>
     </Operation>
+
     <Operation Class="PatchOperationReplace">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps/li[@Class="CompProperties_Power"]</xpath>
         <value>
@@ -30,6 +31,39 @@
                         </value>
                     </li>
                 </powerProfiles>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- Modify precepts with our thoughts -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/PreceptDef[defName="ChildLabor_Encouraged"]/comps</xpath>
+        <value>
+            <li Class="PreceptComp_SituationalThought">
+                <thought>ChildLabor_Encouraged_EnhancedVatLearning</thought>
+                <description>Vat children using enhanced learning</description>
+            </li>
+            <li Class="PreceptComp_SituationalThought">
+                <thought>ChildLabor_Encouraged_EnhancedVatPlay</thought>
+                <description>Vat children using play mode</description>
+            </li>
+            <li Class="PreceptComp_SituationalThought">
+                <thought>ChildLabor_Encouraged_TeenInGrowthVat</thought>
+                <description>Teenagers in growth vats</description>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName="ChildLabor_Disapproved"]/comps</xpath>
+        <value>
+            <li Class="PreceptComp_SituationalThought">
+                <thought>ChildLabor_Disapproved_EnhancedVatLearning</thought>
+                <description>Vat children using enhanced learning</description>
+            </li>
+            <li Class="PreceptComp_SituationalThought">
+                <thought>ChildLabor_Disapproved_EnhancedVatPlay</thought>
+                <description>Vat children using play mode</description>
             </li>
         </value>
     </Operation>

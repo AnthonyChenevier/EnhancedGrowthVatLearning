@@ -40,8 +40,8 @@ public class CompPowerMulti : ThingComp
         IEnumerable<CompProperties_PowerMulti> powerMultis = DefDatabase<ThingDef>.AllDefs.Where(t => t.GetCompProperties<CompProperties_PowerMulti>() is not null)
                                                                                   .Select(t => t.GetCompProperties<CompProperties_PowerMulti>());
 
+        //set private basePowerConsumption field to given value for all multi power profiles
         foreach (CompProperties_PowerMulti powerMulti in powerMultis.Where(pm => pm.powerProfiles.ContainsKey(profileKey)))
-            //set private basePowerConsumption field to given value
             Traverse.Create(powerMulti.powerProfiles[profileKey]).Field("basePowerConsumption").SetValue(powerConsumption);
     }
 }

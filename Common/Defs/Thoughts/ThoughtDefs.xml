@@ -3,8 +3,8 @@
     <!-- child labor thoughts -->
     <!-- Encouraged -->
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_VatLearning</defName>
-        <workerClass>>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Encouraged_EnhancedVatLearning</defName>
+        <workerClass>>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -19,8 +19,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_VatPlayMode</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlayMode</workerClass>
+        <defName>ChildLabor_Encouraged_EnhancedVatPlaying</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -34,10 +34,26 @@
         </stages>
     </ThoughtDef>
 
-    <!-- Discouraged -->
     <ThoughtDef>
-        <defName>ChildLabor_Discouraged_VatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
+        <workerClass>ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
+        <stackLimit>3</stackLimit>
+        <minExpectation>Moderate</minExpectation>
+        <stages>
+            <li>
+                <label>teenagers in growth vats</label>
+                <description>Why are our teenagers in growth vats when they could be out here working?!</description>
+                <baseMoodEffect>-8</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <!-- Disapproved -->
+    <ThoughtDef>
+        <defName>ChildLabor_Disapproved_EnhancedVatLearning</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -52,8 +68,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Discouraged_VatPlayMode</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlayMode</workerClass>
+        <defName>ChildLabor_Disapproved_EnhancedVatPlaying</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_EnhancedVatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -66,20 +82,4 @@
             </li>
         </stages>
     </ThoughtDef>
-
-    <!-- not needed? <ThoughtDef>
-        <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
-        <workerClass>ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
-        <developmentalStageFilter>Adult</developmentalStageFilter>
-        <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
-        <stackLimit>3</stackLimit>
-        <minExpectation>Moderate</minExpectation>
-        <stages>
-            <li>
-                <label>teenagers in growth vats</label>
-                <description>Why are we wasting teens in growth vats when they could be out here working!</description>
-                <baseMoodEffect>-8</baseMoodEffect>
-            </li>
-        </stages>
-    </ThoughtDef>-->
 </Defs>
