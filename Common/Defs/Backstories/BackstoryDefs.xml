@@ -1,57 +1,40 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-    <BackstoryDef>
-        <defName>VatgrownEnhancedColonist</defName>
+    <BackstoryDef Abstract="True" Name="VatgrownBackstoryBase">
+        <titleShort>child</titleShort>
+        <slot>Childhood</slot>
+        <spawnCategories>
+            <li>VatGrownEnhanced</li>
+        </spawnCategories>
+    </BackstoryDef>
+
+    <BackstoryDef ParentName="VatgrownBackstoryBase">
+        <defName>VatgrownChildEGVL</defName>
         <title>vatgrown child</title>
-        <titleShort>child</titleShort>
-        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_objective] spent the majority of [PAWN_possessive] vat time in the enhanced learning Default suite.\nIn the simulation [PAWN_nameDef] experienced a moderately comfortable and somewhat dream-like childhood on a relatively peaceful urbworld, splitting [PAWN_possessive] time between attending school and playing with [PAWN_possessive] friends.\nThe speed of growth and low resolution of the simulation has limited [PAWN_nameDef]'s childhood growth potential a little bit.</baseDesc>
-        <slot>Childhood</slot>
-        <spawnCategories>
-            <li>VatGrownEnhanced</li>
-        </spawnCategories>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_pronoun] spent the majority of [PAWN_possessive] time in the enhanced learning 'Default' suite.\nIn the simulation [PAWN_nameDef] experienced a moderately comfortable and somewhat dream-like childhood on a relatively peaceful urbworld, splitting [PAWN_possessive] time between attending school and playing with [PAWN_possessive] friends.</baseDesc>
     </BackstoryDef>
 
-    <BackstoryDef>
-        <defName>VatgrownSoldierColonist</defName>
+    <BackstoryDef ParentName="VatgrownBackstoryBase">
+        <defName>VatgrownSoldierEGVL</defName>
         <title>vatgrown cadet</title>
-        <titleShort>cadet</titleShort>
-        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_objective] spent the majority of [PAWN_possessive] vat time in the enhanced learning 'Soldier' suite.\nIn the simulation [PAWN_nameDef] drilled extensively in combat skills and operations at a simulated military cadet school on a high-tech urbworld with a proud military ideology of fighting nests of megaspiders on nearby planets ...Would You Like To Know More?\nThe speed of growth and low resolution of the simulation limited [PAWN_nameDef]'s childhood growth potential a bit.</baseDesc>
-        <slot>Childhood</slot>
-        <spawnCategories>
-            <li>VatGrownEnhanced</li>
-        </spawnCategories>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_pronoun] spent the majority of [PAWN_possessive] time in the enhanced learning 'Soldier' suite.\nIn the simulation [PAWN_nameDef] attended a military cadet school on a high-tech urbworld with a proud military ideology of fighting nests of megaspiders on nearby planets, where [PAWN_pronoun] was drilled extensively in combat skills and operations... Would You Like To Know More?</baseDesc>
     </BackstoryDef>
 
-    <BackstoryDef>
-        <defName>VatgrownLaborerColonist</defName>
+    <BackstoryDef ParentName="VatgrownBackstoryBase">
+        <defName>VatgrownLaborerEGVL</defName>
         <title>vatgrown homesteader</title>
-        <titleShort>kid</titleShort>
-        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_objective] spent the majority of [PAWN_possessive] vat time in the 'Labor' enhanced learning suite.\nIn this simulation [PAWN_nameDef] experienced childhood in an idyllic but tough off-grid homestead on a remote agriworld, learning by experience the skills [PAWN_pronoun] needed to survive with the land and maintain a modestly successful farm\nThe speed of growth and low resolution of the simulation limited [PAWN_nameDef]'s childhood growth potential a bit, and led [PAWN_objective] to speak in a heavy rural accent and use phrases such as “If you have a problem with the majestic Alphabeaver, then you have a problem with me. I suggest you let that one marinate" when angered.</baseDesc>
-        <slot>Childhood</slot>
-        <spawnCategories>
-            <li>VatGrownEnhanced</li>
-        </spawnCategories>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_pronoun] spent the majority of [PAWN_possessive] time in the enhanced learning 'Labor' suite.\nIn this simulation [PAWN_nameDef] experienced childhood in a tough off-grid homestead on a remote agriworld, learning by experience the skills [PAWN_pronoun] needed to survive with the land, maintain a modestly successful farm, and speak in a heavy rural accent.</baseDesc>
     </BackstoryDef>
 
-    <BackstoryDef>
-        <defName>VatgrownLeaderColonist</defName>
+    <BackstoryDef ParentName="VatgrownBackstoryBase">
+        <defName>VatgrownLeaderEGVL</defName>
         <title>vatgrown academic</title>
-        <titleShort>pupil</titleShort>
-        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_objective] spent the majority of [PAWN_possessive] vat time in the 'Leader' enhanced learning suite.\nIn this simulation [PAWN_pronoun] experienced an enviable childhood spent in a luxurious, but highly competitive private academy on a decadent glitterworld, where [PAWN_nameDef] was required to compete with other simulated students for the approval of [PAWN_possessive] teachers in a dramatic and stylish fashion, often with unexpected results. Throughout these lessons and trials [PAWN_nameDef] learned about the arts, economics, medicine, science and the skills required to be a leader of [PAWN_possessive] field.\nDue to the slower growth mode and higher-resolution of the simulation [PAWN_nameDef]'s childhood growth nearly reached it's full potential.</baseDesc>
-        <slot>Childhood</slot>
-        <spawnCategories>
-            <li>VatGrownEnhanced</li>
-        </spawnCategories>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_pronoun] spent the majority of [PAWN_possessive] time in the enhanced learning 'Leader' suite.\nIn this simulation [PAWN_nameDef] experienced an enviable childhood as a pupil in a luxurious but highly competitive private academy on a decadent glitterworld, where [PAWN_pronoun] was required to compete with other students for the approval of their teachers in dramatic and stylish fashion; often with unexpected results. Throughout these lessons and trials [PAWN_nameDef] learned about the arts, economics, medicine, science and the skills required to be a leader of [PAWN_possessive] field.</baseDesc>
     </BackstoryDef>
 
-    <BackstoryDef>
-        <defName>VatgrownPlaylandColonist</defName>
+    <BackstoryDef ParentName="VatgrownBackstoryBase">
+        <defName>VatgrownPlaylandEGVL</defName>
         <title>vatgrown dreamchild</title>
-        <titleShort>child</titleShort>
-        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_nameDef] spent the majority of their time in the 'Play' enhanced learning suite, where [PAWN_pronoun] experienced life in a danger-free child's wonderland of colorful characters and playful adventures in Never Past Bedtime Land. While [PAWN_nameDef] didn't learn many skills in this simulation, [PAWN_possessive] did experience as rich and full a childhood as any parent could dream of.</baseDesc>
-        <slot>Childhood</slot>
-        <spawnCategories>
-            <li>VatGrownEnhanced</li>
-        </spawnCategories>
+        <baseDesc>[PAWN_nameDef] spent most of [PAWN_possessive] childhood in a growth vat, where [PAWN_pronoun] spent the majority of their time in the enhanced learning 'Playland' suite. In the simulation [PAWN_nameDef] experienced life in a danger-free child's wonderland of colorful characters and playful adventures in 'Never Past Bedtime Land'. While [PAWN_nameDef] didn't learn many skills in this simulation, [PAWN_possessive] did experience as rich and full a childhood as any parent could dream of.</baseDesc>
     </BackstoryDef>
 </Defs>
