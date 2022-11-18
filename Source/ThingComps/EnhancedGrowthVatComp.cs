@@ -232,8 +232,8 @@ public class EnhancedGrowthVatComp : ThingComp
     {
         //change mode and update growth point rate for occupant
         mode = learningMode;
-        if (enabled && GrowthVat.SelectedPawn?.needs.learning is { } learning)
-            learning.CurLevel = LearningNeedForModeWithVariance(mode);
+        if (GrowthVat.SelectedPawn?.needs.learning is { } learning)
+            learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) : 0.02f;
     }
 
     public void SetEnabled(bool enable)
