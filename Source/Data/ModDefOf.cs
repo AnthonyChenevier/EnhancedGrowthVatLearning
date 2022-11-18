@@ -27,9 +27,9 @@ public static class ModDefOf
 
     public readonly static StatDef VatGrowthStatDef = StatDef.Named("VatGrowthTime");
 
+    public readonly static BackstoryDef VatGrownDefaultBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownChildEGVL");
     public readonly static BackstoryDef VatGrownSoldierBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownSoldierEGVL");
     public readonly static BackstoryDef VatGrownLaborerBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLaborerEGVL");
     public readonly static BackstoryDef VatGrownLeaderBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownLeaderEGVL");
-    public readonly static BackstoryDef VatGrownEnhancedBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownEnhancedEGVL");
     public readonly static BackstoryDef VatGrownPlaylandBackgroundDef = DefDatabase<BackstoryDef>.GetNamed("VatgrownPlaylandEGVL");
 }

@@ -45,7 +45,7 @@ public class EnhancedGrowthVatMod : Mod
             LearningMode.Leader => ModDefOf.VatGrownLeaderBackgroundDef,
             LearningMode.Play => ModDefOf.VatGrownPlaylandBackgroundDef,
             //LearningMode.Default => ModDefOf.VatGrownEnhancedBackgroundDef,
-            _ => ModDefOf.VatGrownEnhancedBackgroundDef
+            _ => ModDefOf.VatGrownDefaultBackgroundDef
         };
     }
 }
