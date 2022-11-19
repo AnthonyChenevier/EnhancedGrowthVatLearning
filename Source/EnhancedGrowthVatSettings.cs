@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
 using UnityEngine;
@@ -176,14 +177,14 @@ public class EnhancedGrowthVatSettings : ModSettings
         };
     }
 
-    public Dictionary<string, float> SkillsMatrix(string mode)
+    public Dictionary<string, float> SkillsMatrix(LearningMode mode)
     {
         return mode switch
         {
-            "Play" => defaultSkills,
-            "Combat" => combatSkills,
-            "Labor" => laborSkills,
-            "Leader" => leaderSkills,
+            LearningMode.Play => defaultSkills,
+            LearningMode.Combat => combatSkills,
+            LearningMode.Labor => laborSkills,
+            LearningMode.Leader => leaderSkills,
             _ => defaultSkills
         };
     }

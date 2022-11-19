@@ -6,7 +6,6 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 2:41 PM
 
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using EnhancedGrowthVatLearning.Data;
@@ -30,49 +29,55 @@ public static class HarmonyPatcher
     }
 }
 
+//
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild), "Notify_LifeStageStarted")]
+public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
+{
+    public static void Postfix(Pawn pawn)
+    {
+        if (Current.ProgramState != ProgramState.Playing ||
+            !pawn.IsColonist ||
+            pawn.ParentHolder is not Building_GrowthVat growthVat ||
+            growthVat.GetComp<EnhancedGrowthVatComp>() is not { } vatComp)
+            return;
+
+        vatComp.Refresh();
+    }
+}
+
+//backstory hooks
 [HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), "Notify_LifeStageStarted")]
 public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 {
     public static void Postfix(Pawn pawn)
     {
-        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || pawn.GetComp<VatGrowthTrackerComp>() is not { } tracker)
+        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || pawn.GetComp<VatGrowthTrackerComp>() is not { } trackerComp)
             return;
 
-        if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
-            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
+        if (trackerComp.RequiresVatBackstory && !(trackerComp.NormalGrowthPercent > trackerComp.MostUsedModePercent))
+            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, trackerComp.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
 
         //remove the tracker now we're done with the backstory. No littering!
-        pawn.AllComps.Remove(tracker);
+        pawn.AllComps.Remove(trackerComp);
     }
 }
 
-//add the tracker comp to every pawn with vat growth ticks > 0 on init
-//so values can be loaded from save file if they exist. We will remove
-//any comps that get added here that don't actually have any tracked vat
-//time in the comp ExposeData() method
 [HarmonyPatch(typeof(ThingWithComps), "InitializeComps")]
 public static class ThingWithComps_InitializeComps_HP
 {
+    //add the tracker comp to every pawn with vat growth ticks > 0 on init
+    //so values can be loaded from save file if they exist. We will remove
+    //any comps that get added here that don't actually have any tracked vat
+    //time in the comp ExposeData() method. Messy I know, this could cause
+    //issues but I'm not sure of a cleaner way to handle it yet. Might try
+    //hooking into a different part of the code where age tracker is available
     public static void Postfix(ThingWithComps __instance)
     {
-        if (__instance is not Pawn pawn || !pawn.RaceProps.Humanlike || !(pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
-            return;
+        if (__instance is Pawn pawn && pawn.RaceProps.Humanlike && (pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
+            EnhancedGrowthVatMod.AddTrackerTo(pawn);
         //agetracker is null at this point so we can't check for this :(
         //if (pawn.ageTracker is not { vatGrowTicks: > 0 })
         //    return;
-
-        ThingComp trackerComp = null;
-        try
-        {
-            trackerComp = (ThingComp)Activator.CreateInstance(typeof(VatGrowthTrackerComp));
-            trackerComp.parent = pawn;
-            pawn.AllComps.Add(trackerComp);
-        }
-        catch (Exception ex)
-        {
-            Log.Error("Could not instantiate or initialize a ThingComp: " + ex);
-            pawn.AllComps.Remove(trackerComp);
-        }
     }
 }
 
@@ -87,7 +92,7 @@ public static class Gizmo_GrowthTier_Visible_HP
     }
 }
 
-//Override to pause vat growth while waiting for growth moment letter to be completed.
+//pause vat growth while waiting for growth moment letter to be completed.
 [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "ConfigureGrowthLetter")]
 public static class ChoiceLetter_GrowthMoment_ConfigureGrowthLetter_HP
 {
@@ -98,16 +103,15 @@ public static class ChoiceLetter_GrowthMoment_ConfigureGrowthLetter_HP
     }
 }
 
-//Override to unpause vat growth once the growth moment is completed.
+//unpause vat growth once the growth moment is completed.
+//also check if the pawn is now an adult (teen) and kick them
+//out of play mode. Welcome my son, welcome to the machine.
 [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "MakeChoices")]
 public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
 {
     public static void Postfix(ChoiceLetter_GrowthMoment __instance)
     {
-        if (__instance.pawn.ParentHolder is not Building_GrowthVat growthVat)
-            return;
-
-        if (growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+        if (__instance.pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
             return;
 
         comp.PausedForLetter = false;
@@ -115,7 +119,7 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
             return;
 
         Messages.Message($"{__instance.pawn.LabelCap} cannot use the play suite now they are no longer a child.", MessageTypeDefOf.RejectInput);
-        comp.SetMode(LearningMode.Default);
+        comp.Mode = LearningMode.Default;
     }
 }
 
@@ -135,7 +139,7 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
         //get normal growth point value for learning need level, storyteller settings and age.
         float growthPointsPerDay = traverse.Method("GrowthPointsPerDayAtLearningLevel", pawn.needs.learning.CurLevel).GetValue<float>();
         //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat (and vat grow stat) aging speed
-        return growthPointsPerDay * (comp.VatAgingFactorWithStatModifier(pawn) / Find.Storyteller.difficulty.childAgingRate);
+        return growthPointsPerDay * (comp.VatTicks / Find.Storyteller.difficulty.childAgingRate);
     }
 }
 
@@ -154,54 +158,53 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
         int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
         if (ticks == defaultTicks && learningComp.Enabled)
         {
-            //Prevent original from running if aging is paused for a growth moment letter
+            //Stop processing and prevent original tracker from running
+            //if aging is paused for a growth moment letter
             if (learningComp.PausedForLetter)
-            {
-                ticks = 0;
                 return false;
-            }
 
-            ticks = learningComp.VatAgingFactorWithStatModifier(pawn); //run our factor and ideo factor
+            //use our tick value instead
+            ticks = learningComp.VatTicks;
         }
 
-        learningComp.GrowthTracker?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
+        learningComp.PawnGrowthTracker?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
     }
 }
 
-//Override to get our property instead. Destructive prefix to prevent a loop of referencing and re-caching the original VatLearning hediff
+//Override to get our property instead. Destructive prefix instead of postfix
+//to prevent a loop of referencing and re-caching the original VatLearning hediff
 [HarmonyPatch(typeof(Building_GrowthVat), "VatLearning", MethodType.Getter)]
 public static class Building_GrowthVat_VatLearning_HP
 {
     public static bool Prefix(Building_GrowthVat __instance, ref Hediff __result)
     {
-        //use our overloaded getter from the comp
         __result = __instance.GetComp<EnhancedGrowthVatComp>().VatLearning;
-        //prevent original from running. Sorry other modders
         return false;
     }
 }
 
 //Override to turn off enhanced mode on pawn exit
-[HarmonyPatch(typeof(Building_GrowthVat), "Notify_PawnRemoved")]
-public static class Building_GrowthVat_Notify_PawnRemoved_HP
-{
-    public static void Postfix(Building_GrowthVat __instance) { __instance.GetComp<EnhancedGrowthVatComp>().SetEnabled(false); }
-}
+//[HarmonyPatch(typeof(Building_GrowthVat), "Notify_PawnRemoved")]
+//public static class Building_GrowthVat_Notify_PawnRemoved_HP
+//{
+//    public static void Postfix(Building_GrowthVat __instance) { __instance.GetComp<EnhancedGrowthVatComp>().Enabled = false; }
+//}
 
-//Override to fix DEV gizmos
+//Override to fix DEV: Learn gizmo
 [HarmonyPatch(typeof(Building_GrowthVat), "GetGizmos")]
 public static class Building_GrowthVat_GetGizmos_HP
 {
     public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Building_GrowthVat __instance)
     {
         foreach (Gizmo gizmo in gizmos)
-            //rebuild the dev:learn gizmo to use the right class
-            if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command && __instance.GetComp<EnhancedGrowthVatComp>().VatLearning is Hediff_EnhancedVatLearning learnBetter)
+            //rebuild the dev:learn gizmo to use the correct class
+            if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command &&
+                __instance.GetComp<EnhancedGrowthVatComp>().VatLearning is Hediff_EnhancedVatLearning learningHediff)
                 yield return new Command_Action
                 {
                     defaultLabel = $"{command.defaultLabel} Enhanced",
-                    action = learnBetter.EnhancedLearn
+                    action = learningHediff.EnhancedLearn
                 };
             else //send the rest through untouched
                 yield return gizmo;

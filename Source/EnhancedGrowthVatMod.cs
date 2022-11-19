@@ -6,6 +6,7 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 1:59 PM
 
 
+using System;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
@@ -47,5 +48,21 @@ public class EnhancedGrowthVatMod : Mod
             //LearningMode.Default => ModDefOf.VatGrownEnhancedBackgroundDef,
             _ => ModDefOf.VatGrownDefaultBackgroundDef
         };
+    }
+
+    public static void AddTrackerTo(Pawn pawn)
+    {
+        ThingComp trackerComp = null;
+        try
+        {
+            trackerComp = (ThingComp)Activator.CreateInstance(typeof(VatGrowthTrackerComp));
+            trackerComp.parent = pawn;
+            pawn.AllComps.Add(trackerComp);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Could not instantiate or initialize VatGrowthTrackerComp: " + ex);
+            pawn.AllComps.Remove(trackerComp);
+        }
     }
 }

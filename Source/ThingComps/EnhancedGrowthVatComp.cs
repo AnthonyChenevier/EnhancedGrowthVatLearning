@@ -25,8 +25,43 @@ public class EnhancedGrowthVatComp : ThingComp
 
     //cache once
     private CompPowerMulti powerMulti;
-    public LearningMode Mode => mode;
-    public bool Enabled => enabled;
+
+    public bool Enabled
+    {
+        get => enabled;
+        set
+        {
+            enabled = value;
+            if (!enabled)
+                pausedForLetter = false;
+
+            //babies don't use enhanced mode
+            if (GrowthVat.SelectedPawn is not { } pawn || pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+                return;
+
+            //set up power profile
+            string powerProfile = enabled ? "EnhancedLearning" : "Default";
+            if (!PowerMulti.TrySetPowerProfile(powerProfile))
+                Log.Error($"VariablePowerComp profile name \"{powerProfile}\" could not be found");
+
+            //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
+            SetVatHediffs(pawn.health);
+
+            //but only children have learning need to be updated
+            CalculateHeldPawnLearningNeed();
+        }
+    }
+
+    public LearningMode Mode
+    {
+        get => mode;
+        set
+        {
+            //change value and update growth point rate for occupant
+            mode = value;
+            CalculateHeldPawnLearningNeed();
+        }
+    }
 
     public bool PausedForLetter
     {
@@ -34,40 +69,39 @@ public class EnhancedGrowthVatComp : ThingComp
         internal set => pausedForLetter = value;
     }
 
-
-    private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
     private CompPowerMulti PowerMulti => powerMulti ??= parent.GetComp<CompPowerMulti>();
+    private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
+    public int VatTicks => Mathf.FloorToInt(ModeAgingFactor * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
 
-    public int VatAgingFactor =>
+    public int ModeAgingFactor =>
         mode is LearningMode.Leader
             ? EnhancedGrowthVatMod.Settings.VatAgingFactor - EnhancedGrowthVatMod.Settings.LeaderAgingFactorModifier
             : EnhancedGrowthVatMod.Settings.VatAgingFactor;
 
 
-    public Hediff VatLearning =>
-        GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(enabled ? ModDefOf.EnhancedVatLearningHediffDef : HediffDefOf.VatLearning) ??
-        GrowthVat.SelectedPawn.health.AddHediff(enabled ? ModDefOf.EnhancedVatLearningHediffDef : HediffDefOf.VatLearning);
-
-    public string ModeDisplay
+    public Hediff VatLearning
     {
         get
         {
-            string currentMode = "CurrentLearningMode".Translate($"LearningModes_{mode}".Translate());
-            string modeDescription = $"{mode}Mode_Desc".Translate();
-            string modeTrainingPriorities = mode == LearningMode.Play ? "" : $"\n\n{ModeTrainingPriorities(mode.ToString())}";
-            return $"{currentMode}\n{modeDescription}{modeTrainingPriorities}";
+            HediffDef learningHediffDef;
+            if (enabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+                learningHediffDef = ModDefOf.EnhancedVatLearningHediffDef;
+            else
+                learningHediffDef = HediffDefOf.VatLearning;
+
+            return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
         }
     }
 
-    public VatGrowthTrackerComp GrowthTracker
+    public VatGrowthTrackerComp PawnGrowthTracker
     {
         get
         {
             if (GrowthVat.SelectedPawn.GetComp<VatGrowthTrackerComp>() is { } trackerComp)
                 return trackerComp;
 
-            //don't add trackers to adults
-            if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageRace.minAge > GrowthUtility.GrowthMomentAges[GrowthUtility.GrowthMomentAges.Length - 1])
+            //don't add trackers to teens/adults
+            if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageRace.minAge >= GrowthUtility.GrowthMomentAges[GrowthUtility.GrowthMomentAges.Length - 1])
                 return null;
 
             //setup a new growth tracker for our held pawn
@@ -81,64 +115,16 @@ public class EnhancedGrowthVatComp : ThingComp
         }
     }
 
-    public int VatAgingFactorWithStatModifier(Pawn pawn) { return Mathf.FloorToInt(VatAgingFactor * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed)); }
 
+    //Overrides
 
-    private static float LearningNeedForModeWithVariance(LearningMode currentMode)
-    {
-        float modeLearningNeed = currentMode switch
-        {
-            LearningMode.Combat or LearningMode.Labor => EnhancedGrowthVatMod.Settings.SpecializedModesLearningNeed,
-            LearningMode.Play => EnhancedGrowthVatMod.Settings.PlayModeLearningNeed,
-            LearningMode.Leader => EnhancedGrowthVatMod.Settings.LeaderModeLearningNeed,
-            _ => EnhancedGrowthVatMod.Settings.DefaultModeLearningNeed
-        };
-
-        float randRange = EnhancedGrowthVatMod.Settings.LearningNeedVariance;
-        float randVariance = 1f - Rand.Range(-randRange, randRange);
-
-        return modeLearningNeed * randVariance;
-    }
 
     public override void CompTick()
     {
         base.CompTick();
         //vary learning need by small random amount a number of times daily
-        if (enabled &&
-            GrowthVat.SelectedPawn is { } pawn &&
-            pawn.needs.learning is { } learning &&
-            parent.IsHashIntervalTick(GenDate.TicksPerDay / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
-            learning.CurLevel = LearningNeedForModeWithVariance(mode);
-    }
-
-
-    public static string ModeTrainingPriorities(string modeString)
-    {
-        return $"{"TrainingPriorities_Label".Translate()}:\n" +
-               $"\t{ColorByWeight(SkillDefOf.Shooting, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Melee, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Construction, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Mining, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Cooking, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Plants, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Animals, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Crafting, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Artistic, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Medicine, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Social, modeString)}\n" +
-               $"\t{ColorByWeight(SkillDefOf.Intellectual, modeString)}";
-    }
-
-    private static string ColorByWeight(SkillDef skill, string learningMode)
-    {
-        //use hex colors instead of .Colorize(), hard to get good color scale with that
-        return EnhancedGrowthVatMod.Settings.SkillsMatrix(learningMode)[skill.defName] switch
-        {
-            > 5f and <= 10f => $"<color=#5c7d59>{skill.LabelCap}: +</color>", //muted green
-            > 10f and <= 15f => $"<color=#57b94d>{skill.LabelCap}: ++</color>", //midGreen
-            >= 20f => $"<color=#18ea03>{skill.LabelCap}: +++</color>", //brightGreen
-            _ => $"<color=#434343>{skill.LabelCap}: -</color>", //grey
-        };
+        if (enabled && parent.IsHashIntervalTick(GenDate.TicksPerDay / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
+            CalculateHeldPawnLearningNeed();
     }
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
@@ -150,35 +136,33 @@ public class EnhancedGrowthVatComp : ThingComp
         ResearchProjectDef playResearch = ModDefOf.VatLearningPlayProjectDef;
 
         //enhanced learning toggle
+        string disabledForBabyNotice = "";
+        if (GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+            disabledForBabyNotice = $"\n\n{"EnhancedLearningDisabledBabies_Notice".Translate().Colorize(ColorLibrary.RedReadable)}";
+
         Command_Toggle enhancedLearningGizmo = new()
         {
             defaultLabel = "ToggleLearning_Label".Translate(),
-            defaultDesc = "ToggleLearning_Desc".Translate(),
+            defaultDesc = $"{"ToggleLearning_Desc".Translate()}{disabledForBabyNotice}",
             icon = ContentFinder<Texture2D>.Get("UI/Gizmos/EnhancedLearningGizmo"),
             activateSound = enabled ? SoundDefOf.Checkbox_TurnedOff : SoundDefOf.Checkbox_TurnedOn,
             isActive = () => enabled,
-            toggleAction = () => { SetEnabled(!enabled); },
+            toggleAction = () => { Enabled = !enabled; },
         };
 
         if (!vatResearch.IsFinished)
             enhancedLearningGizmo.Disable("EnhancedLearningResearchRequired_DisabledReason".Translate(vatResearch.LabelCap));
-        else if (GrowthVat.SelectedPawn == null)
-            enhancedLearningGizmo.Disable("VatOccupantRequired_DisabledReason".Translate());
-        else if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageIndex == 0)
-            enhancedLearningGizmo.Disable("VatBabiesForbidden_DisabledReason".Translate());
 
         yield return enhancedLearningGizmo;
 
         //learning mode switch
-        string mainDesc = "LearningModeSwitch_Desc".Translate();
-        string modeDescription = enabled ? ModeDisplay : $"{"LearningModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}\n\n{ModeDisplay}";
-
+        string disabledNotEnhancedNotice = !enabled ? $"\n\n{"LearningModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}" : "";
         Command_Action learningModeGizmo = new()
         {
             defaultLabel = "LearningModeSwitch_Label".Translate(),
-            defaultDesc = $"{mainDesc}\n\n{modeDescription}",
-            icon = ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{mode}"),
-            activateSound = SoundDefOf.Designate_Claim,
+            defaultDesc = $"{"LearningModeSwitch_Desc".Translate()}\n\n{"CurrentMode_Label".Translate(mode.Label())}\n\n{mode.Description()}{disabledNotEnhancedNotice}",
+            icon = mode.Icon(),
+            activateSound = SoundDefOf.Click,
             action = () => { Find.WindowStack.Add(new FloatMenu(ModeMenuOptions(playResearch, soldierResearch, laborResearch, leaderResearch))); },
         };
 
@@ -188,79 +172,99 @@ public class EnhancedGrowthVatComp : ThingComp
         yield return learningModeGizmo;
     }
 
+    //save/load stuff
+    public override void PostExposeData()
+    {
+        Scribe_Values.Look(ref enabled, nameof(enabled));
+        Scribe_Values.Look(ref pausedForLetter, nameof(pausedForLetter));
+        Scribe_Values.Look(ref mode, nameof(mode));
+        base.PostExposeData();
+    }
+
+    //refresh on spawn
+    public override void PostSpawnSetup(bool respawningAfterLoad)
+    {
+        base.PostSpawnSetup(respawningAfterLoad);
+        Refresh();
+    }
+
+
+    //comp methods
+
+
+    public void Refresh() => Enabled = enabled;
+
     private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,
                                                   ResearchProjectDef soldierResearch,
                                                   ResearchProjectDef laborResearch,
                                                   ResearchProjectDef leaderResearch)
     {
-        List<FloatMenuOption> floatMenuOptions = new();
+        List<FloatMenuOption> options = new();
 
         if (playResearch.IsFinished)
-            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Play}".Translate(),
-                                                     () => SetMode(LearningMode.Play),
-                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Play}"),
-                                                     Color.white));
+        {
+            string disabledForTeenNotice = "";
+            if (GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Adult())
+                disabledForTeenNotice = $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}";
+
+            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Play.Label()), () => Mode = LearningMode.Play, LearningMode.Play.Icon(), Color.white)
+            {
+                Disabled = GrowthVat.SelectedPawn is { } pawn1 && pawn1.ageTracker.CurLifeStage.developmentalStage.Adult(),
+                tooltip = new TipSignal($"{LearningMode.Play.Description()}{disabledForTeenNotice}"),
+            });
+        }
 
         if (soldierResearch.IsFinished)
-            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Combat}".Translate(),
-                                                     () => SetMode(LearningMode.Combat),
-                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Combat}"),
-                                                     Color.white));
+            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Combat.Label()), () => Mode = LearningMode.Combat, LearningMode.Combat.Icon(), Color.white)
+            {
+                tooltip = new TipSignal(LearningMode.Combat.Description()),
+            });
 
         if (laborResearch.IsFinished)
-            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Labor}".Translate(),
-                                                     () => SetMode(LearningMode.Labor),
-                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Labor}"),
-                                                     Color.white));
+            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Labor.Label()), () => Mode = LearningMode.Labor, LearningMode.Labor.Icon(), Color.white)
+            {
+                tooltip = new TipSignal(LearningMode.Labor.Description()),
+            });
 
         if (leaderResearch.IsFinished)
-            floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Leader}".Translate(),
-                                                     () => SetMode(LearningMode.Leader),
-                                                     ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Leader}"),
-                                                     Color.white));
+            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Leader.Label()), () => Mode = LearningMode.Leader, LearningMode.Leader.Icon(), Color.white)
+            {
+                tooltip = new TipSignal(LearningMode.Leader.Description()),
+            });
 
         //default always visible
-        floatMenuOptions.Add(new FloatMenuOption($"LearningModes_{LearningMode.Default}".Translate(),
-                                                 () => SetMode(LearningMode.Default),
-                                                 ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{LearningMode.Default}"),
-                                                 Color.white));
+        options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Default.Label()), () => Mode = LearningMode.Default, LearningMode.Default.Icon(), Color.white)
+        {
+            tooltip = new TipSignal(LearningMode.Default.Description()),
+        });
 
-        return floatMenuOptions;
+        return options;
     }
 
-    public void SetMode(LearningMode learningMode)
+    private void CalculateHeldPawnLearningNeed()
     {
-        //change mode and update growth point rate for occupant
-        mode = learningMode;
-        if (GrowthVat.SelectedPawn?.needs.learning is { } learning)
-            learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) : 0.02f;
-    }
-
-    public void SetEnabled(bool enable)
-    {
-        enabled = enable;
-        if (!enabled)
-            pausedForLetter = false;
-
-        SetPowerProfile(enabled);
-
-        //babies and nulls get nothing
-        if (GrowthVat.SelectedPawn is not { } pawn || pawn.ageTracker.CurLifeStageIndex == 0)
+        if (GrowthVat.SelectedPawn is not { } pawn || pawn.needs.learning is not { } learning)
             return;
 
-        //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
-        SetVatHediffs(pawn.health);
+        //if turned off emulate low learning (its not used anyway)
+        if (!enabled)
+        {
+            learning.CurLevel = 0.02f;
+            return;
+        }
 
-        //but only children have learning need
-        if (pawn.needs.learning != null)
-            pawn.needs.learning.CurLevel = enabled ? LearningNeedForModeWithVariance(mode) * LearningUtility.LearningRateFactor(pawn) : 0.02f;
-    }
+        //randomize learning need by variance value
+        float randRange = EnhancedGrowthVatMod.Settings.LearningNeedVariance;
+        float modeLearningNeed = mode switch
+        {
+            LearningMode.Combat or LearningMode.Labor => EnhancedGrowthVatMod.Settings.SpecializedModesLearningNeed,
+            LearningMode.Play => EnhancedGrowthVatMod.Settings.PlayModeLearningNeed,
+            LearningMode.Leader => EnhancedGrowthVatMod.Settings.LeaderModeLearningNeed,
+            _ => EnhancedGrowthVatMod.Settings.DefaultModeLearningNeed
+        };
 
-    private void SetPowerProfile(bool enable)
-    {
-        string powerProfile = enable ? "EnhancedLearning" : "Default";
-        if (!PowerMulti.TrySetPowerProfile(powerProfile))
-            Log.Error($"VariablePowerComp profile name \"{powerProfile}\" could not be found");
+
+        learning.CurLevel = modeLearningNeed * (1f - Rand.Range(-randRange, randRange)) * LearningUtility.LearningRateFactor(pawn);
     }
 
     public void SetVatHediffs(Pawn_HealthTracker pawnHealth)
@@ -293,20 +297,5 @@ public class EnhancedGrowthVatComp : ThingComp
             pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(ModDefOf.EnhancedVatLearningHediffDef));
             pawnHealth.AddHediff(HediffDefOf.VatLearning);
         }
-    }
-
-    //save/load stuff
-    public override void PostExposeData()
-    {
-        Scribe_Values.Look(ref enabled, nameof(enabled));
-        Scribe_Values.Look(ref pausedForLetter, nameof(pausedForLetter));
-        Scribe_Values.Look(ref mode, nameof(mode));
-        base.PostExposeData();
-    }
-
-    public override void PostSpawnSetup(bool respawningAfterLoad)
-    {
-        base.PostSpawnSetup(respawningAfterLoad);
-        SetEnabled(enabled);
     }
 }

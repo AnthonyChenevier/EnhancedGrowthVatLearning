@@ -52,42 +52,37 @@
     <combatSkills_SettingsLabel>Combat Skills selection weights</combatSkills_SettingsLabel>
     <leaderSkills_SettingsLabel>Leader Skills selection weights</leaderSkills_SettingsLabel>
     <skillsMatrix_Tooltip>Selection weights for each skill in this learning mode. Change this to influence which skills are randomly selected for in training.</skillsMatrix_Tooltip>
+    
+    
+    <!-- Learning modes -->
+    <DefaultMode>Default</DefaultMode>
+    <CombatMode>Combat</CombatMode>
+    <LaborMode>Labor</LaborMode>
+    <LeaderMode>Leader</LeaderMode>
+    <PlayMode>Playland</PlayMode>
 
     <!-- Gizmos - toggle enhance learning -->
     <ToggleLearning_Label>enhance learning</ToggleLearning_Label>
     <ToggleLearning_Desc>Toggle enhanced learning mode for this vat. When active this greatly increases the personal growth outcomes and skills gained by the occupant, but drains more power and slows growth speed.</ToggleLearning_Desc>
-
-    <EnhancedLearningResearchRequired_DisabledReason>{0} research required.</EnhancedLearningResearchRequired_DisabledReason>
-    <VatOccupantRequired_DisabledReason>Occupant required.</VatOccupantRequired_DisabledReason>
-    <VatBabiesForbidden_DisabledReason>Babies cannot use enhanced learning</VatBabiesForbidden_DisabledReason>
+    <EnhancedLearningDisabledBabies_Notice>Babies cannot use enhanced learning, but will automatically enter the selected learning suite when they reach the appropriate age.</EnhancedLearningDisabledBabies_Notice>
+    <EnhancedLearningResearchRequired_DisabledReason>'{0}' research required.</EnhancedLearningResearchRequired_DisabledReason>
     
     <!-- Gizmos - switch program -->
-    <LearningModeSwitch_Label>Switch program...</LearningModeSwitch_Label>
-    <LearningModeSwitch_Desc>Switch between available training suites.</LearningModeSwitch_Desc>
-    <LearningModeDisabled_Notice>Training programs effects are only active if enhanced learning is enabled.</LearningModeDisabled_Notice>
-
+    <LearningModeSwitch_Label>Switch suite...</LearningModeSwitch_Label>
+    <LearningModeSwitch_Desc>Switch between available learning suites.</LearningModeSwitch_Desc>
+    <SwitchToMode_Label>Select '{0}' learning suite</SwitchToMode_Label>
     <LearningModeResearchRequired_DisabledReason>'{0}', '{1}' or '{2}' research required to switch training suite.</LearningModeResearchRequired_DisabledReason>
-    
-    
-    <!-- Learning modes -->
-    <CurrentLearningMode>Current: {0} training suite</CurrentLearningMode>
-    <TrainingPriorities_Label>Training priorities</TrainingPriorities_Label>
-    <!--<NextLearningMode>Next: {0} training suite</NextLearningMode>-->
 
-    <LearningModes_Play>Play</LearningModes_Play>
+    <!-- Switch suite gizmo description -->
+    <CurrentMode_Label>Currently configured for the '{0}' learning suite.</CurrentMode_Label>
+    <DefaultMode_Desc>The default suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
+    <CombatMode_Desc>The combat suite is configured to provide a heavily structured learning environment in an urbworld military cadet school. Vat occupants will gain more knowledge of combat and combat-related operations such as building defenses, breaching entrenched positions and triage. As more focus is put on certain skills being trained vat occupants have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</CombatMode_Desc>
+    <LaborMode_Desc>The labor suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</LaborMode_Desc>
+    <LeaderMode_Desc>The leader suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
     <PlayMode_Desc>The playland suite is configured to provide a completely unstructured environment in an imaginary world. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</PlayMode_Desc>
-
-    <LearningModes_Default>Default</LearningModes_Default>
-    <DefaultMode_Desc>The default training suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
-
-    <LearningModes_Combat>Combat</LearningModes_Combat>
-    <CombatMode_Desc>The combat training suite is configured to provide a heavily structured learning environment in an urbworld military cadet school. Vat occupants will gain more knowledge of combat and combat-related operations such as building defenses, breaching entrenched positions and triage. As more focus is put on certain skills being trained vat occupants have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</CombatMode_Desc>
-
-    <LearningModes_Labor>Labor</LearningModes_Labor>
-    <LaborMode_Desc>The labor training suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</LaborMode_Desc>
-
-    <LearningModes_Leader>Leader</LearningModes_Leader>
-    <LeaderMode_Desc>The leader training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
+    <TrainingPrioritiesList>Training priorities</TrainingPrioritiesList>
+    <LearningModeDisabled_Notice>Learning suite effects are only active when enhanced learning is enabled.</LearningModeDisabled_Notice>
+    <PlayModeDisabled_Notice>Teenagers cannot use the Playland suite.</PlayModeDisabled_Notice>
 
     <!-- Stats -->
     <StatsReport_TotalVatTime>Simulated time experienced: {0}</StatsReport_TotalVatTime>

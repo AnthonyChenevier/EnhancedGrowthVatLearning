@@ -33,7 +33,7 @@ public class StatWorker_VatTime : StatWorker
         foreach (LearningMode mode in tracker.ModeTicks.Keys /*.Where(k => tracker.ModeTicks[k] > 0)*/)
         {
             sb.Append("\n");
-            sb.Append("StatsReport_VatLearningTime".Translate($"LearningModes_{mode}".Translate(), tracker.LearningModePercent(mode).ToStringPercent()));
+            sb.Append("StatsReport_VatLearningTime".Translate(mode.Label(), tracker.LearningModePercent(mode).ToStringPercent()));
         }
 
         sb.Append("\n");
