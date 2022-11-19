@@ -109,7 +109,7 @@ public class EnhancedGrowthVatSettings : ModSettings
             { "Combat", 2000f },
             { "Labor", 2000f },
             { "Leader", 2200f },
-            { "Play", 200f }
+            { "Play", 800f }
         };
 
         defaultSkills = new Dictionary<string, float>
