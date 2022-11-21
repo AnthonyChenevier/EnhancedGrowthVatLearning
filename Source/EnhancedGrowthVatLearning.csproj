@@ -52,6 +52,7 @@
     <Compile Include="EnhancedGrowthVatSettings.cs" />
     <Compile Include="Data\LearningMode.cs" />
     <Compile Include="Data\ModDefOf.cs" />
+    <Compile Include="GrowthTrackerRepository.cs" />
     <Compile Include="ListingHelper.cs" />
     <Compile Include="Stats\StatWorker_VatTime.cs" />
     <Compile Include="ThingComps\CompProperties_EnhancedGrowthVat.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Thoughts\ThoughtWorker_Precept_VatLearning.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_VatPlaying.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_TeenInGrowthVat.cs" />
-    <Compile Include="ThingComps\VatGrowthTrackerComp.cs" />
+    <Compile Include="VatGrowthTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">

@@ -51,33 +51,14 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 {
     public static void Postfix(Pawn pawn)
     {
-        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || pawn.GetComp<VatGrowthTrackerComp>() is not { } trackerComp)
+        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || EnhancedGrowthVatMod.GetTrackerFor(pawn) is not { } tracker)
             return;
 
-        if (trackerComp.RequiresVatBackstory && !(trackerComp.NormalGrowthPercent > trackerComp.MostUsedModePercent))
-            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, trackerComp.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
+        if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
+            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
 
         //remove the tracker now we're done with the backstory. No littering!
-        pawn.AllComps.Remove(trackerComp);
-    }
-}
-
-[HarmonyPatch(typeof(ThingWithComps), "InitializeComps")]
-public static class ThingWithComps_InitializeComps_HP
-{
-    //add the tracker comp to every pawn with vat growth ticks > 0 on init
-    //so values can be loaded from save file if they exist. We will remove
-    //any comps that get added here that don't actually have any tracked vat
-    //time in the comp ExposeData() method. Messy I know, this could cause
-    //issues but I'm not sure of a cleaner way to handle it yet. Might try
-    //hooking into a different part of the code where age tracker is available
-    public static void Postfix(ThingWithComps __instance)
-    {
-        if (__instance is Pawn pawn && pawn.RaceProps.Humanlike && (pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
-            EnhancedGrowthVatMod.AddTrackerTo(pawn);
-        //agetracker is null at this point so we can't check for this :(
-        //if (pawn.ageTracker is not { vatGrowTicks: > 0 })
-        //    return;
+        EnhancedGrowthVatMod.RemoveTrackerFor(pawn);
     }
 }
 
@@ -151,11 +132,14 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
     {
         Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
 
-        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { } learningComp)
+        EnhancedGrowthVatComp learningComp = ((Building_GrowthVat)pawn.ParentHolder).GetComp<EnhancedGrowthVatComp>();
+        if (learningComp == null)
             return true; //should not happen unless I missed a call to this method
 
         //Check for default value used by growth vat so dev gizmo and other direct accessors can bypass
-        int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
+        //NOTE: GetStatValue seems like a hungry beast performance-wise.
+        float statValue = pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
+        int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * statValue);
         if (ticks == defaultTicks && learningComp.Enabled)
         {
             //Stop processing and prevent original tracker from running
@@ -167,7 +151,8 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
             ticks = learningComp.VatTicks;
         }
 
-        learningComp.PawnGrowthTracker?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
+        //finally, track ticks for backstories and stats ourselves
+        EnhancedGrowthVatMod.GetTrackerFor(pawn).TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
     }
 }

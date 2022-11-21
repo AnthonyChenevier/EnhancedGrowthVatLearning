@@ -11,10 +11,13 @@ using EnhancedGrowthVatLearning.Data;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.ThingComps;
+namespace EnhancedGrowthVatLearning;
 
-public class VatGrowthTrackerComp : ThingComp
+public class VatGrowthTracker : IExposable
 {
+    private Pawn _pawn;
+    public Pawn Pawn => _pawn;
+
     private long _vatTicksBiological;
     public long VatTicksBiological => _vatTicksBiological;
 
@@ -26,6 +29,8 @@ public class VatGrowthTrackerComp : ThingComp
         { LearningMode.Leader, 0 },
         { LearningMode.Play, 0 },
     };
+
+    public VatGrowthTracker(Pawn pawn) { _pawn = pawn; }
 
     public Dictionary<LearningMode, long> ModeTicks => _modeTicks;
 
@@ -52,20 +57,10 @@ public class VatGrowthTrackerComp : ThingComp
             _modeTicks[mode] += ticks;
     }
 
-    public override void PostExposeData()
+    public void ExposeData()
     {
-        //if we are loading then make sure we have data so we don't keep ourselves attached to every colonist
-        long tempValue = _vatTicksBiological;
-        Scribe_Values.Look(ref tempValue, nameof(_vatTicksBiological));
-        if (Scribe.mode == LoadSaveMode.PostLoadInit && tempValue == 0)
-        {
-            //Log.Message("EnhancedGrowthVatLearningMod:: VatGrowthTrackerComp was added to untracked pawn to try and load values - _vatTicksBiological was 0. Removing now.");
-            parent.AllComps.Remove(this);
-            return;
-        }
-
-        //keep loading/saving as normal if we have data
-        _vatTicksBiological = tempValue;
+        Scribe_References.Look(ref _pawn, nameof(_pawn));
+        Scribe_Values.Look(ref _vatTicksBiological, nameof(_vatTicksBiological));
         Scribe_Collections.Look(ref _modeTicks, nameof(_modeTicks), LookMode.Value, LookMode.Value);
     }
 }

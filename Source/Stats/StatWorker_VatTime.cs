@@ -18,16 +18,16 @@ public class StatWorker_VatTime : StatWorker
 {
     public override bool ShouldShowFor(StatRequest req)
     {
-        return req.HasThing && req.Thing is Pawn pawn && pawn.RaceProps.Humanlike && pawn.GetComp<VatGrowthTrackerComp>() is { VatTicksBiological: > 0 };
+        return req.HasThing && req.Thing is Pawn pawn && pawn.RaceProps.Humanlike && EnhancedGrowthVatMod.GetTrackerFor(pawn) is { VatTicksBiological: > 0 };
     }
 
-    public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess) { val = ((Pawn)req.Thing).GetComp<VatGrowthTrackerComp>().VatTicksBiological; }
+    public override void FinalizeValue(StatRequest req, ref float val, bool applyPostProcess) { val = EnhancedGrowthVatMod.GetTrackerFor((Pawn)req.Thing).VatTicksBiological; }
 
     public override string ValueToString(float val, bool finalized, ToStringNumberSense numberSense = ToStringNumberSense.Absolute) { return ((int)val).ToStringTicksToPeriod(); }
 
     public override string GetExplanationFinalizePart(StatRequest req, ToStringNumberSense numberSense, float finalVal)
     {
-        VatGrowthTrackerComp tracker = ((Pawn)req.Thing).GetComp<VatGrowthTrackerComp>();
+        VatGrowthTracker tracker = EnhancedGrowthVatMod.GetTrackerFor((Pawn)req.Thing);
 
         StringBuilder sb = new();
         foreach (LearningMode mode in tracker.ModeTicks.Keys /*.Where(k => tracker.ModeTicks[k] > 0)*/)

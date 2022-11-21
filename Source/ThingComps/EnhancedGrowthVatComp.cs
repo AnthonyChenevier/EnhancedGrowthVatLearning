@@ -93,28 +93,6 @@ public class EnhancedGrowthVatComp : ThingComp
         }
     }
 
-    public VatGrowthTrackerComp PawnGrowthTracker
-    {
-        get
-        {
-            if (GrowthVat.SelectedPawn.GetComp<VatGrowthTrackerComp>() is { } trackerComp)
-                return trackerComp;
-
-            //don't add trackers to teens/adults
-            if (GrowthVat.SelectedPawn.ageTracker.CurLifeStageRace.minAge >= GrowthUtility.GrowthMomentAges[GrowthUtility.GrowthMomentAges.Length - 1])
-                return null;
-
-            //setup a new growth tracker for our held pawn
-            trackerComp = new VatGrowthTrackerComp
-            {
-                parent = GrowthVat.SelectedPawn,
-            };
-
-            GrowthVat.SelectedPawn.AllComps.Add(trackerComp);
-            return trackerComp;
-        }
-    }
-
 
     //Overrides
 
