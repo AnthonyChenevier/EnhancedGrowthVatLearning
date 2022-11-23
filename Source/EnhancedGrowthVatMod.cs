@@ -6,6 +6,8 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 1:59 PM
 
 
+using System.Collections.Generic;
+using System.Linq;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
@@ -96,5 +98,35 @@ public class EnhancedGrowthVatMod : Mod
     {
         if (GrowthTrackerRepository.Trackers.ContainsKey(pawn.thingIDNumber))
             GrowthTrackerRepository.Trackers.Remove(pawn.thingIDNumber);
+    }
+
+    public static void RemoveMod()
+    {
+        //turn off all growth vat enhanced learning to remove hediffs
+        int i = 0;
+        foreach (Building_GrowthVat growthVat in from map in Current.Game.Maps from growthVat in map.spawnedThings.OfType<Building_GrowthVat>() select growthVat)
+        {
+            growthVat.GetComp<EnhancedGrowthVatComp>().Enabled = false;
+            i++;
+        }
+
+        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Turned off enhanced learning for {i} growth vats over {Current.Game.Maps.Count} maps.");
+
+        //remove all of the mod's backstories from world pawns.
+        int j = 0;
+        List<Pawn> pawnsToCheck = Find.World.worldPawns.AllPawnsAliveOrDead;
+        pawnsToCheck.AddRange(Current.Game.Maps.SelectMany(map => map.mapPawns.AllPawns));
+        foreach (Pawn pawn in pawnsToCheck.Where(p => p.RaceProps.Humanlike))
+            if (pawn.story.Childhood.spawnCategories != null && pawn.story.Childhood.spawnCategories.Contains("VatGrownEnhanced"))
+            {
+                pawn.story.Childhood = DefDatabase<BackstoryDef>.GetNamed("VatgrownChild11");
+                j++;
+            }
+
+        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Changed {j} pawn childhood backstories back to default vatgrown child");
+
+        //remove tracker repo from world components. Should still work for a bit with cache so save and quit is possible
+        Find.World.components.Remove(GrowthTrackerRepository);
+        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Removed GrowthTrackerRepository from world components so it will not be saved.");
     }
 }

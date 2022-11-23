@@ -224,16 +224,8 @@ public class EnhancedGrowthVatSettings : ModSettings
         //set initial power consumption for dirty setting check if it's unset (once per opening setting screen)
         initPowerConsumptionValue ??= enhancedModePowerConsumption;
 
-        Rect resetButtonRect = new(inRect)
-        {
-            xMin = inRect.xMax - 200f,
-            xMax = inRect.xMax - 30f,
-            yMin = inRect.yMin - 40f, //go up above inrect
-            height = 30f
-        };
-
-        if (Widgets.ButtonText(resetButtonRect, "ResetToDefaults_Button".Translate()))
-            SetDefaults();
+        DrawResetButton(inRect);
+        DrawRemoveModButton(inRect);
 
         Listing_Standard listing = new();
         listing.Begin(inRect);
@@ -327,6 +319,40 @@ public class EnhancedGrowthVatSettings : ModSettings
         listing.End();
         if (contentHeight != scrollView.CurHeight)
             contentHeight = scrollView.CurHeight;
+    }
+
+    private void DrawResetButton(Rect inRect)
+    {
+        Rect buttonRect = new(inRect)
+        {
+            xMin = inRect.xMax - 200f,
+            xMax = inRect.xMax - 30f,
+            yMin = inRect.yMin - 40f, //go up above inrect
+            height = 30f
+        };
+
+        TooltipHandler.TipRegion(buttonRect, "ResetToDefaults_Tooltip".Translate());
+        if (Widgets.ButtonText(buttonRect, "ResetToDefaults_Button".Translate()))
+            SetDefaults();
+    }
+
+    private void DrawRemoveModButton(Rect inRect)
+    {
+        Rect buttonRect = new(inRect)
+        {
+            xMin = inRect.xMax - 380f,
+            xMax = inRect.xMax - 210f,
+            yMin = inRect.yMin - 40f, //go up above inrect
+            height = 30f
+        };
+
+        //only active if in-game
+        TooltipHandler.TipRegion(buttonRect, "RemoveMod_Tooltip".Translate());
+        if (Widgets.ButtonText(buttonRect, "RemoveMod_Button".Translate(), active: Current.Game?.World != null))
+            Find.WindowStack.Add(new Dialog_MessageBox("AreYouSureModRemoval_Dialog".Translate().Colorize(ColorLibrary.RedReadable),
+                                                       buttonAText: "OK".Translate(),
+                                                       buttonAAction: EnhancedGrowthVatMod.RemoveMod,
+                                                       buttonBText: "Cancel".Translate()));
     }
 
     private void DoSetting(Listing_Standard listing, string settingName, ref int setting, ref string inputBuffer, int min, int max)

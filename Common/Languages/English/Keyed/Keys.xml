@@ -3,6 +3,11 @@
     <!-- Settings -->
     <EnhancedGrowthVatSettings>Enhanced Growth Vat Learning</EnhancedGrowthVatSettings>
     <ResetToDefaults_Button>Reset to defaults</ResetToDefaults_Button>
+    <ResetToDefaults_Tooltip>Reset all mod settings to default values.</ResetToDefaults_Tooltip>
+    <RemoveMod_Button>Remove mod</RemoveMod_Button>
+    <RemoveMod_Tooltip>Only works if a game is loaded (not on the main menu).\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</RemoveMod_Tooltip>
+    <AreYouSureModRemoval_Dialog>Are you sure you want to remove Enhanced Growth Vat Learning from your game? Selecting 'OK' will:\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</AreYouSureModRemoval_Dialog>
+
     <vatGrowthPointMultiplier_SettingsLabel>Vat growth point multiplier</vatGrowthPointMultiplier_SettingsLabel>
     <vatGrowthPointMultiplier_Tooltip>Multiplier used to modify the final growth points given to vat occupants based on their learning need. Default value provides enough growth points to reach level 5 at each growth moment if they are kept in the vat the entire time</vatGrowthPointMultiplier_Tooltip>
 
