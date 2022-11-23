@@ -26,7 +26,7 @@ public class HediffComp_EnhancedVatGrowing : HediffComp
                 vatAgingFactor = comp.PausedForLetter ? 0 : comp.ModeAgingFactor; //show base value or 0 if paused
 
             //explain final growth speed (if growStat matters)
-            float growStat = Pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
+            float growStat = Pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed, true, GenDate.TicksPerDay);
             int finalSpeed = Mathf.FloorToInt(vatAgingFactor * growStat);
             string growthStatMod = growStat == 1f ? "" : $" {"AgingSpeedWithOccupantStatModifier".Translate(finalSpeed, growStat.ToStringPercent())}";
 
