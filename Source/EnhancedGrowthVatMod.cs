@@ -79,6 +79,10 @@ public class EnhancedGrowthVatMod : Mod
 
     public static VatGrowthTracker GetTrackerFor(Pawn pawn)
     {
+        if (!Settings.GenerateBackstories)
+            return null;
+
+
         int id = pawn.thingIDNumber;
 
         if (GrowthTrackerRepository.Trackers.ContainsKey(id) && GrowthTrackerRepository.Trackers[id] is { } tracker)

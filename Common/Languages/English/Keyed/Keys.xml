@@ -41,6 +41,9 @@
     <enhancedModePowerConsumption_SettingsLabel>Power consumption for enhanced modes (Watts)</enhancedModePowerConsumption_SettingsLabel>
     <enhancedModePowerConsumption_Tooltip>Set the power consumption for when enhanced mode is enabled in watts.</enhancedModePowerConsumption_Tooltip>
 
+    <generateBackstories_SettingsLabel>Generate custom mode-specific backstories for vatgrown pawns?</generateBackstories_SettingsLabel>
+    <generateBackstories_Tooltip>Toggle if vat time is tracked and used to generate mode-specific backstories when pawns reach teen-age. Hint: Check the pawn's stats while they are children to see tracked time if this is active.</generateBackstories_Tooltip>
+
     <vatDaysForBackstory_SettingsLabel>Simulated days required for mode backstory</vatDaysForBackstory_SettingsLabel>
     <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment. The default value of 400 days matches the vanilla vatgrown child backstory requirement. Maximum of 780 days is equal to 13 RW years, or the max age a child could reach spending all their time in a vat from birth.</vatDaysForBackstory_Tooltip>
 

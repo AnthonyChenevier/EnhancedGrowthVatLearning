@@ -31,6 +31,7 @@ public class EnhancedGrowthVatSettings : ModSettings
 
     private float enhancedModePowerConsumption;
 
+    private bool generateBackstories;
     private float vatDaysForBackstory;
 
     private float vatLearningHediffSeverityPerDay;
@@ -56,6 +57,8 @@ public class EnhancedGrowthVatSettings : ModSettings
 
     public float EnhancedModePowerConsumption => enhancedModePowerConsumption;
 
+
+    public bool GenerateBackstories => generateBackstories;
     public float VatDaysForBackstory => vatDaysForBackstory;
 
     public float VatLearningHediffSeverityPerDay => vatLearningHediffSeverityPerDay;
@@ -99,6 +102,7 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         enhancedModePowerConsumption = 800f;
 
+        generateBackstories = true;
         vatDaysForBackstory = 400f;
 
         vatLearningHediffSeverityPerDay = 3f;
@@ -204,6 +208,7 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         Scribe_Values.Look(ref enhancedModePowerConsumption, nameof(enhancedModePowerConsumption));
 
+        Scribe_Values.Look(ref generateBackstories, nameof(generateBackstories));
         Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
 
         Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
@@ -246,6 +251,8 @@ public class EnhancedGrowthVatSettings : ModSettings
         DoSetting(scrollView, nameof(vatAgingFactor), ref vatAgingFactor, ref settingBuffers[i++], 1, 100000);
         DoSetting(scrollView, nameof(leaderAgingFactorModifier), ref leaderAgingFactorModifier, ref settingBuffers[i++], 0, 1000000);
         scrollView.Gap();
+
+        scrollView.CheckboxLabeled($"{nameof(generateBackstories)}_SettingsLabel".Translate(), ref generateBackstories, $"{nameof(generateBackstories)}_Tooltip".Translate());
         DoSetting(scrollView, nameof(vatDaysForBackstory), ref vatDaysForBackstory, ref settingBuffers[i++], 1f, 780f);
         scrollView.Gap();
         DoSetting(scrollView, nameof(enhancedModePowerConsumption), ref enhancedModePowerConsumption, ref settingBuffers[i++], 80f, 100000f);
