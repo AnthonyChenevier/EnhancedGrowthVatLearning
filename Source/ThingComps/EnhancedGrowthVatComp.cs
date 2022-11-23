@@ -71,7 +71,9 @@ public class EnhancedGrowthVatComp : ThingComp
 
     private CompPowerMulti PowerMulti => powerMulti ??= parent.GetComp<CompPowerMulti>();
     private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
-    public int VatTicks => Mathf.FloorToInt(ModeAgingFactor * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
+
+    //re-cache occupant speed once per day to reduce expensive computation
+    public int VatTicks => Mathf.FloorToInt(ModeAgingFactor * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed, cacheStaleAfterTicks: GenDate.TicksPerDay));
 
     public int ModeAgingFactor =>
         mode is LearningMode.Leader

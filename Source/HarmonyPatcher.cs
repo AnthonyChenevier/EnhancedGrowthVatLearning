@@ -136,20 +136,27 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
         if (learningComp == null)
             return true; //should not happen unless I missed a call to this method
 
-        //Check for default value used by growth vat so dev gizmo and other direct accessors can bypass
-        //NOTE: GetStatValue seems like a hungry beast performance-wise.
-        float statValue = pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
-        int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * statValue);
-        if (ticks == defaultTicks && learningComp.Enabled)
-        {
-            //Stop processing and prevent original tracker from running
-            //if aging is paused for a growth moment letter
-            if (learningComp.PausedForLetter)
-                return false;
+        if (learningComp.Enabled)
+            //Check for default value used by growth vat so dev gizmo and other direct accessors can bypass
+            //NOTE: GetStatValue seems like a hungry beast performance-wise.
+            //float statValue = pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
+            //int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * statValue);
+            //if (ticks == defaultTicks)
 
-            //use our tick value instead
-            ticks = learningComp.VatTicks;
-        }
+            //attempt much simpler check. Not as robust, but muuuuuch more performant
+            //should only allow the dev gizmo through without modification now. 
+            if (ticks != GenDate.TicksPerYear)
+            {
+                //Stop processing and prevent original tracker from running
+                //if aging is paused for a growth moment letter
+                if (learningComp.PausedForLetter)
+                    return false;
+
+                //use our tick value instead: NOPE
+                //no, actually use Aging factor and decompose the modifier from ticks
+                //with math so we don't have to touch GetStatValue at all here.
+                ticks = Mathf.FloorToInt(learningComp.ModeAgingFactor * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat)); //learningComp.VatTicks;
+            }
 
         //finally, track ticks for backstories and stats ourselves
         EnhancedGrowthVatMod.GetTrackerFor(pawn).TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
