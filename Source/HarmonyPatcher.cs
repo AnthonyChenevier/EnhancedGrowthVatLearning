@@ -145,7 +145,7 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 
             //attempt much simpler check. Not as robust, but muuuuuch more performant
             //should only allow the dev gizmo through without modification now. 
-            if (ticks != GenDate.TicksPerYear)
+            if (ticks < GenDate.TicksPerYear)
             {
                 //Stop processing and prevent original tracker from running
                 //if aging is paused for a growth moment letter
@@ -158,8 +158,9 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
                 ticks = Mathf.FloorToInt(learningComp.ModeAgingFactor * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat)); //learningComp.VatTicks;
             }
 
-        //finally, track ticks for backstories and stats ourselves
-        EnhancedGrowthVatMod.GetTrackerFor(pawn).TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
+        //finally, track ticks for backstories and stats ourselves.
+        //tracker might be null because of dev tools so check for that
+        EnhancedGrowthVatMod.GetTrackerFor(pawn)?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
     }
 }
