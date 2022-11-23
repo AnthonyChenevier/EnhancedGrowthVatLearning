@@ -31,6 +31,7 @@ public class VatGrowthTracker : IExposable
     };
 
     public VatGrowthTracker(Pawn pawn) { _pawn = pawn; }
+    public VatGrowthTracker() { }
 
     public Dictionary<LearningMode, long> ModeTicks => _modeTicks;
 

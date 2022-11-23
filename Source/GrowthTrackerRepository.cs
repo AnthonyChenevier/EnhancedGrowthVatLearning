@@ -24,6 +24,8 @@ public class GrowthTrackerRepository : WorldComponent
 
     public GrowthTrackerRepository() : base(Find.World) { }
 
+    public GrowthTrackerRepository(World world) : base(world) { }
+
     public override void ExposeData()
     {
         Scribe_Collections.Look(ref _trackers, nameof(_trackers), LookMode.Value, LookMode.Deep);
