@@ -98,5 +98,5 @@
     <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
 
     <!-- Hediffs -->
-    <AgingSpeedWithOccupantStatModifier>base speed x{1}(Occupant growth bonus). Final speed: x{0}</AgingSpeedWithOccupantStatModifier>
+    <AgingSpeedWithOccupantStatModifier>base speed\nx{1} (Occupant growth bonus)\nFinal speed: x{0}</AgingSpeedWithOccupantStatModifier>
 </LanguageData>

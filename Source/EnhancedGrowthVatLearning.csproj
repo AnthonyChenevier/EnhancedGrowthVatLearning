@@ -53,6 +53,8 @@
     <Compile Include="Data\LearningMode.cs" />
     <Compile Include="Data\ModDefOf.cs" />
     <Compile Include="GrowthTrackerRepository.cs" />
+    <Compile Include="VatJuice\Hediff_LevelWithComps.cs" />
+    <Compile Include="VatJuice\IngestionOutcomeDoer_GiveHediff_Level.cs" />
     <Compile Include="ListingHelper.cs" />
     <Compile Include="Stats\StatWorker_VatTime.cs" />
     <Compile Include="ThingComps\CompProperties_EnhancedGrowthVat.cs" />

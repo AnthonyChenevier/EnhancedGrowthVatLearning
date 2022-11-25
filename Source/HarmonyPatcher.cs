@@ -128,11 +128,10 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "Notify_TickedInGrowthVat")]
 public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 {
-    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance)
+    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance, out Pawn __state)
     {
-        Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-
-        EnhancedGrowthVatComp learningComp = ((Building_GrowthVat)pawn.ParentHolder).GetComp<EnhancedGrowthVatComp>();
+        __state = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
+        EnhancedGrowthVatComp learningComp = ((Building_GrowthVat)__state.ParentHolder).GetComp<EnhancedGrowthVatComp>();
         if (learningComp == null)
             return true; //should not happen unless I missed a call to this method
 
@@ -160,8 +159,18 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 
         //finally, track ticks for backstories and stats ourselves.
         //tracker might be null because of dev tools so check for that
-        EnhancedGrowthVatMod.GetTrackerFor(pawn)?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
+        EnhancedGrowthVatMod.GetTrackerFor(__state)?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
+    }
+
+    public static void Postfix(Pawn_AgeTracker __instance, Pawn __state)
+    {
+        //Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>(); //for separating mod
+        //Insert vat juice hediff ticker. VatLearning is called the same way just after this
+        //method is called so this is the best place for it
+        Hediff vatjuiceHediff = __state.health.hediffSet.GetFirstHediffOfDef(ModDefOf.VatJuiceEffect);
+        vatjuiceHediff?.Tick();
+        vatjuiceHediff?.PostTick();
     }
 }
 
@@ -177,12 +186,16 @@ public static class Building_GrowthVat_VatLearning_HP
     }
 }
 
-//Override to turn off enhanced mode on pawn exit
-//[HarmonyPatch(typeof(Building_GrowthVat), "Notify_PawnRemoved")]
-//public static class Building_GrowthVat_Notify_PawnRemoved_HP
-//{
-//    public static void Postfix(Building_GrowthVat __instance) { __instance.GetComp<EnhancedGrowthVatComp>().Enabled = false; }
-//}
+//Override to refresh enhanced mode on pawn entry (fixes extra Vat Learning hediff if kids enter when not babies)
+[HarmonyPatch(typeof(Building_GrowthVat), "TryAcceptPawn")]
+public static class Building_GrowthVat_TryAcceptPawn_HP
+{
+    public static void Postfix(Pawn pawn, Building_GrowthVat __instance)
+    {
+        if (pawn.ParentHolder == __instance)
+            __instance.GetComp<EnhancedGrowthVatComp>().SetVatHediffs(pawn.health);
+    }
+}
 
 //Override to fix DEV: Learn gizmo
 [HarmonyPatch(typeof(Building_GrowthVat), "GetGizmos")]

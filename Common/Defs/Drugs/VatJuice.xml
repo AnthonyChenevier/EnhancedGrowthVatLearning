@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ThingDef ParentName="MakeableDrugBase">
+        <defName>VatJuice</defName>
+        <label>vat-juice</label>
+        <description>A synthetic drug developed for quickly deploying front-line space marines during the later stages of interplanetary warfare. A derivative of go-juice developed as a way to increase the speed and efficiency of vat-growing front line troops. \n\nThe military chemists who created it were never able to remove its addictiveness. Some saw this as a downside; others saw it as a benefit.</description>
+        <descriptionHyperlinks>
+            <HediffDef>VatJuiceEffect</HediffDef>
+            <HediffDef>GoJuiceAddiction</HediffDef>
+        </descriptionHyperlinks>
+        <graphicData>
+            <texPath>Things/Item/Drug/VatJuice</texPath>
+            <graphicClass>Graphic_StackCount</graphicClass>
+        </graphicData>
+        <rotatable>false</rotatable>
+        <statBases>
+            <WorkToMake>600</WorkToMake>
+            <MarketValue>200</MarketValue>
+            <Mass>0.1</Mass>
+        </statBases>
+        <techLevel>Spacer</techLevel>
+        <ingestible>
+            <drugCategory>Medical</drugCategory>
+            <foodType>Processed, Fluid</foodType>
+            <baseIngestTicks>80</baseIngestTicks>
+            <ingestSound>Ingest_Inject</ingestSound>
+            <ingestHoldOffsetStanding>
+                <northDefault>
+                    <offset>(0.18,0,0)</offset>
+                </northDefault>
+            </ingestHoldOffsetStanding>
+            <ingestCommandString>Inject {0}</ingestCommandString>
+            <ingestReportString>Injecting {0}.</ingestReportString>
+            <useEatingSpeedStat>false</useEatingSpeedStat>
+            <chairSearchRadius>0</chairSearchRadius>
+            <babiesCanIngest>true</babiesCanIngest>
+            <outcomeDoers>
+                <li Class="EnhancedGrowthVatLearning.VatJuice.IngestionOutcomeDoer_GiveHediff_Level">
+                    <hediffDef>VatJuiceEffect</hediffDef>
+                    <severity>1</severity>
+                </li>
+            </outcomeDoers>
+        </ingestible>
+        <recipeMaker>
+            <researchPrerequisites>
+                <li>GoJuiceProduction</li>
+                <li>GrowthVats</li>
+            </researchPrerequisites>
+            <recipeUsers>
+                <li>DrugLab</li>
+            </recipeUsers>
+            <soundWorking>Recipe_Drug</soundWorking>
+        </recipeMaker>
+        <costList>
+            <GoJuice>5</GoJuice>
+            <Neutroamine>2</Neutroamine>
+            <HemogenPack>1</HemogenPack>
+        </costList>
+        <comps>
+            <li Class="CompProperties_Drug">
+                <chemical>GoJuice</chemical>
+                <addictiveness>0.25</addictiveness>
+                <needLevelOffset>0.1</needLevelOffset>
+                <listOrder>200</listOrder>
+                <overdoseSeverityOffset>0.05~0.1</overdoseSeverityOffset>
+                <largeOverdoseChance>0.005</largeOverdoseChance>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <HediffDef>
+        <defName>VatJuiceEffect</defName>
+        <hediffClass>EnhancedGrowthVatLearning.VatJuice.Hediff_LevelWithComps</hediffClass>
+        <label>effected by vat-juice</label>
+        <labelNoun>a vat-juice effect</labelNoun>
+        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects.</description>
+        <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+        <minSeverity>0</minSeverity>
+        <isBad>false</isBad>
+        <levelIsQuantity>true</levelIsQuantity>
+        <comps>
+            <li Class="HediffCompProperties_Disappears">
+                <disappearsAfterTicks>60000</disappearsAfterTicks>
+                <showRemainingTime>true</showRemainingTime>
+                <canUseDecimalsShortForm>true</canUseDecimalsShortForm>
+                <messageOnDisappear>The effects of vat-juice have worn off {PAWN_nameDef}.</messageOnDisappear>
+            </li>
+        </comps>
+        <stages>
+            <li>
+                <multiplyStatChangesBySeverity>true</multiplyStatChangesBySeverity>
+                <statOffsets>
+                    <GrowthVatOccupantSpeed MayRequire="Ludeon.RimWorld.Biotech">0.25</GrowthVatOccupantSpeed>
+                </statOffsets>
+            </li>
+        </stages>
+    </HediffDef>
+
+    <ThoughtDef>
+        <defName>VatJuiceEffectChild</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Baby, Child</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. I should probably be in a growth vat.</description>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <ThoughtDef>
+        <defName>VatJuiceEffectAdult</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <nullifyingHediffs>GoJuiceHigh</nullifyingHediffs>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. So much more addictive than go-juice and none of the satisfaction. Why did I do this again?</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>

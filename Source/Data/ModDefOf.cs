@@ -19,10 +19,11 @@ public static class ModDefOf
     public readonly static ResearchProjectDef VatLearningLaborProjectDef = ResearchProjectDef.Named("VatLearningLaborResearch");
     public readonly static ResearchProjectDef VatLearningSoldierProjectDef = ResearchProjectDef.Named("VatLearningSoldierResearch");
     public readonly static ResearchProjectDef VatLearningLeaderProjectDef = ResearchProjectDef.Named("VatLearningLeaderResearch");
-    public static ResearchProjectDef VatLearningPlayProjectDef = ResearchProjectDef.Named("VatLearningPlayResearch");
+    public readonly static ResearchProjectDef VatLearningPlayProjectDef = ResearchProjectDef.Named("VatLearningPlayResearch");
 
     public readonly static HediffDef EnhancedVatGrowingHediffDef = HediffDef.Named("EnhancedVatGrowingHediff");
     public readonly static HediffDef EnhancedVatLearningHediffDef = HediffDef.Named("EnhancedVatLearningHediff");
+    public readonly static HediffDef VatJuiceEffect = HediffDef.Named("VatJuiceEffect");
 
 
     public readonly static StatDef VatGrowthStatDef = StatDef.Named("VatGrowthTime");
