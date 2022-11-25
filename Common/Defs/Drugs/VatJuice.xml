@@ -117,7 +117,9 @@
         <hediff>VatJuiceEffect</hediff>
         <validWhileDespawned>true</validWhileDespawned>
         <developmentalStageFilter>Adult</developmentalStageFilter>
-        <nullifyingHediffs>GoJuiceHigh</nullifyingHediffs>
+        <nullifyingHediffs>
+            <li>GoJuiceHigh</li>
+        </nullifyingHediffs>
         <stages>
             <li>
                 <label>effected by vat-juice</label>
