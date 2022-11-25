@@ -80,7 +80,7 @@
         <levelIsQuantity>true</levelIsQuantity>
         <comps>
             <li Class="HediffCompProperties_Disappears">
-                <disappearsAfterTicks>60000</disappearsAfterTicks>
+                <disappearsAfterTicks>180000</disappearsAfterTicks>
                 <showRemainingTime>true</showRemainingTime>
                 <canUseDecimalsShortForm>true</canUseDecimalsShortForm>
                 <messageOnDisappear>The effects of vat-juice have worn off {PAWN_nameDef}.</messageOnDisappear>
