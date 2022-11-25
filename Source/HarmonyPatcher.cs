@@ -171,6 +171,8 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
         Hediff vatjuiceHediff = __state.health.hediffSet.GetFirstHediffOfDef(ModDefOf.VatJuiceEffect);
         vatjuiceHediff?.Tick();
         vatjuiceHediff?.PostTick();
+        if (vatjuiceHediff is { ShouldRemove: true })
+            __state.health.RemoveHediff(vatjuiceHediff);
     }
 }
 
