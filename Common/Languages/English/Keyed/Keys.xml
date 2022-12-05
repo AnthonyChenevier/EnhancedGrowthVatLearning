@@ -91,7 +91,7 @@
     <TrainingPrioritiesList>Training priorities</TrainingPrioritiesList>
     <LearningModeDisabled_Notice>Learning suite effects are only active when enhanced learning is enabled.</LearningModeDisabled_Notice>
     <PlayModeDisabled_Notice>Teenagers cannot use the Playland suite.</PlayModeDisabled_Notice>
-
+    <PlayModeOver13_Message>{0} cannot use the play suite now they are no longer a child.</PlayModeOver13_Message>
     <!-- Stats -->
     <StatsReport_TotalVatTime>Simulated time experienced: {0}</StatsReport_TotalVatTime>
     <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {0}</StatsReport_VatNoLearningTime>

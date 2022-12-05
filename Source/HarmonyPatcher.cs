@@ -92,14 +92,15 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
 {
     public static void Postfix(ChoiceLetter_GrowthMoment __instance)
     {
-        if (__instance.pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+        Pawn pawn = __instance.pawn;
+        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
             return;
 
         comp.PausedForLetter = false;
-        if (!__instance.pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
+        if (!pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
             return;
 
-        Messages.Message($"{__instance.pawn.LabelCap} cannot use the play suite now they are no longer a child.", MessageTypeDefOf.RejectInput);
+        Messages.Message("PlayModeOver13_Message".Translate(pawn.LabelCap), MessageTypeDefOf.RejectInput);
         comp.Mode = LearningMode.Default;
     }
 }
