@@ -55,7 +55,7 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
             return;
 
         if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
-            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode, pawn.skills.skills.MaxBy(s => s.Level));
+            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode);
 
         //remove the tracker now we're done with the backstory. No littering!
         EnhancedGrowthVatMod.RemoveTrackerFor(pawn);

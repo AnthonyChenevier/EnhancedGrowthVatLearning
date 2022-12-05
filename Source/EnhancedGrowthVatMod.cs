@@ -65,8 +65,10 @@ public class EnhancedGrowthVatMod : Mod
         Settings.SettingPowerDirty = false;
     }
 
-    public static void SetVatBackstoryFor(Pawn pawn, LearningMode mostUsedMode, SkillRecord highestSkill)
+    public static void SetVatBackstoryFor(Pawn pawn, LearningMode mostUsedMode)
     {
+        Pawn_SkillTracker skills = pawn.skills;
+
         pawn.story.Childhood = mostUsedMode switch
         {
             LearningMode.Combat => ModDefOf.VatGrownSoldierBackgroundDef,
