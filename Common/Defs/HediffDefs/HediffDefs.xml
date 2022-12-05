@@ -29,14 +29,14 @@
     <HediffDef>
         <defName>VatgrownEffectHediff</defName>
         <label>vatgrowning after-effects</label>
-        <description>General after-effects of coming out of a high-stimulation growth vat. Continuous exposure to very high neural stimulation and increased cell division has left this person nauseous and confused upon re-entering the real world, with a high chance of wandering in confusion, questioning their beliefs, running away or going catatonic as they learn to accept their surroundings. In time this person should adjust to their new reality.</description>
+        <description>General after-effects of coming out of a high-stimulation growth vat. Continuous exposure to very high neural stimulation and increased cell division has left this person in pain, nauseous and confused upon re-entering the real world, with a high chance of wandering in confusion, questioning their beliefs, running away or going catatonic as they learn to accept their surroundings. In time this person should adjust to their new reality.</description>
         <descriptionShort>After-effects of using a growth vat including generalized pain, nausea and a heightened chance of wandering mental breaks.</descriptionShort>
         <hediffClass>HediffWithComps</hediffClass>
         <makesSickThought>true</makesSickThought>
         <scenarioCanAdd>true</scenarioCanAdd>
         <comps>
             <li Class="HediffCompProperties_SeverityPerDay">
-                <severityPerDay>-0.33</severityPerDay>
+                <severityPerDay>-0.2</severityPerDay>
             </li>
         </comps>
         <stages>
@@ -131,7 +131,7 @@
             </li>
             <li>
                 <label>major</label>
-                <minSeverity>0.7</minSeverity>
+                <minSeverity>0.9</minSeverity>
                 <vomitMtbDays>0.4</vomitMtbDays>
                 <painOffset>0.8</painOffset>
                 <baseMoodEffect>-15</baseMoodEffect>
