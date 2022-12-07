@@ -75,11 +75,7 @@ public class EnhancedGrowthVatComp : ThingComp
     //re-cache occupant speed once per day to reduce expensive computation
     public int VatTicks => Mathf.FloorToInt(ModeAgingFactor * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed, cacheStaleAfterTicks: GenDate.TicksPerDay));
 
-    public int ModeAgingFactor =>
-        mode is LearningMode.Leader
-            ? EnhancedGrowthVatMod.Settings.VatAgingFactor - EnhancedGrowthVatMod.Settings.LeaderAgingFactorModifier
-            : EnhancedGrowthVatMod.Settings.VatAgingFactor;
-
+    public int ModeAgingFactor => mode.Settings().baseAgingFactor;
 
     public Hediff VatLearning
     {
@@ -235,13 +231,7 @@ public class EnhancedGrowthVatComp : ThingComp
 
         //randomize learning need by variance value
         float randRange = EnhancedGrowthVatMod.Settings.LearningNeedVariance;
-        float modeLearningNeed = mode switch
-        {
-            LearningMode.Combat or LearningMode.Labor => EnhancedGrowthVatMod.Settings.SpecializedModesLearningNeed,
-            LearningMode.Play => EnhancedGrowthVatMod.Settings.PlayModeLearningNeed,
-            LearningMode.Leader => EnhancedGrowthVatMod.Settings.LeaderModeLearningNeed,
-            _ => EnhancedGrowthVatMod.Settings.DefaultModeLearningNeed
-        };
+        float modeLearningNeed = mode.Settings().baseLearningNeed;
 
 
         learning.CurLevel = modeLearningNeed * (1f - Rand.Range(-randRange, randRange)) * LearningUtility.LearningRateFactor(pawn);

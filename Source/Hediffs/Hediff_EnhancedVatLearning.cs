@@ -6,7 +6,6 @@
 // Last edited by: Anthony Chenevier on 2022/11/03 3:02 PM
 
 
-using System.Collections.Generic;
 using System.Linq;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
@@ -77,9 +76,8 @@ public class Hediff_EnhancedVatLearning : Hediff_VatLearning
             return;
 
         LearningMode mode = vat.GetComp<EnhancedGrowthVatComp>().Mode;
-        Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(mode);
-        SkillRecord randomSkill = pawn.skills.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
+        SkillRecord randomSkill = pawn.skills.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(mode.Settings().skillSelectionWeights[s.def.defName], 2));
 
-        randomSkill.Learn(EnhancedGrowthVatMod.Settings.XpToAward[mode.ToString()] * LearningUtility.LearningRateFactor(pawn), true);
+        randomSkill.Learn(mode.Settings().skillXP * LearningUtility.LearningRateFactor(pawn), true);
     }
 }

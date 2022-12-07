@@ -6,8 +6,8 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 12:35 PM
 
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
@@ -16,18 +16,35 @@ using Verse;
 
 namespace EnhancedGrowthVatLearning;
 
+public class LearningModeSettings : IExposable
+{
+    public float baseLearningNeed;
+    public int baseAgingFactor;
+    public float skillXP;
+    public Dictionary<string, float> skillSelectionWeights;
+
+    public void ExposeData()
+    {
+        Scribe_Values.Look(ref baseLearningNeed, nameof(baseLearningNeed));
+        Scribe_Values.Look(ref baseAgingFactor, nameof(baseAgingFactor));
+        Scribe_Values.Look(ref skillXP, nameof(skillXP));
+        Scribe_Collections.Look(ref skillSelectionWeights, nameof(skillSelectionWeights), LookMode.Value, LookMode.Value);
+    }
+}
+
 public class EnhancedGrowthVatSettings : ModSettings
 {
-    private float defaultModeLearningNeed;
-    private float specializedModesLearningNeed;
-    private float leaderModeLearningNeed;
-    private float playModeLearningNeed;
+    private Dictionary<LearningMode, LearningModeSettings> modeSettings = new()
+    {
+        { LearningMode.Default, new LearningModeSettings() },
+        { LearningMode.Combat, new LearningModeSettings() },
+        { LearningMode.Labor, new LearningModeSettings() },
+        { LearningMode.Leader, new LearningModeSettings() },
+        { LearningMode.Play, new LearningModeSettings() },
+    };
 
     private float learningNeedVariance;
     private int learningNeedDailyChangeRate;
-
-    private int vatAgingFactor;
-    private int leaderAgingFactorModifier;
 
     private float enhancedModePowerConsumption;
 
@@ -35,25 +52,12 @@ public class EnhancedGrowthVatSettings : ModSettings
     private float vatDaysForBackstory;
 
     private float vatLearningHediffSeverityPerDay;
-    public Dictionary<string, float> xpToAward;
-
-    private Dictionary<string, float> defaultSkills;
-    private Dictionary<string, float> combatSkills;
-    private Dictionary<string, float> laborSkills;
-    private Dictionary<string, float> leaderSkills;
 
 
-    public float DefaultModeLearningNeed => defaultModeLearningNeed;
-    public float SpecializedModesLearningNeed => specializedModesLearningNeed;
-    public float LeaderModeLearningNeed => leaderModeLearningNeed;
-
-    public float PlayModeLearningNeed => playModeLearningNeed;
+    public Dictionary<LearningMode, LearningModeSettings> ModeSettings => modeSettings;
 
     public float LearningNeedVariance => learningNeedVariance;
     public int LearningNeedDailyChangeRate => learningNeedDailyChangeRate;
-
-    public int VatAgingFactor => vatAgingFactor;
-    public int LeaderAgingFactorModifier => leaderAgingFactorModifier;
 
     public float EnhancedModePowerConsumption => enhancedModePowerConsumption;
 
@@ -62,43 +66,37 @@ public class EnhancedGrowthVatSettings : ModSettings
     public float VatDaysForBackstory => vatDaysForBackstory;
 
     public float VatLearningHediffSeverityPerDay => vatLearningHediffSeverityPerDay;
-    public Dictionary<string, float> XpToAward => xpToAward;
 
 
     //Settings page stuff
+    private ModSettingsTab _currentTab = ModSettingsTab.MainSettings;
     private float contentHeight = float.MaxValue;
     private Vector2 scrollPosition;
-    private string[] settingBuffers = new string[11];
-    private string[] skillXPBuffers = new string[5];
-    private string[] defaultSkillBuffers = new string[12];
-    private string[] laborSkillBuffers = new string[12];
-    private string[] combatSkillBuffers = new string[12];
-    private string[] leaderSkillBuffers = new string[12];
+
+    private string[] mainSettingBuffers = new string[11];
+    private string[] modeSettingBuffers = new string[11];
+    private string[] skillBuffers = new string[60];
+
     internal float? initPowerConsumptionValue;
     internal bool SettingPowerDirty;
+
+    private enum ModSettingsTab
+    {
+        MainSettings,
+        ModeSettings
+    }
 
 
     public EnhancedGrowthVatSettings() { SetDefaults(); }
 
     private void SetDefaults()
     {
-        settingBuffers = new string[11];
-        skillXPBuffers = new string[5];
-        defaultSkillBuffers = new string[12];
-        laborSkillBuffers = new string[12];
-        combatSkillBuffers = new string[12];
-        leaderSkillBuffers = new string[12];
-
-        defaultModeLearningNeed = 0.7f;
-        specializedModesLearningNeed = 0.6f;
-        leaderModeLearningNeed = 0.85f;
-        playModeLearningNeed = 0.98f;
+        mainSettingBuffers = new string[6];
+        modeSettingBuffers = new string[15];
+        skillBuffers = new string[60];
 
         learningNeedVariance = 0.15f;
         learningNeedDailyChangeRate = 8;
-
-        vatAgingFactor = 18;
-        leaderAgingFactorModifier = 2;
 
         enhancedModePowerConsumption = 800f;
 
@@ -107,16 +105,11 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         vatLearningHediffSeverityPerDay = 3f;
 
-        xpToAward = new Dictionary<string, float>
-        {
-            { "Default", 2000f },
-            { "Combat", 2000f },
-            { "Labor", 2000f },
-            { "Leader", 2200f },
-            { "Play", 800f }
-        };
 
-        defaultSkills = new Dictionary<string, float>
+        modeSettings[LearningMode.Default].baseLearningNeed = 0.7f;
+        modeSettings[LearningMode.Default].baseAgingFactor = 18;
+        modeSettings[LearningMode.Default].skillXP = 2000f;
+        modeSettings[LearningMode.Default].skillSelectionWeights = new Dictionary<string, float>
         {
             { "Shooting", 10 },
             { "Melee", 10 },
@@ -132,23 +125,10 @@ public class EnhancedGrowthVatSettings : ModSettings
             { "Intellectual", 10 },
         };
 
-        combatSkills = new Dictionary<string, float>
-        {
-            { "Shooting", 20 },
-            { "Melee", 20 },
-            { "Medicine", 15 },
-            { "Social", 5 },
-            { "Animals", 5 },
-            { "Cooking", 5 },
-            { "Construction", 15 },
-            { "Plants", 5 },
-            { "Mining", 15 },
-            { "Crafting", 5 },
-            { "Artistic", 5 },
-            { "Intellectual", 5 },
-        };
-
-        laborSkills = new Dictionary<string, float>
+        modeSettings[LearningMode.Labor].baseLearningNeed = 0.6f;
+        modeSettings[LearningMode.Labor].baseAgingFactor = 18;
+        modeSettings[LearningMode.Labor].skillXP = 2000f;
+        modeSettings[LearningMode.Labor].skillSelectionWeights = new Dictionary<string, float>
         {
             { "Shooting", 5 },
             { "Melee", 5 },
@@ -164,7 +144,29 @@ public class EnhancedGrowthVatSettings : ModSettings
             { "Intellectual", 5 },
         };
 
-        leaderSkills = new Dictionary<string, float>
+        modeSettings[LearningMode.Combat].baseLearningNeed = 0.6f;
+        modeSettings[LearningMode.Combat].baseAgingFactor = 18;
+        modeSettings[LearningMode.Combat].skillXP = 2000f;
+        modeSettings[LearningMode.Combat].skillSelectionWeights = new Dictionary<string, float>
+        {
+            { "Shooting", 20 },
+            { "Melee", 20 },
+            { "Medicine", 15 },
+            { "Social", 5 },
+            { "Animals", 5 },
+            { "Cooking", 5 },
+            { "Construction", 15 },
+            { "Plants", 5 },
+            { "Mining", 15 },
+            { "Crafting", 5 },
+            { "Artistic", 5 },
+            { "Intellectual", 5 },
+        };
+
+        modeSettings[LearningMode.Leader].baseLearningNeed = 0.85f;
+        modeSettings[LearningMode.Leader].baseAgingFactor = 16;
+        modeSettings[LearningMode.Leader].skillXP = 2200f;
+        modeSettings[LearningMode.Leader].skillSelectionWeights = new Dictionary<string, float>
         {
             { "Shooting", 10 },
             { "Melee", 10 },
@@ -179,32 +181,33 @@ public class EnhancedGrowthVatSettings : ModSettings
             { "Artistic", 15 },
             { "Intellectual", 40 }, //double because its only available to train after 13 years of age and we want a chance to get it.
         };
-    }
 
-    public Dictionary<string, float> SkillsMatrix(LearningMode mode)
-    {
-        return mode switch
+        modeSettings[LearningMode.Play].baseLearningNeed = 0.98f;
+        modeSettings[LearningMode.Play].baseAgingFactor = 18;
+        modeSettings[LearningMode.Play].skillXP = 800f;
+        modeSettings[LearningMode.Play].skillSelectionWeights = new Dictionary<string, float>
         {
-            LearningMode.Play => defaultSkills,
-            LearningMode.Combat => combatSkills,
-            LearningMode.Labor => laborSkills,
-            LearningMode.Leader => leaderSkills,
-            _ => defaultSkills
+            { "Shooting", 10 },
+            { "Melee", 10 },
+            { "Medicine", 10 },
+            { "Social", 10 },
+            { "Animals", 10 },
+            { "Cooking", 10 },
+            { "Construction", 10 },
+            { "Plants", 10 },
+            { "Mining", 10 },
+            { "Crafting", 10 },
+            { "Artistic", 10 },
+            { "Intellectual", 10 },
         };
     }
 
     public override void ExposeData()
     {
-        Scribe_Values.Look(ref defaultModeLearningNeed, nameof(defaultModeLearningNeed));
-        Scribe_Values.Look(ref specializedModesLearningNeed, nameof(specializedModesLearningNeed));
-        Scribe_Values.Look(ref leaderModeLearningNeed, nameof(leaderModeLearningNeed));
-        Scribe_Values.Look(ref playModeLearningNeed, nameof(playModeLearningNeed));
+        Scribe_Collections.Look(ref modeSettings, nameof(modeSettings), LookMode.Value, LookMode.Deep);
 
         Scribe_Values.Look(ref learningNeedVariance, nameof(learningNeedVariance));
         Scribe_Values.Look(ref learningNeedDailyChangeRate, nameof(learningNeedDailyChangeRate));
-
-        Scribe_Values.Look(ref vatAgingFactor, nameof(vatAgingFactor));
-        Scribe_Values.Look(ref leaderAgingFactorModifier, nameof(leaderAgingFactorModifier));
 
         Scribe_Values.Look(ref enhancedModePowerConsumption, nameof(enhancedModePowerConsumption));
 
@@ -212,12 +215,6 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
 
         Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
-        Scribe_Collections.Look(ref xpToAward, nameof(xpToAward), LookMode.Value, LookMode.Value);
-
-        Scribe_Collections.Look(ref defaultSkills, nameof(defaultSkills), LookMode.Value, LookMode.Value);
-        Scribe_Collections.Look(ref combatSkills, nameof(combatSkills), LookMode.Value, LookMode.Value);
-        Scribe_Collections.Look(ref laborSkills, nameof(laborSkills), LookMode.Value, LookMode.Value);
-        Scribe_Collections.Look(ref leaderSkills, nameof(leaderSkills), LookMode.Value, LookMode.Value);
 
         //update all defs with power multi comp if setting is not default on load
         if (Scribe.mode == LoadSaveMode.LoadingVars && enhancedModePowerConsumption != 800f)
@@ -232,100 +229,127 @@ public class EnhancedGrowthVatSettings : ModSettings
         DrawResetButton(inRect);
         DrawRemoveModButton(inRect);
 
-        Listing_Standard listing = new();
-        listing.Begin(inRect);
-        Rect contentRect = listing.GetRect(inRect.height - 12f);
-        Listing_Standard scrollView = listing.BeginScrollView(contentRect, contentHeight, ref scrollPosition);
+        Listing_Tabbed list = new();
 
+        list.Begin(inRect);
+        Listing_Standard tabList = list.BeginTabSection(new List<TabRecord>
+        {
+            new("MainSettings_TabLabel".Translate(), () => _currentTab = ModSettingsTab.MainSettings, () => _currentTab == ModSettingsTab.MainSettings),
+            new("ModeSettings_TabLabel".Translate(), () => _currentTab = ModSettingsTab.ModeSettings, () => _currentTab == ModSettingsTab.ModeSettings),
+        });
+
+        Rect contentRect = tabList.GetRect(inRect.ContractedBy(4f).height - TabDrawer.TabHeight);
+        Listing_Standard scrollView = tabList.BeginScrollView(contentRect, contentHeight, ref scrollPosition);
+        switch (_currentTab)
+        {
+            case ModSettingsTab.MainSettings:
+                DoMainSettingsSection(scrollView);
+                break;
+            case ModSettingsTab.ModeSettings:
+                DoModeSettingsSection(scrollView);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        tabList.EndScrollView(scrollView);
+        list.EndTabSection(tabList);
+        list.End();
+        if (contentHeight != scrollView.CurHeight)
+            contentHeight = scrollView.CurHeight;
+    }
+
+    private void DoMainSettingsSection(Listing_Standard scrollView)
+    {
         int i = 0;
-        DoSetting(scrollView, nameof(defaultModeLearningNeed), ref defaultModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
-        DoSetting(scrollView, nameof(specializedModesLearningNeed), ref specializedModesLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
-        DoSetting(scrollView, nameof(leaderModeLearningNeed), ref leaderModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
-        DoSetting(scrollView, nameof(playModeLearningNeed), ref playModeLearningNeed, ref settingBuffers[i++], 0.001f, 1f);
-        scrollView.Gap();
+        scrollView.TextFieldNumericLabeledTooltip("learningNeedVariance_SettingsLabel".Translate(),
+                                                  ref learningNeedVariance,
+                                                  "learningNeedVariance_Tooltip".Translate(),
+                                                  ref mainSettingBuffers[i++],
+                                                  0f,
+                                                  1f);
 
-        DoSetting(scrollView, nameof(learningNeedVariance), ref learningNeedVariance, ref settingBuffers[i++], 0f, 1f);
-        DoSetting(scrollView, nameof(learningNeedDailyChangeRate), ref learningNeedDailyChangeRate, ref settingBuffers[i++], 1, 100000);
-        scrollView.Gap();
+        scrollView.TextFieldNumericLabeledTooltip("learningNeedDailyChangeRate_SettingsLabel".Translate(),
+                                                  ref learningNeedDailyChangeRate,
+                                                  "learningNeedDailyChangeRate_Tooltip".Translate(),
+                                                  ref mainSettingBuffers[i++],
+                                                  1,
+                                                  100000);
 
-        DoSetting(scrollView, nameof(vatAgingFactor), ref vatAgingFactor, ref settingBuffers[i++], 1, 100000);
-        DoSetting(scrollView, nameof(leaderAgingFactorModifier), ref leaderAgingFactorModifier, ref settingBuffers[i++], 0, 1000000);
-        scrollView.Gap();
+        scrollView.GapLine();
 
-        scrollView.CheckboxLabeled($"{nameof(generateBackstories)}_SettingsLabel".Translate(), ref generateBackstories, $"{nameof(generateBackstories)}_Tooltip".Translate());
-        DoSetting(scrollView, nameof(vatDaysForBackstory), ref vatDaysForBackstory, ref settingBuffers[i++], 1f, 780f);
-        scrollView.Gap();
-        DoSetting(scrollView, nameof(enhancedModePowerConsumption), ref enhancedModePowerConsumption, ref settingBuffers[i++], 80f, 100000f);
+        scrollView.CheckboxLabeled("generateBackstories_SettingsLabel".Translate(), ref generateBackstories, "generateBackstories_Tooltip".Translate());
+        scrollView.TextFieldNumericLabeledTooltip("vatDaysForBackstory_SettingsLabel".Translate(),
+                                                  ref vatDaysForBackstory,
+                                                  "vatDaysForBackstory_Tooltip".Translate(),
+                                                  ref mainSettingBuffers[i++],
+                                                  1f,
+                                                  780f);
+
+        scrollView.GapLine();
+
+        scrollView.TextFieldNumericLabeledTooltip("enhancedModePowerConsumption_SettingsLabel".Translate(),
+                                                  ref enhancedModePowerConsumption,
+                                                  "enhancedModePowerConsumption_Tooltip".Translate(),
+                                                  ref mainSettingBuffers[i++],
+                                                  80f,
+                                                  100000f);
+
         //handle setting power consumption if it's not the initial value
         if (enhancedModePowerConsumption != initPowerConsumptionValue)
             SettingPowerDirty = true;
 
+        scrollView.GapLine();
 
-        scrollView.Gap();
+        scrollView.TextFieldNumericLabeledTooltip("vatLearningHediffSeverityPerDay_SettingsLabel".Translate(),
+                                                  ref vatLearningHediffSeverityPerDay,
+                                                  "vatLearningHediffSeverityPerDay_Tooltip".Translate(),
+                                                  ref mainSettingBuffers[i],
+                                                  0.001f,
+                                                  100000f);
 
-        DoSetting(scrollView, nameof(vatLearningHediffSeverityPerDay), ref vatLearningHediffSeverityPerDay, ref settingBuffers[i], 0.001f, 100000f);
-        i = 0;
-        scrollView.Label($"{$"{nameof(xpToAward)}_SettingsLabel".Translate()} ", -1f, $"{nameof(xpToAward)}_Tooltip".Translate());
-        List<string> keys = xpToAward.Keys.ToList();
-        foreach (string key in keys)
+        scrollView.GapLine();
+    }
+
+    private void DoModeSettingsSection(Listing_Standard scrollView)
+    {
+        int j = 0;
+        int k = 0;
+        foreach ((LearningMode mode, LearningModeSettings settings) in modeSettings)
         {
-            float xpForMode = xpToAward[key];
-            scrollView.TextFieldNumericLabeled($"{$"{key}XP_SettingsLabel".Translate()} ", ref xpForMode, ref skillXPBuffers[i++], 0f, 100000f);
-            xpToAward[key] = xpForMode;
+            scrollView.TextFieldNumericLabeledTooltip("ModeLearningNeed_SettingsLabel".Translate(mode.Label()),
+                                                      ref settings.baseLearningNeed,
+                                                      "ModeLearningNeed_Tooltip".Translate(mode.Label()),
+                                                      ref modeSettingBuffers[j++],
+                                                      0.001f,
+                                                      1f);
+
+            scrollView.TextFieldNumericLabeledTooltip("ModeVatAgingFactor_SettingsLabel".Translate(mode.Label()),
+                                                      ref settings.baseAgingFactor,
+                                                      "ModeVatAgingFactor_Tooltip".Translate(mode.Label()),
+                                                      ref modeSettingBuffers[j++],
+                                                      1,
+                                                      100000);
+
+
+            scrollView.TextFieldNumericLabeledTooltip("ModeSkillXP_SettingsLabel".Translate(mode.Label()),
+                                                      ref settings.skillXP,
+                                                      "ModeSkillXP_Tooltip".Translate(),
+                                                      ref modeSettingBuffers[j++],
+                                                      0f,
+                                                      100000f);
+
+            scrollView.Gap();
+            scrollView.Label("ModeSkillWeights_SettingsLabel".Translate(mode.Label()), -1f, "ModeSkillWeights_Tooltip".Translate(mode.Label()));
+            foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
+            {
+                float setting = settings.skillSelectionWeights[skill.defName];
+                scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref skillBuffers[k++], 5, 50);
+                settings.skillSelectionWeights[skill.defName] = setting;
+            }
+
+            scrollView.GapLine();
         }
-
-        scrollView.Gap();
-
-
-        i = 0;
-        scrollView.Label($"{$"{nameof(defaultSkills)}_SettingsLabel".Translate()} ", -1f, "skillsMatrix_Tooltip".Translate());
-        foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
-        {
-            float setting = defaultSkills[skill.defName];
-            scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref defaultSkillBuffers[i++], 5, 50);
-            defaultSkills[skill.defName] = setting;
-        }
-
-        scrollView.Gap();
-
-        scrollView.Label($"{$"{nameof(laborSkills)}_SettingsLabel".Translate()} ", -1f, "skillsMatrix_Tooltip".Translate());
-        i = 0;
-        foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
-        {
-            float setting = laborSkills[skill.defName];
-            scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref laborSkillBuffers[i++], 5, 50);
-            laborSkills[skill.defName] = setting;
-        }
-
-        scrollView.Gap();
-
-        scrollView.Label($"{$"{nameof(combatSkills)}_SettingsLabel".Translate()} ", -1f, "skillsMatrix_Tooltip".Translate());
-        i = 0;
-        foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
-        {
-            float setting = combatSkills[skill.defName];
-            scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref combatSkillBuffers[i++], 5, 50);
-            combatSkills[skill.defName] = setting;
-        }
-
-        scrollView.Gap();
-
-        scrollView.Label($"{$"{nameof(leaderSkills)}_SettingsLabel".Translate()} ", -1f, "skillsMatrix_Tooltip".Translate());
-        i = 0;
-        foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
-        {
-            float setting = leaderSkills[skill.defName];
-            scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref leaderSkillBuffers[i++], 5, 50);
-            leaderSkills[skill.defName] = setting;
-        }
-
-        scrollView.Gap();
-
-
-        listing.EndScrollView(scrollView);
-        listing.End();
-        if (contentHeight != scrollView.CurHeight)
-            contentHeight = scrollView.CurHeight;
     }
 
     private void DrawResetButton(Rect inRect)
@@ -360,19 +384,5 @@ public class EnhancedGrowthVatSettings : ModSettings
                                                        buttonAText: "OK".Translate(),
                                                        buttonAAction: EnhancedGrowthVatMod.RemoveMod,
                                                        buttonBText: "Cancel".Translate()));
-    }
-
-    private void DoSetting(Listing_Standard listing, string settingName, ref int setting, ref string inputBuffer, int min, int max)
-    {
-        Rect rect = listing.GetRect(Text.LineHeight);
-        Widgets.TextFieldNumericLabeled(rect, $"{$"{settingName}_SettingsLabel".Translate()} ", ref setting, ref inputBuffer, min, max);
-        TooltipHandler.TipRegion(rect, $"{settingName}_Tooltip".Translate());
-    }
-
-    private void DoSetting(Listing_Standard listing, string settingName, ref float setting, ref string inputBuffer, float min, float max)
-    {
-        Rect rect = listing.GetRect(Text.LineHeight);
-        Widgets.TextFieldNumericLabeled(rect, $"{$"{settingName}_SettingsLabel".Translate()} ", ref setting, ref inputBuffer, min, max);
-        TooltipHandler.TipRegion(rect, $"{settingName}_Tooltip".Translate());
     }
 }

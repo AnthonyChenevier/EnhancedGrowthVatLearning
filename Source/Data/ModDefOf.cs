@@ -23,7 +23,8 @@ public static class ModDefOf
 
     public readonly static HediffDef EnhancedVatGrowingHediffDef = HediffDef.Named("EnhancedVatGrowingHediff");
     public readonly static HediffDef EnhancedVatLearningHediffDef = HediffDef.Named("EnhancedVatLearningHediff");
-    public readonly static HediffDef VatgrownEffectHediffDef = HediffDef.Named("VatgrownEffectHediff");
+    public readonly static HediffDef VatgrowthEffectHediffDef = HediffDef.Named("VatgrowthEffectHediff");
+
     public readonly static HediffDef VatJuiceEffect = HediffDef.Named("VatJuiceEffect");
 
 
