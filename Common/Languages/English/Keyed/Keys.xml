@@ -8,58 +8,39 @@
     <RemoveMod_Tooltip>Only works if a game is loaded (not on the main menu).\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</RemoveMod_Tooltip>
     <AreYouSureModRemoval_Dialog>Are you sure you want to remove Enhanced Growth Vat Learning from your game? Selecting 'OK' will:\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</AreYouSureModRemoval_Dialog>
 
-    <vatGrowthPointMultiplier_SettingsLabel>Vat growth point multiplier</vatGrowthPointMultiplier_SettingsLabel>
-    <vatGrowthPointMultiplier_Tooltip>Multiplier used to modify the final growth points given to vat occupants based on their learning need. Default value provides enough growth points to reach level 5 at each growth moment if they are kept in the vat the entire time</vatGrowthPointMultiplier_Tooltip>
+    <MainSettings_TabLabel>Global Settings</MainSettings_TabLabel>
 
-    <defaultModeLearningNeed_SettingsLabel>Default mode learning need</defaultModeLearningNeed_SettingsLabel>
-    <defaultModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'default' enhanced learning mode.</defaultModeLearningNeed_Tooltip>
-
-    <specializedModesLearningNeed_SettingsLabel>Labor and combat modes learning need</specializedModesLearningNeed_SettingsLabel>
-    <specializedModesLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'labor' or 'combat' enhanced learning modes.</specializedModesLearningNeed_Tooltip>
-
-    <leaderModeLearningNeed_SettingsLabel>Leader mode learning need</leaderModeLearningNeed_SettingsLabel>
-    <leaderModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'leader' enhanced learning mode.</leaderModeLearningNeed_Tooltip>
-
-    <playModeLearningNeed_SettingsLabel>Play mode learning need</playModeLearningNeed_SettingsLabel>
-    <playModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants on 'play' enhanced learning mode.</playModeLearningNeed_Tooltip>
-
-    <learningNeedVariance_SettingsLabel>Learning need random variance</learningNeedVariance_SettingsLabel>
-    <learningNeedVariance_Tooltip>Learning need fluctuates by a random percentage at a number of points during the day, to simulate the occupant doing different things within the simulation. The final learning need for the occupant is calculated as (base learning need for mode *  +/- random value up to this amount)</learningNeedVariance_Tooltip>
+    <learningNeedVariance_SettingsLabel>Learning need max variance</learningNeedVariance_SettingsLabel>
+    <learningNeedVariance_Tooltip>The learning need of enhanced vat occupants can vary by a random amount up to this value a set number of times per day. This simulates the occupants doing different tasks or doing very well or badly with their studies.\n\nA higher value here can cause much more variation in the Growth Tier achieved at each growth moment.</learningNeedVariance_Tooltip>
 
     <learningNeedDailyChangeRate_SettingsLabel>Learning need change rate</learningNeedDailyChangeRate_SettingsLabel>
-    <learningNeedDailyChangeRate_Tooltip>How many times a day to recalculate the learning need for vat occupants in enhanced learning mode.</learningNeedDailyChangeRate_Tooltip>
-
-    <vatLearningHediffSeverityPerDay_SettingsLabel>Enhanced skill Learning speed</vatLearningHediffSeverityPerDay_SettingsLabel>
-    <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When 'Enhanced Vat Learning' hits 100%, the vat occupant receives an amount XP in a random skill, both selected by the learning mode. Change this to modify how often vat occupants get that boost. Higher values means more skills gained.</vatLearningHediffSeverityPerDay_Tooltip>
-
-    <vatAgingFactor_SettingsLabel>Enhanced mode aging factor</vatAgingFactor_SettingsLabel>
-    <vatAgingFactor_Tooltip>The multiplier for how fast vat occupants grow in enhanced learning mode. Vanilla vat occupants grow at a rate of 20x normal, this should be lower to provide a balance to the enhanced learning mode, and provide more time to accumulate growth points.</vatAgingFactor_Tooltip>
-
-    <leaderAgingFactorModifier_SettingsLabel>Leader mode aging factor modifier</leaderAgingFactorModifier_SettingsLabel>
-    <leaderAgingFactorModifier_Tooltip>Leader learning mode reduces aging factor by this amount, so that leaders have more time to mature and gain more skills and growth points.</leaderAgingFactorModifier_Tooltip>
-
-    <enhancedModePowerConsumption_SettingsLabel>Power consumption for enhanced modes (Watts)</enhancedModePowerConsumption_SettingsLabel>
-    <enhancedModePowerConsumption_Tooltip>Set the power consumption for when enhanced mode is enabled in watts.</enhancedModePowerConsumption_Tooltip>
+    <learningNeedDailyChangeRate_Tooltip>How many times a day to recalculate the learning need for enhanced vat occupants. This can be used to balance the variance rate to make the results more or less predictable over time.</learningNeedDailyChangeRate_Tooltip>
 
     <generateBackstories_SettingsLabel>Generate custom mode-specific backstories for vatgrown pawns?</generateBackstories_SettingsLabel>
     <generateBackstories_Tooltip>Toggle if vat time is tracked and used to generate mode-specific backstories when pawns reach teen-age. Hint: Check the pawn's stats while they are children to see tracked time if this is active.</generateBackstories_Tooltip>
 
     <vatDaysForBackstory_SettingsLabel>Simulated days required for mode backstory</vatDaysForBackstory_SettingsLabel>
-    <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment. The default value of 400 days matches the vanilla vatgrown child backstory requirement. Maximum of 780 days is equal to 13 RW years, or the max age a child could reach spending all their time in a vat from birth.</vatDaysForBackstory_Tooltip>
+    <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment.\n\The default value of 400 days matches the vanilla 'vatgrown child' backstory requirement and is just over half of the maximum amount of time an occupant could spend in the vat before that point (780 days or 13 RW years).</vatDaysForBackstory_Tooltip>
 
-    <xpToAward_SettingsLabel>Skill XP awarded for mode</xpToAward_SettingsLabel>
-    <xpToAward_Tooltip>How much skill experience to award each time the Enhanced Vat Learning hediff reaches 100% for each mode</xpToAward_Tooltip>
-    <DefaultXP_SettingsLabel>Default mode skill XP</DefaultXP_SettingsLabel>
-    <LaborXP_SettingsLabel>Labor mode skill XP</LaborXP_SettingsLabel>
-    <CombatXP_SettingsLabel>Combat mode skill XP</CombatXP_SettingsLabel>
-    <LeaderXP_SettingsLabel>Leader mode skill XP</LeaderXP_SettingsLabel>
-    <PlayXP_SettingsLabel>Play mode skill XP</PlayXP_SettingsLabel>
+    <enhancedModePowerConsumption_SettingsLabel>Power consumption (Watts)</enhancedModePowerConsumption_SettingsLabel>
+    <enhancedModePowerConsumption_Tooltip>Power consumption when enhanced mode is enabled.</enhancedModePowerConsumption_Tooltip>
 
-    <defaultSkills_SettingsLabel>Default (and Play) Skills selection weights</defaultSkills_SettingsLabel>
-    <laborSkills_SettingsLabel>Labor Skills selection weights</laborSkills_SettingsLabel>
-    <combatSkills_SettingsLabel>Combat Skills selection weights</combatSkills_SettingsLabel>
-    <leaderSkills_SettingsLabel>Leader Skills selection weights</leaderSkills_SettingsLabel>
-    <skillsMatrix_Tooltip>Selection weights for each skill in this learning mode. Change this to influence which skills are randomly selected for in training.</skillsMatrix_Tooltip>
+    <vatLearningHediffSeverityPerDay_SettingsLabel>Skill gain rate</vatLearningHediffSeverityPerDay_SettingsLabel>
+    <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When the hediff hits 100% the vat occupant receives a set amount of XP in a random skill selected by the learning mode. Default value of 3 will reach 100% 3 times a day - use mode specific settings to tune skills further.</vatLearningHediffSeverityPerDay_Tooltip>
+
+    <ModeSettings_TabLabel>Learning Suite Settings</ModeSettings_TabLabel>
+
+    <ModeLearningNeed_SettingsLabel>{0} mode learning need</ModeLearningNeed_SettingsLabel>
+    <ModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants in {0} mode.</ModeLearningNeed_Tooltip>
+
+    <ModeVatAgingFactor_SettingsLabel>{0} mode aging factor</ModeVatAgingFactor_SettingsLabel>
+    <ModeVatAgingFactor_Tooltip>Vat growth multiplier for {0} mode. Vanilla vat occupants grow at a rate of 20x. Slower growth speed provides more time to learn skills and accumulate growth points.</ModeVatAgingFactor_Tooltip>
+
+    <ModeSkillXP_SettingsLabel>Skill XP awarded in {0} mode</ModeSkillXP_SettingsLabel>
+    <ModeSkillXP_Tooltip>How much skill experience to award each time the 'Enhanced Vat Learning' hediff reaches 100% in {0} mode</ModeSkillXP_Tooltip>
+
+    <ModeSkillWeights_SettingsLabel>{0} mode skill selection weights</ModeSkillWeights_SettingsLabel>
+    <ModeSkillWeights_Tooltip>Selection weights for each skill in {0} mode. Change this to influence which skills are randomly given experience during training.</ModeSkillWeights_Tooltip>
     
     
     <!-- Learning modes -->
