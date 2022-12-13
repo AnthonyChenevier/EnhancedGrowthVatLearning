@@ -15,7 +15,7 @@
     <HediffDef>
         <defName>EnhancedVatGrowingHediff</defName>
         <label>vat growing (reduced speed)</label>
-        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for enhanced learning software.</description>
+        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for enhanced learning software and reduce negative impact on the occupant.</description>
         <hediffClass>HediffWithComps</hediffClass>
         <everCurableByItem>false</everCurableByItem>
         <isBad>false</isBad>
@@ -26,161 +26,246 @@
         </comps>
     </HediffDef>
 
+
+    <!-- Vatgrown Stress-->
+
     <HediffDef>
-        <defName>VatgrownEffectHediff</defName>
-        <label>vatgrowning after-effects</label>
-        <description>General after-effects of coming out of a high-stimulation growth vat. Continuous exposure to very high neural stimulation and increased cell division has left this person in pain, nauseous and confused upon re-entering the real world, with a high chance of wandering in confusion, questioning their beliefs, running away or going catatonic as they learn to accept their surroundings. In time this person should adjust to their new reality.</description>
-        <descriptionShort>After-effects of using a growth vat including generalized pain, nausea and a heightened chance of wandering mental breaks.</descriptionShort>
-        <hediffClass>HediffWithComps</hediffClass>
-        <makesSickThought>true</makesSickThought>
+        <defName>VatgrowthStress</defName>
+        <label>Post-Vatgrowth Stress Disorder</label>
+        <description>Post-Vatgrowth Stress Disorder, caused by accelerated development in a growth vat. Continuous exposure to neural stimulation and artificially accelerated cell division has caused this person some temporary physical and psychological damage. This person will recover by themselves given time, but counseling and medical treatment can reduce the risk of problems in the meantime.</description>
+        <descriptionShort>Physical and psychological stress caused by accelerated development in a growth vat, including generalized pain, nausea and negative psychological effects.</descriptionShort>
         <scenarioCanAdd>true</scenarioCanAdd>
+        <maxSeverity>1</maxSeverity>
+        <initialSeverity>0</initialSeverity>
         <comps>
-            <li Class="HediffCompProperties_SeverityPerDay">
-                <severityPerDay>-0.2</severityPerDay>
+            <li Class="HediffCompProperties_Discoverable"/>
+            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_VatgrownStress">
+                <breakStages>
+                    <li/><!-- Hidden initial stage. No breaks. -->
+                    <li>
+                        <li>
+                            <mentalBreak>Wander_Sad</mentalBreak>
+                            <mtbDays>5</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Wander_OwnRoom</mentalBreak>
+                            <mtbDays>5</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>WanderConfused</mentalBreak>
+                            <mtbDays>5</mtbDays>
+                        </li>
+                    </li>
+                    <li>
+                        <li>
+                            <mentalBreak>Wander_Sad</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Wander_OwnRoom</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>WanderConfused</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Catatonic</mentalBreak>
+                            <mtbDays>15</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>IdeoChange</mentalBreak>
+                            <mtbDays>15</mtbDays>
+                        </li>
+                    </li>
+                    <li>
+                        <li>
+                            <mentalBreak>Wander_Sad</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Wander_OwnRoom</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>WanderConfused</mentalBreak>
+                            <mtbDays>3</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Catatonic</mentalBreak>
+                            <mtbDays>10</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>IdeoChange</mentalBreak>
+                            <mtbDays>10</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Run_Wild</mentalBreak>
+                            <mtbDays>15</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>GiveUpExit</mentalBreak>
+                            <mtbDays>15</mtbDays>
+                        </li>
+                    </li>
+                    <li>
+                        <li>
+                            <mentalBreak>Wander_Sad</mentalBreak>
+                            <mtbDays>1</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Wander_OwnRoom</mentalBreak>
+                            <mtbDays>1</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>WanderConfused</mentalBreak>
+                            <mtbDays>1</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Catatonic</mentalBreak>
+                            <mtbDays>5</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>IdeoChange</mentalBreak>
+                            <mtbDays>5</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>Run_Wild</mentalBreak>
+                            <mtbDays>10</mtbDays>
+                        </li>
+                        <li>
+                            <mentalBreak>GiveUpExit</mentalBreak>
+                            <mtbDays>10</mtbDays>
+                        </li>
+                    </li>
+                </breakStages>
             </li>
         </comps>
         <stages>
             <li>
-                <label>recovering</label>
+                <minSeverity>0</minSeverity>
+                <label>hidden</label>
+            </li>
+            <li> <!-- at max severity for initial stage (0.49) spending 24 hrs out of the vat should reduce to 0 severity without any other intervention-->
+                <minSeverity>0.2</minSeverity>
+                <label>initial</label>
+                <becomeVisible>true</becomeVisible>
                 <vomitMtbDays>1.4</vomitMtbDays>
-                <painOffset>0.3</painOffset>
-                <baseMoodEffect>-4</baseMoodEffect>
+                <painOffset>0.1</painOffset>
                 <capMods>
                     <li>
                         <capacity>Consciousness</capacity>
-                        <postFactor>0.8</postFactor>
+                        <postFactor>0.9</postFactor>
                     </li>
                     <li>
                         <capacity>Moving</capacity>
-                        <postFactor>0.8</postFactor>
+                        <postFactor>0.9</postFactor>
                     </li>
                     <li>
                         <capacity>Manipulation</capacity>
                         <postFactor>0.9</postFactor>
                     </li>
                 </capMods>
-                <mentalStateGivers>
-                    <li>
-                        <mentalState>Wander_Sad</mentalState>
-                        <mtbDays>5</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>Wander_OwnRoom</mentalState>
-                        <mtbDays>5</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>WanderConfused</mentalState>
-                        <mtbDays>5</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>IdeoChange</mentalState>
-                        <mtbDays>20</mtbDays>
-                    </li>
-                </mentalStateGivers>
             </li>
             <li>
                 <label>minor</label>
-                <minSeverity>0.3</minSeverity>
+                <minSeverity>0.5</minSeverity>
                 <vomitMtbDays>0.9</vomitMtbDays>
-                <painOffset>0.6</painOffset>
-                <baseMoodEffect>-8</baseMoodEffect>
+                <painOffset>0.3</painOffset>
                 <capMods>
                     <li>
                         <capacity>Consciousness</capacity>
-                        <postFactor>0.7</postFactor>
-                    </li>
-                    <li>
-                        <capacity>Moving</capacity>
-                        <postFactor>0.7</postFactor>
-                    </li>
-                    <li>
-                        <capacity>Manipulation</capacity>
                         <postFactor>0.9</postFactor>
                     </li>
-                </capMods>
-                <mentalStateGivers>
-                    <li>
-                        <mentalState>Wander_Sad</mentalState>
-                        <mtbDays>3</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>Wander_OwnRoom</mentalState>
-                        <mtbDays>3</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>WanderConfused</mentalState>
-                        <mtbDays>3</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>IdeoChange</mentalState>
-                        <mtbDays>10</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>GiveUpExit</mentalState>
-                        <mtbDays>30</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>RunWild</mentalState>
-                        <mtbDays>30</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>Catatonic</mentalState>
-                        <mtbDays>40</mtbDays>
-                    </li>
-                </mentalStateGivers>
-            </li>
-            <li>
-                <label>major</label>
-                <minSeverity>0.9</minSeverity>
-                <vomitMtbDays>0.4</vomitMtbDays>
-                <painOffset>0.8</painOffset>
-                <baseMoodEffect>-15</baseMoodEffect>
-                <capMods>
-                    <li>
-                        <capacity>Consciousness</capacity>
-                        <postFactor>0.5</postFactor>
-                    </li>
                     <li>
                         <capacity>Moving</capacity>
-                        <postFactor>0.5</postFactor>
+                        <postFactor>0.7</postFactor>
                     </li>
                     <li>
                         <capacity>Manipulation</capacity>
-                        <postFactor>0.8</postFactor>
+                        <postFactor>0.75</postFactor>
                     </li>
                 </capMods>
-                <mentalStateGivers>
+            </li>
+            <li>
+                <label>severe</label>
+                <minSeverity>0.75</minSeverity>
+                <vomitMtbDays>0.9</vomitMtbDays>
+                <painOffset>0.3</painOffset>
+                <capMods>
                     <li>
-                        <mentalState>Wander_Sad</mentalState>
-                        <mtbDays>1</mtbDays>
+                        <capacity>Consciousness</capacity>
+                        <postFactor>0.9</postFactor>
                     </li>
                     <li>
-                        <mentalState>Wander_OwnRoom</mentalState>
-                        <mtbDays>1</mtbDays>
+                        <capacity>Moving</capacity>
+                        <postFactor>0.7</postFactor>
                     </li>
                     <li>
-                        <mentalState>WanderConfused</mentalState>
-                        <mtbDays>1</mtbDays>
+                        <capacity>Manipulation</capacity>
+                        <postFactor>0.75</postFactor>
+                    </li>
+                </capMods>
+            </li>
+            <li>
+                <label>chronic</label>
+                <minSeverity>0.9</minSeverity>
+                <vomitMtbDays>0.4</vomitMtbDays>
+                <painOffset>0.6</painOffset>
+                <capMods>
+                    <li>
+                        <capacity>Consciousness</capacity>
+                        <postFactor>0.8</postFactor>
                     </li>
                     <li>
-                        <mentalState>IdeoChange</mentalState>
-                        <mtbDays>5</mtbDays>
+                        <capacity>Moving</capacity>
+                        <postFactor>0.7</postFactor>
                     </li>
                     <li>
-                        <mentalState>GiveUpExit</mentalState>
-                        <mtbDays>10</mtbDays>
+                        <capacity>Manipulation</capacity>
+                        <postFactor>0.6</postFactor>
                     </li>
-                    <li>
-                        <mentalState>RunWild</mentalState>
-                        <mtbDays>10</mtbDays>
-                    </li>
-                    <li>
-                        <mentalState>Catatonic</mentalState>
-                        <mtbDays>15</mtbDays>
-                    </li>
-                </mentalStateGivers>
+                </capMods>
             </li>
         </stages>
     </HediffDef>
 
+
+    <ThoughtDef>
+        <defName>VatgrownStress</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <Hediff>VatgrowthStress</Hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <nullifyingPrecepts>GrowthVat_Essential</nullifyingPrecepts>
+        <developmentalStageFilter>Child, Adult</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>vatgrown stress level 0</label>
+                <visible>false</visible>
+            </li>
+            <li>
+                <label>vat-grown brain fog</label>
+                <description>I'm a bit foggy after coming out of the growth vat. Sometimes I feel like I'm back in the simulation and get disoriented. I think I know who and where I am though.</description>
+                <baseMoodEffect>-3</baseMoodEffect>
+            </li>
+            <li>
+                <label>vat-grown confusion</label>
+                <description>I was grown in a vat? I'm still not sure about myself or this place. I have dreams and fading memories of another life that seemed so real.</description>
+                <baseMoodEffect>-7</baseMoodEffect>
+                <baseOpinionOffset>-5</baseOpinionOffset>
+            </li>
+            <li>
+                <label>vat-grown denial</label>
+                <description>This place can't be real. The idea that I was grown in a vat isn't believable, is it? I remember so much of my life, even if the memories are hard to recall clearly.</description>
+                <baseMoodEffect>-10</baseMoodEffect>
+                <baseOpinionOffset>-10</baseOpinionOffset>
+            </li>
+            <li>
+                <label>vat-grown psychosis</label>
+                <description>These people are trying to brainwash me into believing my whole life was a lie. I must have been captured and now I'm being subjected to some kind of psychological torture. I know the story they are telling me is fake. I wasn't grown in a vat!</description>
+                <baseMoodEffect>-15</baseMoodEffect>
+                <baseOpinionOffset>-20</baseOpinionOffset>
+            </li>
+        </stages>
+    </ThoughtDef>
 </Defs>
