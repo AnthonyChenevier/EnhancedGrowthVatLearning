@@ -6,6 +6,7 @@
 // Last edited by: Anthony Chenevier on 2022/11/03 3:02 PM
 
 
+using System.Collections.Generic;
 using System.Linq;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.ThingComps;
@@ -79,5 +80,20 @@ public class Hediff_EnhancedVatLearning : Hediff_VatLearning
         SkillRecord randomSkill = pawn.skills.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(mode.Settings().skillSelectionWeights[s.def.defName], 2));
 
         randomSkill.Learn(mode.Settings().skillXP * LearningUtility.LearningRateFactor(pawn), true);
+    }
+
+    public static void ModifySeverityPerDay(float severityPerDay)
+    {
+        IEnumerable<Hediff_EnhancedVatLearning> allVatLearningHediffs = Find.World.worldPawns.AllPawnsAlive
+                                                                            .Where(p => p.health.hediffSet.HasHediff(ModDefOf.EnhancedVatLearningHediffDef))
+                                                                            .Select(p => p.health.hediffSet.GetFirstHediffOfDef(ModDefOf.EnhancedVatLearningHediffDef) as
+                                                                                             Hediff_EnhancedVatLearning);
+
+        foreach (Hediff_EnhancedVatLearning hediff in allVatLearningHediffs)
+        {
+            HediffComp_SeverityPerDay comp = hediff.TryGetComp<HediffComp_SeverityPerDay>();
+            if (comp != null)
+                ((HediffCompProperties_SeverityPerDay)comp.props).severityPerDay = severityPerDay;
+        }
     }
 }

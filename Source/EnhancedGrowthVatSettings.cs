@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using EnhancedGrowthVatLearning.Data;
+using EnhancedGrowthVatLearning.Hediffs;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
 using UnityEngine;
@@ -79,6 +80,8 @@ public class EnhancedGrowthVatSettings : ModSettings
 
     internal float? initPowerConsumptionValue;
     internal bool SettingPowerDirty;
+    internal float? initEnhancedLearningHediffValue;
+    internal bool SettingLearningHediffDirty;
 
     private enum ModSettingsTab
     {
@@ -219,12 +222,17 @@ public class EnhancedGrowthVatSettings : ModSettings
         //update all defs with power multi comp if setting is not default on load
         if (Scribe.mode == LoadSaveMode.LoadingVars && enhancedModePowerConsumption != 800f)
             CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", enhancedModePowerConsumption);
+
+        //update all defs with power multi comp if setting is not default on load
+        if (Scribe.mode == LoadSaveMode.LoadingVars && vatLearningHediffSeverityPerDay != 3f)
+            Hediff_EnhancedVatLearning.ModifySeverityPerDay(vatLearningHediffSeverityPerDay);
     }
 
     public void DoSettingsWindowContents(Rect inRect)
     {
         //set initial power consumption for dirty setting check if it's unset (once per opening setting screen)
         initPowerConsumptionValue ??= enhancedModePowerConsumption;
+        initEnhancedLearningHediffValue ??= vatLearningHediffSeverityPerDay;
 
         DrawResetButton(inRect);
         DrawRemoveModButton(inRect);
@@ -307,6 +315,11 @@ public class EnhancedGrowthVatSettings : ModSettings
                                                   ref mainSettingBuffers[i],
                                                   0.001f,
                                                   100000f);
+
+        //handle setting power consumption if it's not the initial value
+        if (vatLearningHediffSeverityPerDay != initEnhancedLearningHediffValue)
+            SettingLearningHediffDirty = true;
+
 
         scrollView.GapLine();
     }

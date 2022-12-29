@@ -80,4 +80,7 @@
 
     <!-- Hediffs -->
     <AgingSpeedWithOccupantStatModifier>base speed\nx{1} (Occupant growth bonus)\nFinal speed: x{0}</AgingSpeedWithOccupantStatModifier>
+
+    <!-- Letters -->
+    <LetterTextVatgrownStress>{PAWN} has developed {1} due to extensive use of growth vats.\n\n{PAWN_definite} will need counseling to reduce the negative mental effects of the illness.</LetterTextVatgrownStress>
 </LanguageData>

@@ -73,7 +73,9 @@ public class EnhancedGrowthVatComp : ThingComp
     private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
 
     //re-cache occupant speed once per day to reduce expensive computation
-    public int VatTicks => Mathf.FloorToInt(ModeAgingFactor * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed, cacheStaleAfterTicks: GenDate.TicksPerDay));
+    public int VatTicks =>
+        Mathf.FloorToInt((Enabled ? ModeAgingFactor : Building_GrowthVat.AgeTicksPerTickInGrowthVat) *
+                         GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed, cacheStaleAfterTicks: GenDate.TicksPerDay));
 
     public int ModeAgingFactor => mode.Settings().baseAgingFactor;
 
@@ -90,6 +92,10 @@ public class EnhancedGrowthVatComp : ThingComp
             return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
         }
     }
+
+    public Hediff VatStressBuildup =>
+        GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(ModDefOf.VatgrowthStressBuildupHediffDef) ??
+        GrowthVat.SelectedPawn.health.AddHediff(ModDefOf.VatgrowthStressBuildupHediffDef);
 
 
     //Overrides
@@ -239,6 +245,9 @@ public class EnhancedGrowthVatComp : ThingComp
 
     public void SetVatHediffs(Pawn_HealthTracker pawnHealth)
     {
+        if (!pawnHealth.hediffSet.HasHediff(ModDefOf.VatgrowthStressBuildupHediffDef))
+            pawnHealth.AddHediff(ModDefOf.VatgrowthStressBuildupHediffDef);
+
         if (enabled)
         {
             if (pawnHealth.hediffSet.HasHediff(HediffDefOf.VatGrowing))

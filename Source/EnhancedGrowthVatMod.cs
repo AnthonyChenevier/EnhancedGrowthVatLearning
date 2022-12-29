@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnhancedGrowthVatLearning.Data;
+using EnhancedGrowthVatLearning.Hediffs;
 using EnhancedGrowthVatLearning.ThingComps;
 using RimWorld;
 using RimWorld.Planet;
@@ -57,12 +58,19 @@ public class EnhancedGrowthVatMod : Mod
         base.WriteSettings();
 
         Settings.initPowerConsumptionValue = null;
+        Settings.initEnhancedLearningHediffValue = null;
         //update all defs with power multi if the setting changed
-        if (!Settings.SettingPowerDirty)
+        if (Settings.SettingPowerDirty)
+        {
+            CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", Settings.EnhancedModePowerConsumption);
+            Settings.SettingPowerDirty = false;
+        }
+
+        if (!Settings.SettingLearningHediffDirty)
             return;
 
-        CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", Settings.EnhancedModePowerConsumption);
-        Settings.SettingPowerDirty = false;
+        Hediff_EnhancedVatLearning.ModifySeverityPerDay(Settings.VatLearningHediffSeverityPerDay);
+        Settings.SettingLearningHediffDirty = false;
     }
 
     public static void SetVatBackstoryFor(Pawn pawn, LearningMode mostUsedMode)

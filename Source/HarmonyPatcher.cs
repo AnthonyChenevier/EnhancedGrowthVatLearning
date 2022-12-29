@@ -7,6 +7,7 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EnhancedGrowthVatLearning.Data;
 using EnhancedGrowthVatLearning.Hediffs;
@@ -97,6 +98,9 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
             return;
 
         comp.PausedForLetter = false;
+
+        comp.VatStressBuildup.TryGetComp<HediffComp_SeverityFromVatLearning>()?.Notify_GrowthMomentPassed(__instance.growthTier);
+
         if (!pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
             return;
 
@@ -111,17 +115,27 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "GrowthPointsPerDay", MethodType.Getter)]
 public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 {
-    public static float Postfix(float __result, Pawn_AgeTracker __instance)
+    private const int YoungAgeCutoff = 7;
+    private const float GrowthPointsFactor_Young = 0.75f;
+
+    public static void Postfix(ref float __result, Pawn_AgeTracker __instance)
     {
         Traverse traverse = Traverse.Create(__instance);
         Pawn pawn = traverse.Field("pawn").GetValue<Pawn>();
         if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
-            return __result;
+            return;
 
         //get normal growth point value for learning need level, storyteller settings and age.
-        float growthPointsPerDay = traverse.Method("GrowthPointsPerDayAtLearningLevel", pawn.needs.learning.CurLevel).GetValue<float>();
         //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat (and vat grow stat) aging speed
-        return growthPointsPerDay * (comp.VatTicks / Find.Storyteller.difficulty.childAgingRate);
+        __result = GrowthPointsPerDayAtLearningLevel(__instance, pawn.needs.learning?.CurLevel ?? 0f) * (comp.VatTicks / Find.Storyteller.difficulty.childAgingRate);
+    }
+
+    //copy of Pawn_AgeTracker.GrowthPointsPerDayAtLearningLevel(float level) so I don't have to use reflection
+    private static float GrowthPointsPerDayAtLearningLevel(Pawn_AgeTracker ageTracker, float level)
+    {
+        //copy of code from Pawn_AgeTracker.GrowthPointsFactor
+        float growthPointsFactor = ageTracker.AgeBiologicalYears < YoungAgeCutoff ? GrowthPointsFactor_Young : 1f;
+        return level * growthPointsFactor * ageTracker.ChildAgingMultiplier;
     }
 }
 
@@ -136,27 +150,19 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
         if (learningComp == null)
             return true; //should not happen unless I missed a call to this method
 
-        if (learningComp.Enabled)
-            //Check for default value used by growth vat so dev gizmo and other direct accessors can bypass
-            //NOTE: GetStatValue seems like a hungry beast performance-wise.
-            //float statValue = pawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed);
-            //int defaultTicks = Mathf.FloorToInt(Building_GrowthVat.AgeTicksPerTickInGrowthVat * statValue);
-            //if (ticks == defaultTicks)
+        //attempt simple check. Not as robust as using GetStatValue, but muuuuuch more performant
+        //should only allow the dev gizmo through without modification now. 
+        if (learningComp.Enabled && ticks < GenDate.TicksPerYear)
+        {
+            //Stop processing and prevent original tracker from running
+            //if aging is paused for a growth moment letter
+            if (learningComp.PausedForLetter)
+                return false;
 
-            //attempt much simpler check. Not as robust, but muuuuuch more performant
-            //should only allow the dev gizmo through without modification now. 
-            if (ticks < GenDate.TicksPerYear)
-            {
-                //Stop processing and prevent original tracker from running
-                //if aging is paused for a growth moment letter
-                if (learningComp.PausedForLetter)
-                    return false;
-
-                //use our tick value instead: NOPE
-                //no, actually use Aging factor and decompose the modifier from ticks
-                //with math so we don't have to touch GetStatValue at all here.
-                ticks = Mathf.FloorToInt(learningComp.ModeAgingFactor * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat)); //learningComp.VatTicks;
-            }
+            //use Aging factor and decompose the modifier from ticks
+            //with math so we don't have to touch GetStatValue at all here.
+            ticks = Mathf.FloorToInt(learningComp.ModeAgingFactor * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
+        }
 
         //finally, track ticks for backstories and stats ourselves.
         //tracker might be null because of dev tools so check for that
@@ -164,16 +170,17 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
         return true;
     }
 
-    public static void Postfix(Pawn_AgeTracker __instance, Pawn __state)
+    public static void Postfix(Pawn __state)
     {
-        //Pawn pawn = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>(); //for separating mod
-        //Insert vat juice hediff ticker. VatLearning is called the same way just after this
-        //method is called so this is the best place for it
-        Hediff vatjuiceHediff = __state.health.hediffSet.GetFirstHediffOfDef(ModDefOf.VatJuiceEffect);
-        vatjuiceHediff?.Tick();
-        vatjuiceHediff?.PostTick();
-        if (vatjuiceHediff is { ShouldRemove: true })
-            __state.health.RemoveHediff(vatjuiceHediff);
+        //tick all hediffs with TickInGrowthVatComp
+        List<Hediff> vatHediffs = __state.health.hediffSet.hediffs.Where(h => h.TryGetComp<HediffComp_TickInGrowthVat>() is { tickInVat: true }).ToList();
+        foreach (Hediff hediff in vatHediffs)
+        {
+            hediff.Tick();
+            hediff.PostTick();
+            if (hediff is { ShouldRemove: true })
+                __state.health.RemoveHediff(hediff);
+        }
     }
 }
 

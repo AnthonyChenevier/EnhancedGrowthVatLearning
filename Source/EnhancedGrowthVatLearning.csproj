@@ -53,7 +53,14 @@
     <Compile Include="Data\LearningMode.cs" />
     <Compile Include="Data\ModDefOf.cs" />
     <Compile Include="GrowthTrackerRepository.cs" />
-    <Compile Include="Hediffs\HediffComp_VatgrowthStress.cs" />
+    <Compile Include="Hediffs\HediffComp_CounselHediffThought.cs" />
+    <Compile Include="Hediffs\HediffComp_SeverityFromVatLearning.cs" />
+    <Compile Include="Hediffs\HediffComp_SeverityFromVatgrowth.cs" />
+    <Compile Include="Hediffs\HediffComp_SeverityFromVatjuice.cs" />
+    <Compile Include="Hediffs\HediffComp_TickInGrowthVat.cs" />
+    <Compile Include="Hediffs\HediffGiver_RandomSeverityCurved.cs" />
+    <Compile Include="Hediffs\HediffComp_MentalBreaksFromThoughtStage.cs" />
+    <Compile Include="Thoughts\ThoughtWorker_VatgrownStress.cs" />
     <Compile Include="VatJuice\Hediff_LevelWithComps.cs" />
     <Compile Include="VatJuice\IngestionOutcomeDoer_GiveHediff_Level.cs" />
     <Compile Include="ListingHelper.cs" />

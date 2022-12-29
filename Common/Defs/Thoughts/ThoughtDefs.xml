@@ -82,4 +82,73 @@
             </li>
         </stages>
     </ThoughtDef>
+
+
+    <!-- Other thoughts -->
+    <!-- vatgrown stress mental effects -->
+    <ThoughtDef>
+        <defName>VatgrownStressThought</defName>
+        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_VatgrownStress</workerClass>
+        <hediff>VatgrowthStress</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <nullifyingPrecepts>
+            <li>GrowthVat_Essential</li>
+        </nullifyingPrecepts>
+        <developmentalStageFilter>Child, Adult</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>foggy vat memories</label>
+                <description>I'm a bit foggy after coming out of the growth vat. Sometimes I feel like I'm back in the simulation and get disoriented. I think I know who and where I am though.</description>
+                <baseMoodEffect>-3</baseMoodEffect>
+            </li>
+            <li>
+                <label>confusing vat memories</label>
+                <description>I was grown in a vat? I'm still not sure about myself or this place. I have dreams and fading memories of another life that seemed so real.</description>
+                <baseMoodEffect>-7</baseMoodEffect>
+            </li>
+            <li>
+                <label>strong vat memories</label>
+                <description>This place can't be real. The idea that I was grown in a vat isn't believable, is it? I remember so much of my life, even if the memories are hard to recall clearly.</description>
+                <baseMoodEffect>-10</baseMoodEffect>
+            </li>
+            <li>
+                <label>overwhelming vat memories</label>
+                <description>These people are trying to brainwash me into believing my whole life was a lie. I must have been captured and now I'm being subjected to some kind of psychological torture. I know the story they are telling me is fake. I wasn't grown in a vat!</description>
+                <baseMoodEffect>-15</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <!-- Vat-juice effect thoughts -->
+    <ThoughtDef>
+        <defName>VatJuiceEffectChild</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Baby, Child</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. I should probably be in a growth vat.</description>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <ThoughtDef>
+        <defName>VatJuiceEffectAdult</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <nullifyingHediffs>
+            <li>GoJuiceHigh</li>
+        </nullifyingHediffs>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. So much more addictive than go-juice and none of the satisfaction. Why did I do this again?</description>
+                <baseMoodEffect>-2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
 </Defs>
