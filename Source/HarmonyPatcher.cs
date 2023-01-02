@@ -9,15 +9,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EnhancedGrowthVatLearning.Data;
-using EnhancedGrowthVatLearning.Hediffs;
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.Hediffs;
+using GrowthVatsOverclocked.ThingComps;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
 [StaticConstructorOnStartup]
 public static class HarmonyPatcher
@@ -25,12 +25,18 @@ public static class HarmonyPatcher
     static HarmonyPatcher()
     {
         //Harmony.DEBUG = true;
-        Harmony harmony = new("makeitso.bettergrowthvatlearning");
+        Harmony harmony = new("makeitso.growthvatsoverclocked");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+        //add our back compatibility converter to the (private) list here too.
+        List<BackCompatibilityConverter> chain =
+            (List<BackCompatibilityConverter>)typeof(BackCompatibility).GetField("conversionChain", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null);
+
+        chain?.Add(new BackCompatibilityConverter_EGVL_GVO());
     }
 }
 
-//
+//refresh vatcomp to apply hediffs when babies age up
 [HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild), "Notify_LifeStageStarted")]
 public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
 {
@@ -39,7 +45,7 @@ public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
         if (Current.ProgramState != ProgramState.Playing ||
             !pawn.IsColonist ||
             pawn.ParentHolder is not Building_GrowthVat growthVat ||
-            growthVat.GetComp<EnhancedGrowthVatComp>() is not { } vatComp)
+            growthVat.GetComp<CompOverclockedGrowthVat>() is not { } vatComp)
             return;
 
         vatComp.Refresh();
@@ -52,14 +58,14 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 {
     public static void Postfix(Pawn pawn)
     {
-        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || EnhancedGrowthVatMod.GetTrackerFor(pawn) is not { } tracker)
+        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || GrowthVatsOverclockedMod.GetTrackerFor(pawn) is not { } tracker)
             return;
 
         if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
-            EnhancedGrowthVatMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode);
+            GrowthVatsOverclockedMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode);
 
         //remove the tracker now we're done with the backstory. No littering!
-        EnhancedGrowthVatMod.RemoveTrackerFor(pawn);
+        GrowthVatsOverclockedMod.RemoveTrackerFor(pawn);
     }
 }
 
@@ -69,8 +75,9 @@ public static class Gizmo_GrowthTier_Visible_HP
 {
     public static bool Postfix(bool __result, Gizmo_GrowthTier __instance)
     {
-        Pawn child = Traverse.Create(__instance).Field("child").GetValue<Pawn>();
-        return __result || (child.ParentHolder is Building_GrowthVat && (child.IsColonist || child.IsPrisonerOfColony || child.IsSlaveOfColony));
+        return __result ||
+               (Pawn)typeof(Gizmo_GrowthTier).GetField("child", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(__instance) is { ParentHolder: Building_GrowthVat }
+               and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
     }
 }
 
@@ -80,7 +87,7 @@ public static class ChoiceLetter_GrowthMoment_ConfigureGrowthLetter_HP
 {
     public static void Postfix(Pawn pawn, ChoiceLetter_GrowthMoment __instance)
     {
-        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } comp)
             comp.PausedForLetter = true;
     }
 }
@@ -94,12 +101,10 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
     public static void Postfix(ChoiceLetter_GrowthMoment __instance)
     {
         Pawn pawn = __instance.pawn;
-        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<CompOverclockedGrowthVat>() is not { Enabled: true } comp)
             return;
 
         comp.PausedForLetter = false;
-
-        comp.VatStressBuildup.TryGetComp<HediffComp_SeverityFromVatLearning>()?.Notify_GrowthMomentPassed(__instance.growthTier);
 
         if (!pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
             return;
@@ -115,27 +120,23 @@ public static class ChoiceLetter_GrowthMoment_MakeChoices_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "GrowthPointsPerDay", MethodType.Getter)]
 public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 {
-    private const int YoungAgeCutoff = 7;
-    private const float GrowthPointsFactor_Young = 0.75f;
+    private static Pawn Pawn_AgeTracker_Pawn(Pawn_AgeTracker ageTracker) =>
+        (Pawn)typeof(Pawn_AgeTracker).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ageTracker);
+
+    private static float Pawn_AgeTracker_GrowthPointsPerDayAtLearningLevel(Pawn_AgeTracker ageTracker, float level) =>
+        (float)(typeof(Pawn_AgeTracker).GetMethod("GrowthPointsPerDayAtLearningLevel", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod)
+                                       ?.Invoke(ageTracker, new object[] { level }) ??
+                0f);
 
     public static void Postfix(ref float __result, Pawn_AgeTracker __instance)
     {
-        Traverse traverse = Traverse.Create(__instance);
-        Pawn pawn = traverse.Field("pawn").GetValue<Pawn>();
-        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<EnhancedGrowthVatComp>() is not { Enabled: true } comp)
+        if (Pawn_AgeTracker_Pawn(__instance) is not { ParentHolder: Building_GrowthVat growthVat } pawn ||
+            growthVat.GetComp<CompOverclockedGrowthVat>() is not { Enabled: true } comp)
             return;
 
         //get normal growth point value for learning need level, storyteller settings and age.
         //multiply by the quotient of vat aging factor over storyteller growth speed to get final growth points scaled to vat (and vat grow stat) aging speed
-        __result = GrowthPointsPerDayAtLearningLevel(__instance, pawn.needs.learning?.CurLevel ?? 0f) * (comp.VatTicks / Find.Storyteller.difficulty.childAgingRate);
-    }
-
-    //copy of Pawn_AgeTracker.GrowthPointsPerDayAtLearningLevel(float level) so I don't have to use reflection
-    private static float GrowthPointsPerDayAtLearningLevel(Pawn_AgeTracker ageTracker, float level)
-    {
-        //copy of code from Pawn_AgeTracker.GrowthPointsFactor
-        float growthPointsFactor = ageTracker.AgeBiologicalYears < YoungAgeCutoff ? GrowthPointsFactor_Young : 1f;
-        return level * growthPointsFactor * ageTracker.ChildAgingMultiplier;
+        __result = Pawn_AgeTracker_GrowthPointsPerDayAtLearningLevel(__instance, (pawn.needs.learning?.CurLevel ?? 0f) * comp.DailyGrowthPointFactor);
     }
 }
 
@@ -143,10 +144,13 @@ public static class Pawn_AgeTracker_GrowthPointsPerDay_HP
 [HarmonyPatch(typeof(Pawn_AgeTracker), "Notify_TickedInGrowthVat")]
 public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 {
-    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance, out Pawn __state)
+    private static Pawn Pawn_AgeTracker_Pawn(Pawn_AgeTracker ageTracker) =>
+        (Pawn)typeof(Pawn_AgeTracker).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ageTracker);
+
+    public static bool Prefix(ref int ticks, Pawn_AgeTracker __instance)
     {
-        __state = Traverse.Create(__instance).Field("pawn").GetValue<Pawn>();
-        EnhancedGrowthVatComp learningComp = ((Building_GrowthVat)__state.ParentHolder).GetComp<EnhancedGrowthVatComp>();
+        Pawn pawn = Pawn_AgeTracker_Pawn(__instance);
+        CompOverclockedGrowthVat learningComp = ((Building_GrowthVat)pawn?.ParentHolder)?.GetComp<CompOverclockedGrowthVat>();
         if (learningComp == null)
             return true; //should not happen unless I missed a call to this method
 
@@ -166,20 +170,24 @@ public static class Pawn_AgeTracker_Notify_TickedInGrowthVat_HP
 
         //finally, track ticks for backstories and stats ourselves.
         //tracker might be null because of dev tools so check for that
-        EnhancedGrowthVatMod.GetTrackerFor(__state)?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
+        GrowthVatsOverclockedMod.GetTrackerFor(pawn)?.TrackGrowthTicks(ticks, learningComp.Enabled, learningComp.Mode);
         return true;
     }
 
-    public static void Postfix(Pawn __state)
+
+    //Tick any hediffs that have our extension
+    public static void Postfix(Pawn_AgeTracker __instance)
     {
+        Pawn pawn = Pawn_AgeTracker_Pawn(__instance);
+
         //tick all hediffs with TickInGrowthVatComp
-        List<Hediff> vatHediffs = __state.health.hediffSet.hediffs.Where(h => h.TryGetComp<HediffComp_TickInGrowthVat>() is { tickInVat: true }).ToList();
+        List<Hediff> vatHediffs = pawn.health.hediffSet.hediffs.Where(h => h.TryGetComp<HediffComp_TickInGrowthVat>() is { tickInVat: true }).ToList();
         foreach (Hediff hediff in vatHediffs)
         {
             hediff.Tick();
             hediff.PostTick();
             if (hediff is { ShouldRemove: true })
-                __state.health.RemoveHediff(hediff);
+                pawn.health.RemoveHediff(hediff);
         }
     }
 }
@@ -191,7 +199,7 @@ public static class Building_GrowthVat_VatLearning_HP
 {
     public static bool Prefix(Building_GrowthVat __instance, ref Hediff __result)
     {
-        __result = __instance.GetComp<EnhancedGrowthVatComp>().VatLearning;
+        __result = __instance.GetComp<CompOverclockedGrowthVat>().VatLearning;
         return false;
     }
 }
@@ -203,7 +211,7 @@ public static class Building_GrowthVat_TryAcceptPawn_HP
     public static void Postfix(Pawn pawn, Building_GrowthVat __instance)
     {
         if (pawn.ParentHolder == __instance)
-            __instance.GetComp<EnhancedGrowthVatComp>().SetVatHediffs(pawn.health);
+            __instance.GetComp<CompOverclockedGrowthVat>().Refresh();
     }
 }
 
@@ -216,7 +224,7 @@ public static class Building_GrowthVat_GetGizmos_HP
         foreach (Gizmo gizmo in gizmos)
             //rebuild the dev:learn gizmo to use the correct class
             if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command &&
-                __instance.GetComp<EnhancedGrowthVatComp>().VatLearning is Hediff_EnhancedVatLearning learningHediff)
+                __instance.GetComp<CompOverclockedGrowthVat>().VatLearning is Hediff_EnhancedVatLearning learningHediff)
                 yield return new Command_Action
                 {
                     defaultLabel = $"{command.defaultLabel} Enhanced",

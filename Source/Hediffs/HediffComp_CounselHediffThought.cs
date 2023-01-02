@@ -1,6 +1,6 @@
 ﻿// HediffComp_CounselHediffThought.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/12/24 6:46 PM
 // Last edited by: Anthony Chenevier on 2022/12/24 6:46 PM
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Hediffs;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class HediffCompProperties_CounselHediffThought : HediffCompProperties
 {

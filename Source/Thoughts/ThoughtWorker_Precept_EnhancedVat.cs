@@ -1,18 +1,18 @@
 ﻿// ThoughtWorker_Precept_EnhancedVat.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/17 9:28 PM
 // Last edited by: Anthony Chenevier on 2022/11/18 12:29 AM
 
 
-using EnhancedGrowthVatLearning.Data;
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Thoughts;
+namespace GrowthVatsOverclocked.Thoughts;
 
 public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
 {
@@ -33,7 +33,7 @@ public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
             if (child.MapHeld == pawn.MapHeld &&
                 child.DevelopmentalStage.Child() &&
                 child.ParentHolder is Building_GrowthVat growthVat &&
-                growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } vatComp &&
+                growthVat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } vatComp &&
                 ActiveForMode(vatComp.Mode))
                 count++;
 

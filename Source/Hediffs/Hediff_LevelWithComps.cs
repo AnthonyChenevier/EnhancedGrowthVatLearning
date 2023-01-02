@@ -1,6 +1,6 @@
 ﻿// Hediff_TimedLevel.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/26 1:32 AM
 // Last edited by: Anthony Chenevier on 2022/11/26 1:32 AM
@@ -9,7 +9,7 @@
 using System.Linq;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.VatJuice;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class Hediff_LevelWithComps : Hediff_Level
 {

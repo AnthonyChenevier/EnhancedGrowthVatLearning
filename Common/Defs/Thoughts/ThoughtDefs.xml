@@ -4,7 +4,7 @@
     <!-- Encouraged -->
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_EnhancedVatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -20,7 +20,7 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -36,7 +36,7 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -53,7 +53,7 @@
     <!-- Disapproved -->
     <ThoughtDef>
         <defName>ChildLabor_Disapproved_EnhancedVatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -69,7 +69,7 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Disapproved_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -88,7 +88,7 @@
     <!-- vatgrown stress mental effects -->
     <ThoughtDef>
         <defName>VatgrownStressThought</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_VatgrownStress</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_VatgrownStress</workerClass>
         <hediff>VatgrowthStress</hediff>
         <validWhileDespawned>true</validWhileDespawned>
         <nullifyingPrecepts>

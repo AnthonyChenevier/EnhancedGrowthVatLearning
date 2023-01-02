@@ -8,17 +8,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EnhancedGrowthVatLearning.Data;
-using EnhancedGrowthVatLearning.Hediffs;
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.Hediffs;
+using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
-public class EnhancedGrowthVatMod : Mod
+public class GrowthVatsOverclockedMod : Mod
 {
     private static GrowthTrackerRepository _growthTrackerRepository;
 
@@ -45,10 +45,10 @@ public class EnhancedGrowthVatMod : Mod
         }
     }
 
-    public override string SettingsCategory() { return "EnhancedGrowthVatSettings".Translate(); }
-    public static EnhancedGrowthVatSettings Settings { get; private set; }
+    public override string SettingsCategory() { return "GrowthVatsOverclockedSettings".Translate(); }
+    public static GrowthVatsOverclockedSettings Settings { get; private set; }
 
-    public EnhancedGrowthVatMod(ModContentPack content) : base(content) { Settings = GetSettings<EnhancedGrowthVatSettings>(); }
+    public GrowthVatsOverclockedMod(ModContentPack content) : base(content) { Settings = GetSettings<GrowthVatsOverclockedSettings>(); }
 
     public override void DoSettingsWindowContents(Rect inRect) { Settings.DoSettingsWindowContents(inRect); }
 
@@ -62,7 +62,7 @@ public class EnhancedGrowthVatMod : Mod
         //update all defs with power multi if the setting changed
         if (Settings.SettingPowerDirty)
         {
-            CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", Settings.EnhancedModePowerConsumption);
+            CompPowerMulti.ModifyPowerProfiles("Overclocked", Settings.OverclockedPowerConsumption);
             Settings.SettingPowerDirty = false;
         }
 
@@ -75,15 +75,15 @@ public class EnhancedGrowthVatMod : Mod
 
     public static void SetVatBackstoryFor(Pawn pawn, LearningMode mostUsedMode)
     {
-        Pawn_SkillTracker skills = pawn.skills;
+        //Pawn_SkillTracker skills = pawn.skills;
 
         pawn.story.Childhood = mostUsedMode switch
         {
-            LearningMode.Combat => ModDefOf.VatGrownSoldierBackgroundDef,
-            LearningMode.Labor => ModDefOf.VatGrownLaborerBackgroundDef,
-            LearningMode.Leader => ModDefOf.VatGrownLeaderBackgroundDef,
-            LearningMode.Play => ModDefOf.VatGrownPlaylandBackgroundDef,
-            _ => ModDefOf.VatGrownDefaultBackgroundDef
+            LearningMode.Combat => GVODefOf.VatgrownSoldierEGVL,
+            LearningMode.Labor => GVODefOf.VatgrownLaborerEGVL,
+            LearningMode.Leader => GVODefOf.VatgrownLeaderEGVL,
+            LearningMode.Play => GVODefOf.VatgrownPlaylandEGVL,
+            _ => GVODefOf.VatgrownChildEGVL
         };
     }
 
@@ -91,7 +91,6 @@ public class EnhancedGrowthVatMod : Mod
     {
         if (!Settings.GenerateBackstories)
             return null;
-
 
         int id = pawn.thingIDNumber;
 
@@ -120,11 +119,11 @@ public class EnhancedGrowthVatMod : Mod
         int i = 0;
         foreach (Building_GrowthVat growthVat in from map in Current.Game.Maps from growthVat in map.spawnedThings.OfType<Building_GrowthVat>() select growthVat)
         {
-            growthVat.GetComp<EnhancedGrowthVatComp>().Enabled = false;
+            growthVat.GetComp<CompOverclockedGrowthVat>().Enabled = false;
             i++;
         }
 
-        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Turned off enhanced learning for {i} growth vats over {Current.Game.Maps.Count} maps.");
+        Log.Message($"GrowthVatsOverclocked :: Mod Removal Preparation - Turned off enhanced learning for {i} growth vats over {Current.Game.Maps.Count} maps.");
 
         //remove all of the mod's backstories from world pawns.
         int j = 0;
@@ -137,10 +136,10 @@ public class EnhancedGrowthVatMod : Mod
                 j++;
             }
 
-        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Changed {j} pawn childhood backstories back to default vatgrown child");
+        Log.Message($"GrowthVatsOverclocked :: Mod Removal Preparation - Changed {j} pawn childhood backstories back to default vatgrown child");
 
         //remove tracker repo from world components. Should still work for a bit with cache so save and quit is possible
         Find.World.components.Remove(GrowthTrackerRepository);
-        Log.Message($"EnhancedGrowthVatLearning :: Mod Removal Preparation - Removed GrowthTrackerRepository from world components so it will not be saved.");
+        Log.Message($"GrowthVatsOverclocked :: Mod Removal Preparation - Removed GrowthTrackerRepository from world components so it will not be saved.");
     }
 }

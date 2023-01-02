@@ -4,8 +4,8 @@
 	<HediffDef>
 		<defName>EnhancedVatLearningHediff</defName>
 		<label>enhanced vat learning</label>
-		<description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
-		<hediffClass>EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
+		<description>The overclocked growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
+		<hediffClass>GrowthVatsOverclocked.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
 		<everCurableByItem>false</everCurableByItem>
 		<initialSeverity>0.001</initialSeverity>
 		<maxSeverity>1</maxSeverity>
@@ -21,7 +21,7 @@
         <isBad>false</isBad>
         <comps>
             <li>
-                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
+                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_EnhancedVatGrowing</compClass>
             </li>
         </comps>
     </HediffDef>
@@ -37,7 +37,7 @@
         <initialSeverity>0.001</initialSeverity>
         <maxSeverity>1</maxSeverity>
         <hediffGivers>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffGiver_RandomSeverityCurved">
+            <li Class="GrowthVatsOverclocked.Hediffs.HediffGiver_RandomSeverityCurved">
                 <hediff>VatgrowthStress</hediff>
                 <allowOnLodgers>false</allowOnLodgers>
                 <allowOnBeggars>false</allowOnBeggars>
@@ -54,26 +54,35 @@
                 </mtbSeverityCurve>
             </li>
         </hediffGivers>
+        <stages>
+            <li>
+                <label>safe</label>
+            </li>
+            <li>
+                <minSeverity>0.5</minSeverity>
+                <label>dangerous</label>
+                <becomeVisible>true</becomeVisible>
+            </li>
+        </stages>
         <comps>
             <li>
-                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_TickInGrowthVat</compClass>
+                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_TickInGrowthVat</compClass>
             </li>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_SeverityFromVatgrowth">
+            <li Class="HediffCompProperties_Discoverable">
+
+            </li>
+            <li Class="HediffCompProperties_SeverityPerDay">
+                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_SeverityPerDayNotInVat</compClass>
                 <!-- spending 2 days out of the vat removes the hediff. 24hrs will always be enough for reducing to safe levels -->
-                <severityPerDayOutOfVat>-0.5</severityPerDayOutOfVat>
+                <severityPerDay>-0.5</severityPerDay>
+            </li>
+            <li Class="GrowthVatsOverclocked.Hediffs.HediffCompProperties_SeverityPerDayInVat">
                 <!-- naturally raises to just under 0.5 severity over 18 years of vat growth at any speed. -->
-                <severityPerBiologicalYear>0.02777</severityPerBiologicalYear>
-            </li>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_SeverityFromVatjuice">
-                <!-- for each dose of vat juice in system add 16.667% to severity 
-                per year multiplier. 6 doses doubles severity gain, which easily
-                maxes out buildup without other factors. More reasonable 3-4 doses 
-                would still add up to ~0.75-0.83 severity over total growth time.-->
-                <vatjuiceDoseOffset>0.16667</vatjuiceDoseOffset>
-            </li>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_SeverityFromVatLearning">
-                <!-- 8 growth tiers * 3 growth moments = +0.25 severity. Only counts growth points gained while in vat. -->
-                <severityPerGrowthTier>0.010416</severityPerGrowthTier>
+                <severityPerGrownYear>0.02777</severityPerGrownYear>
+                <!-- add 10% to severity gain per dose of vatjuice in system -->
+                <vatjuicePerDoseSeverityModifier>0.1</vatjuicePerDoseSeverityModifier>
+                <!-- add 3% to severity gain per growth points per day given. 2 GPPD (vanilla vat growth) = 6% extra severity. 18 GPPD (max learning need) = 54% extra stress gain -->
+                <learningNeedSeverityModifier>0.005</learningNeedSeverityModifier>
             </li>
         </comps>
     </HediffDef>
@@ -104,10 +113,10 @@
             </li>
         </stages>
         <comps>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_CounselHediffThought">
+            <li Class="GrowthVatsOverclocked.Hediffs.HediffCompProperties_CounselHediffThought">
                 <thoughtDef>VatgrownStressThought</thoughtDef>
             </li>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffCompProperties_MentalBreaksFromThoughtStage">
+            <li Class="GrowthVatsOverclocked.Hediffs.HediffCompProperties_MentalBreaksFromThoughtStage">
                 <thoughtDef>VatgrownStressThought</thoughtDef>
                 <thoughtStageMtbCurve>
                     <points>

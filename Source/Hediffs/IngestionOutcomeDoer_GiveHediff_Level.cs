@@ -1,6 +1,6 @@
 ﻿// IngestionOutcomeDoer_GiveHediff_Level.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/25 11:07 PM
 // Last edited by: Anthony Chenevier on 2022/11/25 11:07 PM
@@ -9,7 +9,7 @@
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.VatJuice;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class IngestionOutcomeDoer_GiveHediff_Level : IngestionOutcomeDoer_GiveHediff
 {

@@ -1,14 +1,14 @@
 ﻿// ThoughtWorker_Precept_EnhancedVatLearning.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/17 10:56 PM
 // Last edited by: Anthony Chenevier on 2022/11/17 10:56 PM
 
 
-using EnhancedGrowthVatLearning.Data;
+using GrowthVatsOverclocked.Data;
 
-namespace EnhancedGrowthVatLearning.Thoughts;
+namespace GrowthVatsOverclocked.Thoughts;
 
 public class ThoughtWorker_Precept_VatLearning : ThoughtWorker_Precept_EnhancedVat
 {

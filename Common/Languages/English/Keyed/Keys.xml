@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
     <!-- Settings -->
-    <EnhancedGrowthVatSettings>Enhanced Growth Vat Learning</EnhancedGrowthVatSettings>
+    <GrowthVatsOverclockedSettings>Growth Vats: Overclocked</GrowthVatsOverclockedSettings>
     <ResetToDefaults_Button>Reset to defaults</ResetToDefaults_Button>
     <ResetToDefaults_Tooltip>Reset all mod settings to default values.</ResetToDefaults_Tooltip>
     <RemoveMod_Button>Remove mod</RemoveMod_Button>
@@ -22,8 +22,8 @@
     <vatDaysForBackstory_SettingsLabel>Simulated days required for mode backstory</vatDaysForBackstory_SettingsLabel>
     <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment.\n\The default value of 400 days matches the vanilla 'vatgrown child' backstory requirement and is just over half of the maximum amount of time an occupant could spend in the vat before that point (780 days or 13 RW years).</vatDaysForBackstory_Tooltip>
 
-    <enhancedModePowerConsumption_SettingsLabel>Power consumption (Watts)</enhancedModePowerConsumption_SettingsLabel>
-    <enhancedModePowerConsumption_Tooltip>Power consumption when enhanced mode is enabled.</enhancedModePowerConsumption_Tooltip>
+    <overclockedPowerConsumption_SettingsLabel>Overclocked power consumption (Watts)</overclockedPowerConsumption_SettingsLabel>
+    <overclockedPowerConsumption_Tooltip>Power consumption when vat overclocking is enabled.</overclockedPowerConsumption_Tooltip>
 
     <vatLearningHediffSeverityPerDay_SettingsLabel>Skill gain rate</vatLearningHediffSeverityPerDay_SettingsLabel>
     <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When the hediff hits 100% the vat occupant receives a set amount of XP in a random skill selected by the learning mode. Default value of 3 will reach 100% 3 times a day - use mode specific settings to tune skills further.</vatLearningHediffSeverityPerDay_Tooltip>
@@ -34,7 +34,7 @@
     <ModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants in {0} mode.</ModeLearningNeed_Tooltip>
 
     <ModeVatAgingFactor_SettingsLabel>{0} mode aging factor</ModeVatAgingFactor_SettingsLabel>
-    <ModeVatAgingFactor_Tooltip>Vat growth multiplier for {0} mode. Vanilla vat occupants grow at a rate of 20x. Slower growth speed provides more time to learn skills and accumulate growth points.</ModeVatAgingFactor_Tooltip>
+    <ModeVatAgingFactor_Tooltip>Vat growth multiplier for {0} mode. Vanilla vat occupants grow at a rate of 20x. Slower growth speed provides more time to learn skills. Growth points averages over growth time are unaffected.</ModeVatAgingFactor_Tooltip>
 
     <ModeSkillXP_SettingsLabel>Skill XP awarded in {0} mode</ModeSkillXP_SettingsLabel>
     <ModeSkillXP_Tooltip>How much skill experience to award each time the 'Enhanced Vat Learning' hediff reaches 100% in {0} mode</ModeSkillXP_Tooltip>
@@ -51,8 +51,8 @@
     <PlayMode>Playland</PlayMode>
 
     <!-- Gizmos - toggle enhance learning -->
-    <ToggleLearning_Label>enhance learning</ToggleLearning_Label>
-    <ToggleLearning_Desc>Toggle enhanced learning mode for this vat. When active this greatly increases the personal growth outcomes and skills gained by the occupant, but drains more power and slows growth speed.</ToggleLearning_Desc>
+    <ToggleLearning_Label>overclock vat</ToggleLearning_Label>
+    <ToggleLearning_Desc>Overclocks and upgrades software for this vat. When active this greatly increases the personal growth outcomes and skills gained by the occupant, but drains more power and slows growth speed.</ToggleLearning_Desc>
     <EnhancedLearningDisabledBabies_Notice>Babies cannot use enhanced learning, but will automatically enter the selected learning suite when they reach the appropriate age.</EnhancedLearningDisabledBabies_Notice>
     <EnhancedLearningResearchRequired_DisabledReason>'{0}' research required.</EnhancedLearningResearchRequired_DisabledReason>
     

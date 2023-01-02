@@ -1,17 +1,17 @@
 ﻿// VatGrowthTrackerComp.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/12 3:38 PM
 // Last edited by: Anthony Chenevier on 2022/11/12 3:38 PM
 
 
 using System.Collections.Generic;
-using EnhancedGrowthVatLearning.Data;
+using GrowthVatsOverclocked.Data;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
 public class VatGrowthTracker : IExposable
 {
@@ -45,7 +45,7 @@ public class VatGrowthTracker : IExposable
 
     public LearningMode MostUsedMode => _modeTicks.Keys.MaxBy(p => _modeTicks[p]);
     public float MostUsedModePercent => LearningModePercent(MostUsedMode);
-    public bool RequiresVatBackstory => VatTicksBiological >= EnhancedGrowthVatMod.Settings.VatDaysForBackstory * GenDate.TicksPerDay;
+    public bool RequiresVatBackstory => VatTicksBiological >= GrowthVatsOverclockedMod.Settings.VatDaysForBackstory * GenDate.TicksPerDay;
 
     public float LearningModePercent(LearningMode mode) { return 1f / _vatTicksBiological * _modeTicks[mode]; }
 

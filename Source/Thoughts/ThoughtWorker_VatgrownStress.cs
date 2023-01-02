@@ -1,17 +1,17 @@
 ﻿// ThoughtWorker_VatgrownStress.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/12/24 3:31 PM
 // Last edited by: Anthony Chenevier on 2022/12/24 6:17 PM
 
 
-using EnhancedGrowthVatLearning.Hediffs;
+using GrowthVatsOverclocked.Hediffs;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Thoughts;
+namespace GrowthVatsOverclocked.Thoughts;
 
 public class ThoughtWorker_VatgrownStress : ThoughtWorker
 {

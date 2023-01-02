@@ -8,14 +8,14 @@
 
 using System;
 using System.Collections.Generic;
-using EnhancedGrowthVatLearning.Data;
-using EnhancedGrowthVatLearning.Hediffs;
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.Hediffs;
+using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
 public class LearningModeSettings : IExposable
 {
@@ -33,7 +33,7 @@ public class LearningModeSettings : IExposable
     }
 }
 
-public class EnhancedGrowthVatSettings : ModSettings
+public class GrowthVatsOverclockedSettings : ModSettings
 {
     private Dictionary<LearningMode, LearningModeSettings> modeSettings = new()
     {
@@ -47,7 +47,7 @@ public class EnhancedGrowthVatSettings : ModSettings
     private float learningNeedVariance;
     private int learningNeedDailyChangeRate;
 
-    private float enhancedModePowerConsumption;
+    private float overclockedPowerConsumption;
 
     private bool generateBackstories;
     private float vatDaysForBackstory;
@@ -60,7 +60,7 @@ public class EnhancedGrowthVatSettings : ModSettings
     public float LearningNeedVariance => learningNeedVariance;
     public int LearningNeedDailyChangeRate => learningNeedDailyChangeRate;
 
-    public float EnhancedModePowerConsumption => enhancedModePowerConsumption;
+    public float OverclockedPowerConsumption => overclockedPowerConsumption;
 
 
     public bool GenerateBackstories => generateBackstories;
@@ -90,7 +90,7 @@ public class EnhancedGrowthVatSettings : ModSettings
     }
 
 
-    public EnhancedGrowthVatSettings() { SetDefaults(); }
+    public GrowthVatsOverclockedSettings() { SetDefaults(); }
 
     private void SetDefaults()
     {
@@ -101,7 +101,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         learningNeedVariance = 0.15f;
         learningNeedDailyChangeRate = 8;
 
-        enhancedModePowerConsumption = 800f;
+        overclockedPowerConsumption = 800f;
 
         generateBackstories = true;
         vatDaysForBackstory = 400f;
@@ -212,7 +212,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref learningNeedVariance, nameof(learningNeedVariance));
         Scribe_Values.Look(ref learningNeedDailyChangeRate, nameof(learningNeedDailyChangeRate));
 
-        Scribe_Values.Look(ref enhancedModePowerConsumption, nameof(enhancedModePowerConsumption));
+        Scribe_Values.Look(ref overclockedPowerConsumption, nameof(overclockedPowerConsumption));
 
         Scribe_Values.Look(ref generateBackstories, nameof(generateBackstories));
         Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
@@ -220,8 +220,8 @@ public class EnhancedGrowthVatSettings : ModSettings
         Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
 
         //update all defs with power multi comp if setting is not default on load
-        if (Scribe.mode == LoadSaveMode.LoadingVars && enhancedModePowerConsumption != 800f)
-            CompPowerMulti.ModifyPowerProfiles("EnhancedLearning", enhancedModePowerConsumption);
+        if (Scribe.mode == LoadSaveMode.LoadingVars && overclockedPowerConsumption != 800f)
+            CompPowerMulti.ModifyPowerProfiles("Overclocked", overclockedPowerConsumption);
 
         //update all defs with power multi comp if setting is not default on load
         if (Scribe.mode == LoadSaveMode.LoadingVars && vatLearningHediffSeverityPerDay != 3f)
@@ -230,8 +230,8 @@ public class EnhancedGrowthVatSettings : ModSettings
 
     public void DoSettingsWindowContents(Rect inRect)
     {
-        //set initial power consumption for dirty setting check if it's unset (once per opening setting screen)
-        initPowerConsumptionValue ??= enhancedModePowerConsumption;
+        //set up dirty setting checks (once per opening setting screen)
+        initPowerConsumptionValue ??= overclockedPowerConsumption;
         initEnhancedLearningHediffValue ??= vatLearningHediffSeverityPerDay;
 
         DrawResetButton(inRect);
@@ -296,15 +296,15 @@ public class EnhancedGrowthVatSettings : ModSettings
 
         scrollView.GapLine();
 
-        scrollView.TextFieldNumericLabeledTooltip("enhancedModePowerConsumption_SettingsLabel".Translate(),
-                                                  ref enhancedModePowerConsumption,
-                                                  "enhancedModePowerConsumption_Tooltip".Translate(),
+        scrollView.TextFieldNumericLabeledTooltip("overclockedPowerConsumption_SettingsLabel".Translate(),
+                                                  ref overclockedPowerConsumption,
+                                                  "overclockedPowerConsumption_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i++],
                                                   80f,
                                                   100000f);
 
         //handle setting power consumption if it's not the initial value
-        if (enhancedModePowerConsumption != initPowerConsumptionValue)
+        if (overclockedPowerConsumption != initPowerConsumptionValue)
             SettingPowerDirty = true;
 
         scrollView.GapLine();
@@ -395,7 +395,7 @@ public class EnhancedGrowthVatSettings : ModSettings
         if (Widgets.ButtonText(buttonRect, "RemoveMod_Button".Translate(), active: Current.Game?.World != null))
             Find.WindowStack.Add(new Dialog_MessageBox("AreYouSureModRemoval_Dialog".Translate().Colorize(ColorLibrary.RedReadable),
                                                        buttonAText: "OK".Translate(),
-                                                       buttonAAction: EnhancedGrowthVatMod.RemoveMod,
+                                                       buttonAAction: GrowthVatsOverclockedMod.RemoveMod,
                                                        buttonBText: "Cancel".Translate()));
     }
 }

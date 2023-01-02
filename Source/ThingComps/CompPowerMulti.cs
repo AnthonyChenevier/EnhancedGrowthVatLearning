@@ -8,11 +8,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
+using System.Reflection;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.ThingComps;
+namespace GrowthVatsOverclocked.ThingComps;
 
 public class CompPowerMulti : ThingComp
 {
@@ -41,7 +41,12 @@ public class CompPowerMulti : ThingComp
                                                                                   .Select(t => t.GetCompProperties<CompProperties_PowerMulti>());
 
         //set private basePowerConsumption field to given value for all multi power profiles
-        foreach (CompProperties_PowerMulti powerMulti in powerMultis.Where(pm => pm.powerProfiles.ContainsKey(profileKey)))
-            Traverse.Create(powerMulti.powerProfiles[profileKey]).Field("basePowerConsumption").SetValue(powerConsumption);
+        foreach (CompProperties_PowerMulti multiPowerComp in powerMultis.Where(pm => pm.powerProfiles.ContainsKey(profileKey)))
+            SetPrivateBasePowerConsumption(multiPowerComp.powerProfiles[profileKey], powerConsumption);
+    }
+
+    private static void SetPrivateBasePowerConsumption(CompProperties_Power powerComp, float powerConsumption)
+    {
+        typeof(CompProperties_Power).GetField("basePowerConsumption", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(powerComp, powerConsumption);
     }
 }

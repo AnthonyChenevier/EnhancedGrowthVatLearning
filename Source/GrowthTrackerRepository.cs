@@ -1,6 +1,6 @@
 ﻿// GrowthTrackerRepository.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/22 9:50 AM
 // Last edited by: Anthony Chenevier on 2022/11/22 9:50 AM
@@ -12,7 +12,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
 public class GrowthTrackerRepository : WorldComponent
 {
@@ -70,7 +70,7 @@ public class GrowthTrackerRepository : WorldComponent
 
 
             _trackers.Remove(id);
-            Log.Message($"EnhancedGrowthVatLearning :: Removed growth tracker for '{pawnID}' from global repository. Reason: {reason}");
+            Log.Message($"GrowthVatsOverclocked :: Removed growth tracker for '{pawnID}' from global repository. Reason: {reason}");
         }
     }
 }

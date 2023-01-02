@@ -8,9 +8,9 @@
 
 using Verse;
 
-namespace EnhancedGrowthVatLearning.ThingComps;
+namespace GrowthVatsOverclocked.ThingComps;
 
 public class CompProperties_EnhancedGrowthVat : CompProperties
 {
-    public CompProperties_EnhancedGrowthVat() : base(typeof(EnhancedGrowthVatComp)) { }
+    public CompProperties_EnhancedGrowthVat() : base(typeof(CompOverclockedGrowthVat)) { }
 }

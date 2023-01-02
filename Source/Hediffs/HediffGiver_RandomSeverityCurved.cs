@@ -1,6 +1,6 @@
 ﻿// HediffGiver_VatgrowthStress.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/12/13 3:29 PM
 // Last edited by: Anthony Chenevier on 2022/12/23 1:10 PM
@@ -9,7 +9,7 @@
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Hediffs;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class HediffGiver_RandomSeverityCurved : HediffGiver
 {

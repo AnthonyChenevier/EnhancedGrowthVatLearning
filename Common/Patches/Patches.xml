@@ -4,7 +4,7 @@
     <Operation Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
         <value>
-            <li Class="EnhancedGrowthVatLearning.ThingComps.CompProperties_EnhancedGrowthVat" />
+            <li Class="GrowthVatsOverclocked.ThingComps.CompProperties_EnhancedGrowthVat" />
         </value>
     </Operation>
 
@@ -14,7 +14,7 @@
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
             </li>
-            <li Class="EnhancedGrowthVatLearning.ThingComps.CompProperties_PowerMulti">
+            <li Class="GrowthVatsOverclocked.ThingComps.CompProperties_PowerMulti">
                 <powerProfiles>
                     <li>
                         <key>Default</key>
@@ -24,7 +24,7 @@
                         </value>
                     </li>
                     <li>
-                        <key>EnhancedLearning</key>
+                        <key>Overclocked</key>
                         <value>
                             <basePowerConsumption>800</basePowerConsumption>
                             <idlePowerDraw>80</idlePowerDraw>

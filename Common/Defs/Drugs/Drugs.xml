@@ -36,7 +36,7 @@
             <chairSearchRadius>0</chairSearchRadius>
             <babiesCanIngest>true</babiesCanIngest>
             <outcomeDoers>
-                <li Class="EnhancedGrowthVatLearning.VatJuice.IngestionOutcomeDoer_GiveHediff_Level">
+                <li Class="GrowthVatsOverclocked.Hediffs.IngestionOutcomeDoer_GiveHediff_Level">
                     <hediffDef>VatJuiceEffect</hediffDef>
                     <severity>1</severity>
                 </li>
@@ -70,7 +70,7 @@
 
     <HediffDef>
         <defName>VatJuiceEffect</defName>
-        <hediffClass>EnhancedGrowthVatLearning.VatJuice.Hediff_LevelWithComps</hediffClass>
+        <hediffClass>GrowthVatsOverclocked.Hediffs.Hediff_LevelWithComps</hediffClass>
         <label>effected by vat-juice</label>
         <labelNoun>a vat-juice effect</labelNoun>
         <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects.</description>
@@ -79,7 +79,7 @@
         <isBad>false</isBad>
         <levelIsQuantity>true</levelIsQuantity>
         <hediffGivers>
-            <li Class="EnhancedGrowthVatLearning.Hediffs.HediffGiver_RandomSeverityCurved">
+            <li Class="GrowthVatsOverclocked.Hediffs.HediffGiver_RandomSeverityCurved">
                 <hediff>VatjuicePain</hediff>
                 <!-- partsToAffect>
                     <li>Brain</li>
@@ -102,7 +102,7 @@
         </hediffGivers>
         <comps>
             <li>
-                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_TickInGrowthVat</compClass>
+                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_TickInGrowthVat</compClass>
             </li>
             <li Class="HediffCompProperties_Disappears">
                 <disappearsAfterTicks>180000</disappearsAfterTicks>

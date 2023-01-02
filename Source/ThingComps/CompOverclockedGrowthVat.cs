@@ -7,14 +7,17 @@
 
 
 using System.Collections.Generic;
-using EnhancedGrowthVatLearning.Data;
+using GrowthVatsOverclocked.Data;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.ThingComps;
+namespace GrowthVatsOverclocked.ThingComps;
 
-public class EnhancedGrowthVatComp : ThingComp
+/// <summary>
+/// Central part of the mod, does most of the heavy lifting that isn't done by harmony patches
+/// </summary>
+public class CompOverclockedGrowthVat : ThingComp
 {
     private bool enabled;
 
@@ -40,9 +43,9 @@ public class EnhancedGrowthVatComp : ThingComp
                 return;
 
             //set up power profile
-            string powerProfile = enabled ? "EnhancedLearning" : "Default";
+            string powerProfile = enabled ? "Overclocked" : "Default";
             if (!PowerMulti.TrySetPowerProfile(powerProfile))
-                Log.Error($"VariablePowerComp profile name \"{powerProfile}\" could not be found");
+                Log.Error($"GrowthVatsOverclocked :: VariablePowerComp profile name \"{powerProfile}\" could not be found when attempting to set.");
 
             //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
             SetVatHediffs(pawn.health);
@@ -85,7 +88,7 @@ public class EnhancedGrowthVatComp : ThingComp
         {
             HediffDef learningHediffDef;
             if (enabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
-                learningHediffDef = ModDefOf.EnhancedVatLearningHediffDef;
+                learningHediffDef = GVODefOf.EnhancedVatLearningHediff;
             else
                 learningHediffDef = HediffDefOf.VatLearning;
 
@@ -94,8 +97,9 @@ public class EnhancedGrowthVatComp : ThingComp
     }
 
     public Hediff VatStressBuildup =>
-        GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(ModDefOf.VatgrowthStressBuildupHediffDef) ??
-        GrowthVat.SelectedPawn.health.AddHediff(ModDefOf.VatgrowthStressBuildupHediffDef);
+        GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthStressBuildup) ?? GrowthVat.SelectedPawn.health.AddHediff(GVODefOf.VatgrowthStressBuildup);
+
+    public float DailyGrowthPointFactor => VatTicks / Find.Storyteller.difficulty.childAgingRate;
 
 
     //Overrides
@@ -105,17 +109,17 @@ public class EnhancedGrowthVatComp : ThingComp
     {
         base.CompTick();
         //vary learning need by small random amount a number of times daily
-        if (enabled && parent.IsHashIntervalTick(GenDate.TicksPerDay / EnhancedGrowthVatMod.Settings.LearningNeedDailyChangeRate))
+        if (enabled && parent.IsHashIntervalTick(GenDate.TicksPerDay / GrowthVatsOverclockedMod.Settings.LearningNeedDailyChangeRate))
             CalculateHeldPawnLearningNeed();
     }
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        ResearchProjectDef vatResearch = ModDefOf.EnhancedGrowthVatResearchProjectDef;
-        ResearchProjectDef soldierResearch = ModDefOf.VatLearningSoldierProjectDef;
-        ResearchProjectDef laborResearch = ModDefOf.VatLearningLaborProjectDef;
-        ResearchProjectDef leaderResearch = ModDefOf.VatLearningLeaderProjectDef;
-        ResearchProjectDef playResearch = ModDefOf.VatLearningPlayProjectDef;
+        ResearchProjectDef vatResearch = GVODefOf.GrowthVatOverclockingResearch;
+        ResearchProjectDef soldierResearch = GVODefOf.VatLearningSoldierResearch;
+        ResearchProjectDef laborResearch = GVODefOf.VatLearningLaborResearch;
+        ResearchProjectDef leaderResearch = GVODefOf.VatLearningLeaderResearch;
+        ResearchProjectDef playResearch = GVODefOf.VatLearningPlayResearch;
 
         //enhanced learning toggle
         string disabledForBabyNotice = "";
@@ -172,8 +176,6 @@ public class EnhancedGrowthVatComp : ThingComp
 
 
     //comp methods
-
-
     public void Refresh() => Enabled = enabled;
 
     private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,
@@ -185,42 +187,33 @@ public class EnhancedGrowthVatComp : ThingComp
 
         if (playResearch.IsFinished)
         {
-            string disabledForTeenNotice = "";
-            if (GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Adult())
-                disabledForTeenNotice = $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}";
-
-            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Play.Label()), () => Mode = LearningMode.Play, LearningMode.Play.Icon(), Color.white)
-            {
-                Disabled = GrowthVat.SelectedPawn is { } pawn1 && pawn1.ageTracker.CurLifeStage.developmentalStage.Adult(),
-                tooltip = new TipSignal($"{LearningMode.Play.Description()}{disabledForTeenNotice}"),
-            });
+            bool overPlayAge = GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Adult();
+            string disabledForTeenNotice = overPlayAge ? $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}" : "";
+            options.Add(ModeMenuOption(LearningMode.Play, $"{LearningMode.Play.Description()}{disabledForTeenNotice}", overPlayAge));
         }
 
         if (soldierResearch.IsFinished)
-            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Combat.Label()), () => Mode = LearningMode.Combat, LearningMode.Combat.Icon(), Color.white)
-            {
-                tooltip = new TipSignal(LearningMode.Combat.Description()),
-            });
+            options.Add(ModeMenuOption(LearningMode.Combat, LearningMode.Combat.Description()));
 
         if (laborResearch.IsFinished)
-            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Labor.Label()), () => Mode = LearningMode.Labor, LearningMode.Labor.Icon(), Color.white)
-            {
-                tooltip = new TipSignal(LearningMode.Labor.Description()),
-            });
+            options.Add(ModeMenuOption(LearningMode.Labor, LearningMode.Labor.Description()));
 
         if (leaderResearch.IsFinished)
-            options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Leader.Label()), () => Mode = LearningMode.Leader, LearningMode.Leader.Icon(), Color.white)
-            {
-                tooltip = new TipSignal(LearningMode.Leader.Description()),
-            });
+            options.Add(ModeMenuOption(LearningMode.Leader, LearningMode.Leader.Description()));
 
         //default always visible
-        options.Add(new FloatMenuOption("SwitchToMode_Label".Translate(LearningMode.Default.Label()), () => Mode = LearningMode.Default, LearningMode.Default.Icon(), Color.white)
-        {
-            tooltip = new TipSignal(LearningMode.Default.Description()),
-        });
+        options.Add(ModeMenuOption(LearningMode.Default, LearningMode.Default.Description()));
 
         return options;
+    }
+
+    private FloatMenuOption ModeMenuOption(LearningMode learningMode, string tooltip, bool isDisabled = false)
+    {
+        return new FloatMenuOption("SwitchToMode_Label".Translate(learningMode.Label()), () => Mode = learningMode, learningMode.Icon(), Color.white)
+        {
+            tooltip = new TipSignal(tooltip),
+            Disabled = isDisabled
+        };
     }
 
     private void CalculateHeldPawnLearningNeed()
@@ -236,44 +229,41 @@ public class EnhancedGrowthVatComp : ThingComp
         }
 
         //randomize learning need by variance value
-        float randRange = EnhancedGrowthVatMod.Settings.LearningNeedVariance;
-        float modeLearningNeed = mode.Settings().baseLearningNeed;
-
-
-        learning.CurLevel = modeLearningNeed * (1f - Rand.Range(-randRange, randRange)) * LearningUtility.LearningRateFactor(pawn);
+        float randRange = GrowthVatsOverclockedMod.Settings.LearningNeedVariance;
+        learning.CurLevel = mode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * LearningUtility.LearningRateFactor(pawn);
     }
 
     public void SetVatHediffs(Pawn_HealthTracker pawnHealth)
     {
-        if (!pawnHealth.hediffSet.HasHediff(ModDefOf.VatgrowthStressBuildupHediffDef))
-            pawnHealth.AddHediff(ModDefOf.VatgrowthStressBuildupHediffDef);
+        if (!pawnHealth.hediffSet.HasHediff(GVODefOf.VatgrowthStressBuildup))
+            pawnHealth.AddHediff(GVODefOf.VatgrowthStressBuildup);
 
         if (enabled)
         {
             if (pawnHealth.hediffSet.HasHediff(HediffDefOf.VatGrowing))
             {
                 pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatGrowing));
-                pawnHealth.AddHediff(ModDefOf.EnhancedVatGrowingHediffDef);
+                pawnHealth.AddHediff(GVODefOf.EnhancedVatGrowingHediff);
             }
 
             if (!pawnHealth.hediffSet.HasHediff(HediffDefOf.VatLearning))
                 return;
 
             pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatLearning));
-            pawnHealth.AddHediff(ModDefOf.EnhancedVatLearningHediffDef);
+            pawnHealth.AddHediff(GVODefOf.EnhancedVatLearningHediff);
         }
         else
         {
-            if (pawnHealth.hediffSet.HasHediff(ModDefOf.EnhancedVatGrowingHediffDef))
+            if (pawnHealth.hediffSet.HasHediff(GVODefOf.EnhancedVatGrowingHediff))
             {
-                pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(ModDefOf.EnhancedVatGrowingHediffDef));
+                pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatGrowingHediff));
                 pawnHealth.AddHediff(HediffDefOf.VatGrowing);
             }
 
-            if (!pawnHealth.hediffSet.HasHediff(ModDefOf.EnhancedVatLearningHediffDef))
+            if (!pawnHealth.hediffSet.HasHediff(GVODefOf.EnhancedVatLearningHediff))
                 return;
 
-            pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(ModDefOf.EnhancedVatLearningHediffDef));
+            pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatLearningHediff));
             pawnHealth.AddHediff(HediffDefOf.VatLearning);
         }
     }

@@ -7,8 +7,8 @@
     <ProjectGuid>{FC41E232-A864-437B-8A66-32A408DC6EB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EnhancedGrowthVatLearning</RootNamespace>
-    <AssemblyName>EnhancedGrowthVatLearning</AssemblyName>
+    <RootNamespace>GrowthVatsOverclocked</RootNamespace>
+    <AssemblyName>GrowthVatsOverclocked</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -48,26 +48,26 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EnhancedGrowthVatMod.cs" />
-    <Compile Include="EnhancedGrowthVatSettings.cs" />
+    <Compile Include="GrowthVatsOverclockedMod.cs" />
+    <Compile Include="GrowthVatsOverclockedSettings.cs" />
     <Compile Include="Data\LearningMode.cs" />
-    <Compile Include="Data\ModDefOf.cs" />
+    <Compile Include="Data\GVODefOf.cs" />
     <Compile Include="GrowthTrackerRepository.cs" />
     <Compile Include="Hediffs\HediffComp_CounselHediffThought.cs" />
-    <Compile Include="Hediffs\HediffComp_SeverityFromVatLearning.cs" />
-    <Compile Include="Hediffs\HediffComp_SeverityFromVatgrowth.cs" />
-    <Compile Include="Hediffs\HediffComp_SeverityFromVatjuice.cs" />
+    <Compile Include="Hediffs\HediffComp_SeverityPerDayInVat.cs" />
+    <Compile Include="Hediffs\HediffComp_SeverityPerDayNotInVat.cs" />
     <Compile Include="Hediffs\HediffComp_TickInGrowthVat.cs" />
     <Compile Include="Hediffs\HediffGiver_RandomSeverityCurved.cs" />
     <Compile Include="Hediffs\HediffComp_MentalBreaksFromThoughtStage.cs" />
+    <Compile Include="BackCompatibilityConverter_EGVL_GVO.cs" />
     <Compile Include="Thoughts\ThoughtWorker_VatgrownStress.cs" />
-    <Compile Include="VatJuice\Hediff_LevelWithComps.cs" />
-    <Compile Include="VatJuice\IngestionOutcomeDoer_GiveHediff_Level.cs" />
+    <Compile Include="Hediffs\Hediff_LevelWithComps.cs" />
+    <Compile Include="Hediffs\IngestionOutcomeDoer_GiveHediff_Level.cs" />
     <Compile Include="ListingHelper.cs" />
     <Compile Include="Stats\StatWorker_VatTime.cs" />
     <Compile Include="ThingComps\CompProperties_EnhancedGrowthVat.cs" />
     <Compile Include="ThingComps\CompProperties_PowerMulti.cs" />
-    <Compile Include="ThingComps\EnhancedGrowthVatComp.cs" />
+    <Compile Include="ThingComps\CompOverclockedGrowthVat.cs" />
     <Compile Include="Hediffs\HediffComp_EnhancedVatGrowing.cs" />
     <Compile Include="Hediffs\Hediff_EnhancedVatLearning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +90,10 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HotSwap">
+      <HintPath>C:\steam\steamapps\common\RimWorld\Mods\HotSwap\Assemblies\HotSwap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ISharpZipLib">

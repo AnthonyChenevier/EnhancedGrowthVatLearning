@@ -6,12 +6,12 @@
 // Last edited by: Anthony Chenevier on 2022/11/04 12:27 AM
 
 
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Hediffs;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class HediffComp_EnhancedVatGrowing : HediffComp
 {
@@ -22,7 +22,7 @@ public class HediffComp_EnhancedVatGrowing : HediffComp
         get
         {
             int vatAgingFactor = 5318008; //shouldn't be seen if everything is working
-            if (Pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+            if (Pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } comp)
                 vatAgingFactor = comp.PausedForLetter ? 0 : comp.ModeAgingFactor; //show base value or 0 if paused
 
             //explain final growth speed (if growStat matters)

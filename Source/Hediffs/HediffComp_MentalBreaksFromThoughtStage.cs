@@ -1,6 +1,6 @@
 ﻿// Hediff_PVSD.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/12/08 1:25 AM
 // Last edited by: Anthony Chenevier on 2022/12/12 3:40 PM
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Hediffs;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class ThoughtBreak
 {
