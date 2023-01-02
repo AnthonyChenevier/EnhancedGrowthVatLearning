@@ -3,19 +3,27 @@
     <!-- Growth Vat vanilla replacement Hediffs -->
 	<HediffDef>
 		<defName>EnhancedVatLearningHediff</defName>
-		<label>enhanced vat learning</label>
-		<description>The overclocked growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
-		<hediffClass>GrowthVatsOverclocked.Hediffs.Hediff_EnhancedVatLearning</hediffClass>
+		<label>vat learning (overclocked)</label>
+		<description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
+		<hediffClass>Hediff_VatLearning</hediffClass>
 		<everCurableByItem>false</everCurableByItem>
 		<initialSeverity>0.001</initialSeverity>
 		<maxSeverity>1</maxSeverity>
 		<isBad>false</isBad>
+        <comps>
+            <li Class="HediffCompProperties_SeverityPerDay">
+                <severityPerDay>3</severityPerDay>
+            </li>
+            <li>
+                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride</compClass>
+            </li>
+        </comps>
 	</HediffDef>
 
     <HediffDef>
         <defName>EnhancedVatGrowingHediff</defName>
         <label>vat growing (reduced speed)</label>
-        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for enhanced learning software and reduce negative impact on the occupant.</description>
+        <description>The growth vat is stimulating this person's body to increase the rate of cell division and aging. It is running at reduced speed to free up resources for overclocked learning hardware.</description>
         <hediffClass>HediffWithComps</hediffClass>
         <everCurableByItem>false</everCurableByItem>
         <isBad>false</isBad>

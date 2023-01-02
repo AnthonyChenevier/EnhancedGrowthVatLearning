@@ -69,7 +69,7 @@
     <Compile Include="ThingComps\CompProperties_PowerMulti.cs" />
     <Compile Include="ThingComps\CompOverclockedGrowthVat.cs" />
     <Compile Include="Hediffs\HediffComp_EnhancedVatGrowing.cs" />
-    <Compile Include="Hediffs\Hediff_EnhancedVatLearning.cs" />
+    <Compile Include="Hediffs\HediffComp_VatLearningModeOverride.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="ThingComps\CompPowerMulti.cs" />

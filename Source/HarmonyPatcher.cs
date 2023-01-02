@@ -204,6 +204,21 @@ public static class Building_GrowthVat_VatLearning_HP
     }
 }
 
+//Patch vat learning hediff to 
+[HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
+public static class Hediff_VatLearning_Learn_HP
+{
+    public static bool Prefix(Hediff_VatLearning __instance)
+    {
+        if (__instance.TryGetComp<HediffComp_VatLearningModeOverride>() is not { } comp)
+            return true; //not our hediff, continue.
+
+        //use our comp instead of default Learn()
+        comp.Learn();
+        return false;
+    }
+}
+
 //Override to refresh enhanced mode on pawn entry (fixes extra Vat Learning hediff if kids enter when not babies)
 [HarmonyPatch(typeof(Building_GrowthVat), "TryAcceptPawn")]
 public static class Building_GrowthVat_TryAcceptPawn_HP
@@ -222,13 +237,13 @@ public static class Building_GrowthVat_GetGizmos_HP
     public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Building_GrowthVat __instance)
     {
         foreach (Gizmo gizmo in gizmos)
-            //rebuild the dev:learn gizmo to use the correct class
+            //rebuild the dev:learn gizmo to use the comp Learn()
             if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command &&
-                __instance.GetComp<CompOverclockedGrowthVat>().VatLearning is Hediff_EnhancedVatLearning learningHediff)
+                ((Hediff_VatLearning)__instance.GetComp<CompOverclockedGrowthVat>().VatLearning)?.TryGetComp<HediffComp_VatLearningModeOverride>() is { } comp)
                 yield return new Command_Action
                 {
                     defaultLabel = $"{command.defaultLabel} Enhanced",
-                    action = learningHediff.EnhancedLearn
+                    action = comp.Learn
                 };
             else //send the rest through untouched
                 yield return gizmo;

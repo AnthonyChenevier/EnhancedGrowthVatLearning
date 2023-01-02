@@ -48,7 +48,16 @@ public class CompOverclockedGrowthVat : ThingComp
                 Log.Error($"GrowthVatsOverclocked :: VariablePowerComp profile name \"{powerProfile}\" could not be found when attempting to set.");
 
             //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
-            SetVatHediffs(pawn.health);
+            if (enabled)
+            {
+                SwapHediffs(pawn.health, HediffDefOf.VatGrowing, ModDefOf.EnhancedVatGrowingHediffDef);
+                SwapHediffs(pawn.health, HediffDefOf.VatLearning, ModDefOf.EnhancedVatLearningHediffDef, true);
+            }
+            else
+            {
+                SwapHediffs(pawn.health, ModDefOf.EnhancedVatGrowingHediffDef, HediffDefOf.VatGrowing);
+                SwapHediffs(pawn.health, ModDefOf.EnhancedVatLearningHediffDef, HediffDefOf.VatLearning); //no severity copy back to prevent gaming for XP boost
+            }
 
             //but only children have learning need to be updated
             CalculateHeldPawnLearningNeed();
@@ -230,41 +239,20 @@ public class CompOverclockedGrowthVat : ThingComp
 
         //randomize learning need by variance value
         float randRange = GrowthVatsOverclockedMod.Settings.LearningNeedVariance;
-        learning.CurLevel = mode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * LearningUtility.LearningRateFactor(pawn);
+        learning.CurLevel = mode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * pawn.GetStatValue(StatDefOf.LearningRateFactor);
     }
 
-    public void SetVatHediffs(Pawn_HealthTracker pawnHealth)
+    private void SwapHediffs(Pawn_HealthTracker healthTracker, HediffDef currentDef, HediffDef nextDef, bool copySeverity = false)
     {
-        if (!pawnHealth.hediffSet.HasHediff(GVODefOf.VatgrowthStressBuildup))
-            pawnHealth.AddHediff(GVODefOf.VatgrowthStressBuildup);
+        if (!healthTracker.hediffSet.HasHediff(currentDef))
+            return;
 
-        if (enabled)
-        {
-            if (pawnHealth.hediffSet.HasHediff(HediffDefOf.VatGrowing))
-            {
-                pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatGrowing));
-                pawnHealth.AddHediff(GVODefOf.EnhancedVatGrowingHediff);
-            }
+        Hediff current = healthTracker.hediffSet.GetFirstHediffOfDef(currentDef);
 
-            if (!pawnHealth.hediffSet.HasHediff(HediffDefOf.VatLearning))
-                return;
+        healthTracker.RemoveHediff(current);
+        Hediff next = healthTracker.AddHediff(nextDef);
 
-            pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatLearning));
-            pawnHealth.AddHediff(GVODefOf.EnhancedVatLearningHediff);
-        }
-        else
-        {
-            if (pawnHealth.hediffSet.HasHediff(GVODefOf.EnhancedVatGrowingHediff))
-            {
-                pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatGrowingHediff));
-                pawnHealth.AddHediff(HediffDefOf.VatGrowing);
-            }
-
-            if (!pawnHealth.hediffSet.HasHediff(GVODefOf.EnhancedVatLearningHediff))
-                return;
-
-            pawnHealth.RemoveHediff(pawnHealth.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatLearningHediff));
-            pawnHealth.AddHediff(HediffDefOf.VatLearning);
-        }
+        if (copySeverity)
+            next.Severity = current.Severity;
     }
 }
