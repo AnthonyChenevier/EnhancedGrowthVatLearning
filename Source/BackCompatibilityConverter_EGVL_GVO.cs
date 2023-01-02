@@ -45,7 +45,7 @@ public class BackCompatibilityConverter_EGVL_GVO : BackCompatibilityConverter
             return typeof(HediffComp_EnhancedVatGrowing);
 
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
-            return typeof(Hediff_EnhancedVatLearning);
+            return typeof(Hediff_VatLearning);
 
         return null;
     }

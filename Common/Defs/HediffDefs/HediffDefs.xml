@@ -15,7 +15,7 @@
                 <severityPerDay>3</severityPerDay>
             </li>
             <li>
-                <compClass>EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride</compClass>
+                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_VatLearningModeOverride</compClass>
             </li>
         </comps>
 	</HediffDef>

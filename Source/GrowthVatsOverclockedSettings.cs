@@ -225,7 +225,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
 
         //update all defs with power multi comp if setting is not default on load
         if (Scribe.mode == LoadSaveMode.LoadingVars && vatLearningHediffSeverityPerDay != 3f)
-            Hediff_EnhancedVatLearning.ModifySeverityPerDay(vatLearningHediffSeverityPerDay);
+            HediffComp_VatLearningModeOverride.ModifySeverityPerDay(vatLearningHediffSeverityPerDay);
     }
 
     public void DoSettingsWindowContents(Rect inRect)

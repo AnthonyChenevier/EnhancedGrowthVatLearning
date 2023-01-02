@@ -9,7 +9,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EnhancedGrowthVatLearning.Hediffs;
 using GrowthVatsOverclocked.Data;
 using GrowthVatsOverclocked.Hediffs;
 using GrowthVatsOverclocked.ThingComps;

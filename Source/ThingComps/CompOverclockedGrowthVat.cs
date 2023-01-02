@@ -50,13 +50,13 @@ public class CompOverclockedGrowthVat : ThingComp
             //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
             if (enabled)
             {
-                SwapHediffs(pawn.health, HediffDefOf.VatGrowing, ModDefOf.EnhancedVatGrowingHediffDef);
-                SwapHediffs(pawn.health, HediffDefOf.VatLearning, ModDefOf.EnhancedVatLearningHediffDef, true);
+                SwapHediffs(pawn.health, HediffDefOf.VatGrowing, GVODefOf.EnhancedVatGrowingHediff);
+                SwapHediffs(pawn.health, HediffDefOf.VatLearning, GVODefOf.EnhancedVatLearningHediff, true);
             }
             else
             {
-                SwapHediffs(pawn.health, ModDefOf.EnhancedVatGrowingHediffDef, HediffDefOf.VatGrowing);
-                SwapHediffs(pawn.health, ModDefOf.EnhancedVatLearningHediffDef, HediffDefOf.VatLearning); //no severity copy back to prevent gaming for XP boost
+                SwapHediffs(pawn.health, GVODefOf.EnhancedVatGrowingHediff, HediffDefOf.VatGrowing);
+                SwapHediffs(pawn.health, GVODefOf.EnhancedVatLearningHediff, HediffDefOf.VatLearning); //no severity copy back to prevent gaming for XP boost
             }
 
             //but only children have learning need to be updated

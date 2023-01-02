@@ -69,7 +69,7 @@ public class GrowthVatsOverclockedMod : Mod
         if (!Settings.SettingLearningHediffDirty)
             return;
 
-        Hediff_EnhancedVatLearning.ModifySeverityPerDay(Settings.VatLearningHediffSeverityPerDay);
+        HediffComp_VatLearningModeOverride.ModifySeverityPerDay(Settings.VatLearningHediffSeverityPerDay);
         Settings.SettingLearningHediffDirty = false;
     }
 

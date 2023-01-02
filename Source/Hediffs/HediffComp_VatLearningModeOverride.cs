@@ -8,13 +8,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using EnhancedGrowthVatLearning.Data;
-using EnhancedGrowthVatLearning.ThingComps;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Hediffs;
+namespace GrowthVatsOverclocked.Hediffs;
 
 public class HediffComp_VatLearningModeOverride : HediffComp
 {
@@ -28,15 +28,15 @@ public class HediffComp_VatLearningModeOverride : HediffComp
         if (comp == null)
             return;
 
-        comp.severityPerDay = EnhancedGrowthVatMod.Settings.VatLearningHediffSeverityPerDay;
+        comp.severityPerDay = GrowthVatsOverclockedMod.Settings.VatLearningHediffSeverityPerDay;
     }
 
     public void LearnMode(Pawn_SkillTracker skillTracker, LearningMode mode)
     {
-        Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(mode);
+        Dictionary<string, float> skillsMatrix = mode.Settings().skillSelectionWeights;
         SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
-        float modeXPToAward = EnhancedGrowthVatMod.Settings.XpToAward[mode.ToString()] * LearningUtility.LearningRateFactor(Parent.pawn);
+        float modeXPToAward = mode.Settings().skillXP * LearningUtility.LearningRateFactor(Parent.pawn);
         skill.Learn(modeXPToAward, true);
     }
 
@@ -51,12 +51,26 @@ public class HediffComp_VatLearningModeOverride : HediffComp
     {
         if (Parent.pawn.skills is { } skillTracker)
         {
-            if (Parent.pawn.ParentHolder is Building_GrowthVat vat && vat.GetComp<EnhancedGrowthVatComp>() is { Enabled: true } comp)
+            if (Parent.pawn.ParentHolder is Building_GrowthVat vat && vat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } comp)
                 LearnMode(skillTracker, comp.Mode);
             else
                 LearnBasic(skillTracker);
         }
 
         Parent.Severity = Parent.def.initialSeverity;
+    }
+
+    //change severity per day for all active hediffs of this type (for changing settings mid-game)
+    public static void ModifySeverityPerDay(float severityPerDay)
+    {
+        IEnumerable<Hediff_VatLearning> allVatLearningHediffs = Find.World.worldPawns.AllPawnsAlive.Where(p => p.health.hediffSet.HasHediff(GVODefOf.EnhancedVatLearningHediff))
+                                                                    .Select(p => p.health.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatLearningHediff) as Hediff_VatLearning);
+
+        foreach (Hediff_VatLearning hediff in allVatLearningHediffs)
+        {
+            HediffComp_SeverityPerDay comp = hediff.TryGetComp<HediffComp_SeverityPerDay>();
+            if (comp != null)
+                ((HediffCompProperties_SeverityPerDay)comp.props).severityPerDay = severityPerDay;
+        }
     }
 }
