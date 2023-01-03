@@ -118,7 +118,7 @@ public class CompOverclockedGrowthVat : ThingComp
     {
         base.CompTick();
         //vary learning need by small random amount a number of times daily
-        if (enabled && parent.IsHashIntervalTick(GenDate.TicksPerDay / GrowthVatsOverclockedMod.Settings.LearningNeedDailyChangeRate))
+        if (enabled && parent.IsHashIntervalTick(GenDate.TicksPerDay / GrowthVatsOverclockedMod.Settings.Data.learningNeedDailyChangeRate))
             CalculateHeldPawnLearningNeed();
     }
 
@@ -238,7 +238,7 @@ public class CompOverclockedGrowthVat : ThingComp
         }
 
         //randomize learning need by variance value
-        float randRange = GrowthVatsOverclockedMod.Settings.LearningNeedVariance;
+        float randRange = GrowthVatsOverclockedMod.Settings.Data.learningNeedVariance;
         learning.CurLevel = mode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * pawn.GetStatValue(StatDefOf.LearningRateFactor);
     }
 

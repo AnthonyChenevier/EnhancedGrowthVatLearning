@@ -28,7 +28,7 @@ public class HediffComp_VatLearningModeOverride : HediffComp
         if (comp == null)
             return;
 
-        comp.severityPerDay = GrowthVatsOverclockedMod.Settings.VatLearningHediffSeverityPerDay;
+        comp.severityPerDay = GrowthVatsOverclockedMod.Settings.Data.learningHediffRate;
     }
 
     public void LearnMode(Pawn_SkillTracker skillTracker, LearningMode mode)
@@ -40,7 +40,7 @@ public class HediffComp_VatLearningModeOverride : HediffComp
         skill.Learn(modeXPToAward, true);
     }
 
-    //copy of Hediff_VatLearning.Learn() behaviour because we destroy access to the original with our harmony patch
+    //copy of Hediff_VatLearning.Learn() behaviour because we remove access to the original with our harmony patch
     public void LearnBasic(Pawn_SkillTracker skillTracker)
     {
         if (skillTracker.skills.Where(x => !x.TotallyDisabled).TryRandomElement(out SkillRecord skill))
@@ -61,7 +61,7 @@ public class HediffComp_VatLearningModeOverride : HediffComp
     }
 
     //change severity per day for all active hediffs of this type (for changing settings mid-game)
-    public static void ModifySeverityPerDay(float severityPerDay)
+    public static void SetGlobalSetting_SeverityPerDay(float severityPerDay)
     {
         IEnumerable<Hediff_VatLearning> allVatLearningHediffs = Find.World.worldPawns.AllPawnsAlive.Where(p => p.health.hediffSet.HasHediff(GVODefOf.EnhancedVatLearningHediff))
                                                                     .Select(p => p.health.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatLearningHediff) as Hediff_VatLearning);

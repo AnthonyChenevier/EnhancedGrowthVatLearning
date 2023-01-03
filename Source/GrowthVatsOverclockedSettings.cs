@@ -17,222 +17,57 @@ using Verse;
 
 namespace GrowthVatsOverclocked;
 
-public class LearningModeSettings : IExposable
-{
-    public float baseLearningNeed;
-    public int baseAgingFactor;
-    public float skillXP;
-    public Dictionary<string, float> skillSelectionWeights;
-
-    public void ExposeData()
-    {
-        Scribe_Values.Look(ref baseLearningNeed, nameof(baseLearningNeed));
-        Scribe_Values.Look(ref baseAgingFactor, nameof(baseAgingFactor));
-        Scribe_Values.Look(ref skillXP, nameof(skillXP));
-        Scribe_Collections.Look(ref skillSelectionWeights, nameof(skillSelectionWeights), LookMode.Value, LookMode.Value);
-    }
-}
-
 public class GrowthVatsOverclockedSettings : ModSettings
 {
-    private Dictionary<LearningMode, LearningModeSettings> modeSettings = new()
-    {
-        { LearningMode.Default, new LearningModeSettings() },
-        { LearningMode.Combat, new LearningModeSettings() },
-        { LearningMode.Labor, new LearningModeSettings() },
-        { LearningMode.Leader, new LearningModeSettings() },
-        { LearningMode.Play, new LearningModeSettings() },
-    };
-
-    private float learningNeedVariance;
-    private int learningNeedDailyChangeRate;
-
-    private float overclockedPowerConsumption;
-
-    private bool generateBackstories;
-    private float vatDaysForBackstory;
-
-    private float vatLearningHediffSeverityPerDay;
-
-
-    public Dictionary<LearningMode, LearningModeSettings> ModeSettings => modeSettings;
-
-    public float LearningNeedVariance => learningNeedVariance;
-    public int LearningNeedDailyChangeRate => learningNeedDailyChangeRate;
-
-    public float OverclockedPowerConsumption => overclockedPowerConsumption;
-
-
-    public bool GenerateBackstories => generateBackstories;
-    public float VatDaysForBackstory => vatDaysForBackstory;
-
-    public float VatLearningHediffSeverityPerDay => vatLearningHediffSeverityPerDay;
-
-
-    //Settings page stuff
-    private ModSettingsTab _currentTab = ModSettingsTab.MainSettings;
-    private float contentHeight = float.MaxValue;
-    private Vector2 scrollPosition;
-
-    private string[] mainSettingBuffers = new string[11];
-    private string[] modeSettingBuffers = new string[11];
-    private string[] skillBuffers = new string[60];
-
-    internal float? initPowerConsumptionValue;
-    internal bool SettingPowerDirty;
-    internal float? initEnhancedLearningHediffValue;
-    internal bool SettingLearningHediffDirty;
-
     private enum ModSettingsTab
     {
         MainSettings,
         ModeSettings
     }
 
+    //tabs and scroll view
+    private ModSettingsTab _currentTab = ModSettingsTab.MainSettings;
+    private float contentHeight = float.MaxValue;
+    private Vector2 scrollPosition;
 
-    public GrowthVatsOverclockedSettings() { SetDefaults(); }
+    //input buffers
+    private string[] mainSettingBuffers = new string[11];
+    private string[] modeSettingBuffers = new string[11];
+    private string[] skillBuffers = new string[60];
 
-    private void SetDefaults()
+    //dirty settings buffers and flags
+    internal float? initOverclockedPowerConsumption;
+    internal bool SettingPowerDirty;
+    internal float? initLearningRate;
+    internal bool SettingLearningRateDirty;
+
+    public ModSettingsData Data { get; }
+
+    public GrowthVatsOverclockedSettings()
     {
-        mainSettingBuffers = new string[6];
-        modeSettingBuffers = new string[15];
-        skillBuffers = new string[60];
-
-        learningNeedVariance = 0.15f;
-        learningNeedDailyChangeRate = 8;
-
-        overclockedPowerConsumption = 800f;
-
-        generateBackstories = true;
-        vatDaysForBackstory = 400f;
-
-        vatLearningHediffSeverityPerDay = 3f;
-
-
-        modeSettings[LearningMode.Default].baseLearningNeed = 0.7f;
-        modeSettings[LearningMode.Default].baseAgingFactor = 18;
-        modeSettings[LearningMode.Default].skillXP = 2000f;
-        modeSettings[LearningMode.Default].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 10 },
-            { "Social", 10 },
-            { "Animals", 10 },
-            { "Cooking", 10 },
-            { "Construction", 10 },
-            { "Plants", 10 },
-            { "Mining", 10 },
-            { "Crafting", 10 },
-            { "Artistic", 10 },
-            { "Intellectual", 10 },
-        };
-
-        modeSettings[LearningMode.Labor].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Labor].baseAgingFactor = 18;
-        modeSettings[LearningMode.Labor].skillXP = 2000f;
-        modeSettings[LearningMode.Labor].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 5 },
-            { "Melee", 5 },
-            { "Medicine", 5 },
-            { "Social", 5 },
-            { "Animals", 15 },
-            { "Cooking", 15 },
-            { "Construction", 10 },
-            { "Plants", 20 },
-            { "Mining", 10 },
-            { "Crafting", 20 },
-            { "Artistic", 5 },
-            { "Intellectual", 5 },
-        };
-
-        modeSettings[LearningMode.Combat].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Combat].baseAgingFactor = 18;
-        modeSettings[LearningMode.Combat].skillXP = 2000f;
-        modeSettings[LearningMode.Combat].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 20 },
-            { "Melee", 20 },
-            { "Medicine", 15 },
-            { "Social", 5 },
-            { "Animals", 5 },
-            { "Cooking", 5 },
-            { "Construction", 15 },
-            { "Plants", 5 },
-            { "Mining", 15 },
-            { "Crafting", 5 },
-            { "Artistic", 5 },
-            { "Intellectual", 5 },
-        };
-
-        modeSettings[LearningMode.Leader].baseLearningNeed = 0.85f;
-        modeSettings[LearningMode.Leader].baseAgingFactor = 16;
-        modeSettings[LearningMode.Leader].skillXP = 2200f;
-        modeSettings[LearningMode.Leader].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 15 },
-            { "Social", 20 },
-            { "Animals", 5 },
-            { "Cooking", 5 },
-            { "Construction", 5 },
-            { "Plants", 5 },
-            { "Mining", 5 },
-            { "Crafting", 5 },
-            { "Artistic", 15 },
-            { "Intellectual", 40 }, //double because its only available to train after 13 years of age and we want a chance to get it.
-        };
-
-        modeSettings[LearningMode.Play].baseLearningNeed = 0.98f;
-        modeSettings[LearningMode.Play].baseAgingFactor = 18;
-        modeSettings[LearningMode.Play].skillXP = 800f;
-        modeSettings[LearningMode.Play].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 10 },
-            { "Social", 10 },
-            { "Animals", 10 },
-            { "Cooking", 10 },
-            { "Construction", 10 },
-            { "Plants", 10 },
-            { "Mining", 10 },
-            { "Crafting", 10 },
-            { "Artistic", 10 },
-            { "Intellectual", 10 },
-        };
+        Data = new ModSettingsData();
+        Data.SetDefaults();
+        ResetBuffers();
     }
 
     public override void ExposeData()
     {
-        Scribe_Collections.Look(ref modeSettings, nameof(modeSettings), LookMode.Value, LookMode.Deep);
+        Data.Expose();
 
-        Scribe_Values.Look(ref learningNeedVariance, nameof(learningNeedVariance));
-        Scribe_Values.Look(ref learningNeedDailyChangeRate, nameof(learningNeedDailyChangeRate));
+        if (Scribe.mode == LoadSaveMode.LoadingVars)
+            CheckAndApplyNonDefaultDirtySettings();
+    }
 
-        Scribe_Values.Look(ref overclockedPowerConsumption, nameof(overclockedPowerConsumption));
-
-        Scribe_Values.Look(ref generateBackstories, nameof(generateBackstories));
-        Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
-
-        Scribe_Values.Look(ref vatLearningHediffSeverityPerDay, nameof(vatLearningHediffSeverityPerDay));
-
-        //update all defs with power multi comp if setting is not default on load
-        if (Scribe.mode == LoadSaveMode.LoadingVars && overclockedPowerConsumption != 800f)
-            CompPowerMulti.ModifyPowerProfiles("Overclocked", overclockedPowerConsumption);
-
-        //update all defs with power multi comp if setting is not default on load
-        if (Scribe.mode == LoadSaveMode.LoadingVars && vatLearningHediffSeverityPerDay != 3f)
-            HediffComp_VatLearningModeOverride.ModifySeverityPerDay(vatLearningHediffSeverityPerDay);
+    private void ResetBuffers()
+    {
+        mainSettingBuffers = new string[6];
+        modeSettingBuffers = new string[15];
+        skillBuffers = new string[60];
     }
 
     public void DoSettingsWindowContents(Rect inRect)
     {
-        //set up dirty setting checks (once per opening setting screen)
-        initPowerConsumptionValue ??= overclockedPowerConsumption;
-        initEnhancedLearningHediffValue ??= vatLearningHediffSeverityPerDay;
+        InitDirtySettingChecks();
 
         DrawResetButton(inRect);
         DrawRemoveModButton(inRect);
@@ -265,20 +100,22 @@ public class GrowthVatsOverclockedSettings : ModSettings
         list.End();
         if (contentHeight != scrollView.CurHeight)
             contentHeight = scrollView.CurHeight;
+
+        CheckDirtySettings();
     }
 
     private void DoMainSettingsSection(Listing_Standard scrollView)
     {
         int i = 0;
         scrollView.TextFieldNumericLabeledTooltip("learningNeedVariance_SettingsLabel".Translate(),
-                                                  ref learningNeedVariance,
+                                                  ref Data.learningNeedVariance,
                                                   "learningNeedVariance_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i++],
                                                   0f,
                                                   1f);
 
         scrollView.TextFieldNumericLabeledTooltip("learningNeedDailyChangeRate_SettingsLabel".Translate(),
-                                                  ref learningNeedDailyChangeRate,
+                                                  ref Data.learningNeedDailyChangeRate,
                                                   "learningNeedDailyChangeRate_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i++],
                                                   1,
@@ -286,9 +123,9 @@ public class GrowthVatsOverclockedSettings : ModSettings
 
         scrollView.GapLine();
 
-        scrollView.CheckboxLabeled("generateBackstories_SettingsLabel".Translate(), ref generateBackstories, "generateBackstories_Tooltip".Translate());
+        scrollView.CheckboxLabeled("generateBackstories_SettingsLabel".Translate(), ref Data.generateBackstories, "generateBackstories_Tooltip".Translate());
         scrollView.TextFieldNumericLabeledTooltip("vatDaysForBackstory_SettingsLabel".Translate(),
-                                                  ref vatDaysForBackstory,
+                                                  ref Data.vatDaysForBackstory,
                                                   "vatDaysForBackstory_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i++],
                                                   1f,
@@ -297,29 +134,20 @@ public class GrowthVatsOverclockedSettings : ModSettings
         scrollView.GapLine();
 
         scrollView.TextFieldNumericLabeledTooltip("overclockedPowerConsumption_SettingsLabel".Translate(),
-                                                  ref overclockedPowerConsumption,
+                                                  ref Data.overclockedPowerConsumption,
                                                   "overclockedPowerConsumption_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i++],
                                                   80f,
                                                   100000f);
 
-        //handle setting power consumption if it's not the initial value
-        if (overclockedPowerConsumption != initPowerConsumptionValue)
-            SettingPowerDirty = true;
-
         scrollView.GapLine();
 
         scrollView.TextFieldNumericLabeledTooltip("vatLearningHediffSeverityPerDay_SettingsLabel".Translate(),
-                                                  ref vatLearningHediffSeverityPerDay,
+                                                  ref Data.learningHediffRate,
                                                   "vatLearningHediffSeverityPerDay_Tooltip".Translate(),
                                                   ref mainSettingBuffers[i],
                                                   0.001f,
                                                   100000f);
-
-        //handle setting power consumption if it's not the initial value
-        if (vatLearningHediffSeverityPerDay != initEnhancedLearningHediffValue)
-            SettingLearningHediffDirty = true;
-
 
         scrollView.GapLine();
     }
@@ -328,8 +156,9 @@ public class GrowthVatsOverclockedSettings : ModSettings
     {
         int j = 0;
         int k = 0;
-        foreach ((LearningMode mode, LearningModeSettings settings) in modeSettings)
+        foreach ((LearningMode mode, ModSettingsData.LearningModeSettings settings) in Data.modeSettings)
         {
+            scrollView.Label($"<b>{mode.Label()}</b>");
             scrollView.TextFieldNumericLabeledTooltip("ModeLearningNeed_SettingsLabel".Translate(mode.Label()),
                                                       ref settings.baseLearningNeed,
                                                       "ModeLearningNeed_Tooltip".Translate(mode.Label()),
@@ -352,7 +181,6 @@ public class GrowthVatsOverclockedSettings : ModSettings
                                                       0f,
                                                       100000f);
 
-            scrollView.Gap();
             scrollView.Label("ModeSkillWeights_SettingsLabel".Translate(mode.Label()), -1f, "ModeSkillWeights_Tooltip".Translate(mode.Label()));
             foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
             {
@@ -377,7 +205,10 @@ public class GrowthVatsOverclockedSettings : ModSettings
 
         TooltipHandler.TipRegion(buttonRect, "ResetToDefaults_Tooltip".Translate());
         if (Widgets.ButtonText(buttonRect, "ResetToDefaults_Button".Translate()))
-            SetDefaults();
+        {
+            Data.SetDefaults();
+            ResetBuffers();
+        }
     }
 
     private void DrawRemoveModButton(Rect inRect)
@@ -397,5 +228,50 @@ public class GrowthVatsOverclockedSettings : ModSettings
                                                        buttonAText: "OK".Translate(),
                                                        buttonAAction: GrowthVatsOverclockedMod.RemoveMod,
                                                        buttonBText: "Cancel".Translate()));
+    }
+
+    private void InitDirtySettingChecks()
+    { //set up dirty setting checks (once per opening setting screen)
+        initOverclockedPowerConsumption ??= Data.overclockedPowerConsumption;
+        initLearningRate ??= Data.learningHediffRate;
+    }
+
+    private void CheckDirtySettings()
+    {
+        //handle setting power consumption if it's not the initial value
+        if (initLearningRate != Data.learningHediffRate)
+            SettingLearningRateDirty = true;
+
+        //handle setting power consumption if it's not the initial value
+        if (initOverclockedPowerConsumption != Data.overclockedPowerConsumption)
+            SettingPowerDirty = true;
+    }
+
+    //update all global settings if the setting is not default on load
+    private void CheckAndApplyNonDefaultDirtySettings()
+    {
+        if (Data.overclockedPowerConsumption != 800f)
+            CompPowerMulti.SetGlobalSetting_PowerConsumption("Overclocked", Data.overclockedPowerConsumption);
+
+        if (Data.learningHediffRate != 3f)
+            HediffComp_VatLearningModeOverride.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+    }
+
+    public void ApplyDirtySettings()
+    {
+        initOverclockedPowerConsumption = null;
+        initLearningRate = null;
+        //update all defs with power multi if the setting changed
+        if (SettingPowerDirty)
+        {
+            CompPowerMulti.SetGlobalSetting_PowerConsumption("Overclocked", Data.overclockedPowerConsumption);
+            SettingPowerDirty = false;
+        }
+
+        if (SettingLearningRateDirty)
+        {
+            HediffComp_VatLearningModeOverride.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+            SettingLearningRateDirty = false;
+        }
     }
 }

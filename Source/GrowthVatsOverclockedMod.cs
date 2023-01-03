@@ -9,7 +9,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GrowthVatsOverclocked.Data;
-using GrowthVatsOverclocked.Hediffs;
 using GrowthVatsOverclocked.ThingComps;
 using RimWorld;
 using RimWorld.Planet;
@@ -57,20 +56,7 @@ public class GrowthVatsOverclockedMod : Mod
     {
         base.WriteSettings();
 
-        Settings.initPowerConsumptionValue = null;
-        Settings.initEnhancedLearningHediffValue = null;
-        //update all defs with power multi if the setting changed
-        if (Settings.SettingPowerDirty)
-        {
-            CompPowerMulti.ModifyPowerProfiles("Overclocked", Settings.OverclockedPowerConsumption);
-            Settings.SettingPowerDirty = false;
-        }
-
-        if (!Settings.SettingLearningHediffDirty)
-            return;
-
-        HediffComp_VatLearningModeOverride.ModifySeverityPerDay(Settings.VatLearningHediffSeverityPerDay);
-        Settings.SettingLearningHediffDirty = false;
+        Settings.ApplyDirtySettings();
     }
 
     public static void SetVatBackstoryFor(Pawn pawn, LearningMode mostUsedMode)
@@ -89,7 +75,7 @@ public class GrowthVatsOverclockedMod : Mod
 
     public static VatGrowthTracker GetTrackerFor(Pawn pawn)
     {
-        if (!Settings.GenerateBackstories)
+        if (!Settings.Data.generateBackstories)
             return null;
 
         int id = pawn.thingIDNumber;
@@ -138,7 +124,7 @@ public class GrowthVatsOverclockedMod : Mod
 
         Log.Message($"GrowthVatsOverclocked :: Mod Removal Preparation - Changed {j} pawn childhood backstories back to default vatgrown child");
 
-        //remove tracker repo from world components. Should still work for a bit with cache so save and quit is possible
+        //remove tracker repo from world components. Should still work with property so save and quit is possible
         Find.World.components.Remove(GrowthTrackerRepository);
         Log.Message($"GrowthVatsOverclocked :: Mod Removal Preparation - Removed GrowthTrackerRepository from world components so it will not be saved.");
     }

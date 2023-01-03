@@ -23,7 +23,7 @@ public enum LearningMode
 
 public static class LearningModeExtensions
 {
-    public static LearningModeSettings Settings(this LearningMode mode) => GrowthVatsOverclockedMod.Settings.ModeSettings[mode];
+    public static ModSettingsData.LearningModeSettings Settings(this LearningMode mode) => GrowthVatsOverclockedMod.Settings.Data.modeSettings[mode];
     public static string Label(this LearningMode mode) => $"{mode}Mode".Translate();
     public static Texture2D Icon(this LearningMode mode) => ContentFinder<Texture2D>.Get($"UI/Gizmos/LearningMode{mode}");
     public static string Description(this LearningMode mode) => $"{$"{mode}Mode_Desc".Translate()}{(mode == LearningMode.Play ? "" : $"\n\n{mode.TrainingPriorities()}")}";

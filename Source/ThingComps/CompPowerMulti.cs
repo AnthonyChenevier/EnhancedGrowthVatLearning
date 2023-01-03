@@ -35,18 +35,14 @@ public class CompPowerMulti : ThingComp
         return true;
     }
 
-    public static void ModifyPowerProfiles(string profileKey, float powerConsumption)
+    public static void SetGlobalSetting_PowerConsumption(string profileKey, float powerConsumption)
     {
         IEnumerable<CompProperties_PowerMulti> powerMultis = DefDatabase<ThingDef>.AllDefs.Where(t => t.GetCompProperties<CompProperties_PowerMulti>() is not null)
                                                                                   .Select(t => t.GetCompProperties<CompProperties_PowerMulti>());
 
         //set private basePowerConsumption field to given value for all multi power profiles
         foreach (CompProperties_PowerMulti multiPowerComp in powerMultis.Where(pm => pm.powerProfiles.ContainsKey(profileKey)))
-            SetPrivateBasePowerConsumption(multiPowerComp.powerProfiles[profileKey], powerConsumption);
-    }
-
-    private static void SetPrivateBasePowerConsumption(CompProperties_Power powerComp, float powerConsumption)
-    {
-        typeof(CompProperties_Power).GetField("basePowerConsumption", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(powerComp, powerConsumption);
+            typeof(CompProperties_Power).GetField("basePowerConsumption", BindingFlags.NonPublic | BindingFlags.Instance)
+                                        ?.SetValue(multiPowerComp.powerProfiles[profileKey], powerConsumption);
     }
 }

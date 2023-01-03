@@ -45,7 +45,7 @@ public class VatGrowthTracker : IExposable
 
     public LearningMode MostUsedMode => _modeTicks.Keys.MaxBy(p => _modeTicks[p]);
     public float MostUsedModePercent => LearningModePercent(MostUsedMode);
-    public bool RequiresVatBackstory => VatTicksBiological >= GrowthVatsOverclockedMod.Settings.VatDaysForBackstory * GenDate.TicksPerDay;
+    public bool RequiresVatBackstory => VatTicksBiological >= GrowthVatsOverclockedMod.Settings.Data.vatDaysForBackstory * GenDate.TicksPerDay;
 
     public float LearningModePercent(LearningMode mode) { return 1f / _vatTicksBiological * _modeTicks[mode]; }
 

@@ -9,28 +9,27 @@
 using System;
 using System.Xml;
 using GrowthVatsOverclocked.Hediffs;
+using HarmonyLib;
 using Verse;
 
-namespace GrowthVatsOverclocked;
+namespace GrowthVatsOverclocked.HarmonyPatches;
 
-//[HotSwappable]
-public class BackCompatibilityConverter_EGVL_GVO : BackCompatibilityConverter
+[HarmonyPatch(typeof(BackCompatibility))]
+public static class ModBackCompatibilityPatch
 {
-    public override bool AppliesToVersion(int majorVer, int minorVer) => true;
-
-    public override string BackCompatibleDefName(
-        Type defType, 
-        string defName, 
-        bool forDefInjections = false, 
-        XmlNode node = null)
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(BackCompatibility.BackCompatibleDefName))]
+    private static string GetBackCompatibleDefName_HP(string __result, Type defType, string defName)
     {
         if (defType == typeof(ResearchProjectDef) && defName == "EnhancedGrowthVatLearningResearch")
                 return "GrowthVatOverclockingResearch";
 
-        return null;
+        return __result;
     }
 
-    public override Type GetBackCompatibleType(Type baseType, string providedClassName, XmlNode node)
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(BackCompatibility.GetBackCompatibleType))]
+    private static Type GetBackCompatibleType_HP(Type __result, Type baseType, string providedClassName, XmlNode node)
     {
         if (providedClassName is "EnhancedGrowthVatLearning.GrowthTrackerRepository")
             return typeof(GrowthTrackerRepository);
@@ -47,12 +46,6 @@ public class BackCompatibilityConverter_EGVL_GVO : BackCompatibilityConverter
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
             return typeof(Hediff_VatLearning);
 
-        return null;
-    }
-
-    public override void PostExposeData(object obj)
-    {
-        if (Scribe.mode != LoadSaveMode.LoadingVars)
-            return;
+        return __result;
     }
 }
