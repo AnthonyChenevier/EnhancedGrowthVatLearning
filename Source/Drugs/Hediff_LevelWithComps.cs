@@ -9,7 +9,7 @@
 using System.Linq;
 using Verse;
 
-namespace GrowthVatsOverclocked.Hediffs;
+namespace GrowthVatsOverclocked.Drugs;
 
 public class Hediff_LevelWithComps : Hediff_Level
 {

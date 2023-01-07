@@ -1,0 +1,118 @@
+﻿// HarmonyPatches.cs
+// 
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
+// 
+// Created by: Anthony Chenevier on 2023/01/03 6:47 PM
+// Last edited by: Anthony Chenevier on 2023/01/03 6:47 PM
+
+
+using System.Collections.Generic;
+using System.Reflection;
+using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.VatExtensions;
+using GrowthVatsOverclocked.Vatshock;
+using HarmonyLib;
+using RimWorld;
+using Verse;
+
+namespace GrowthVatsOverclocked.HarmonyPatches;
+
+[StaticConstructorOnStartup]
+public static class PatchInitializer
+{
+    static PatchInitializer()
+    {
+        //Harmony.DEBUG = true;
+        Harmony harmony = new("makeitso.growthvatsoverclocked");
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
+    }
+}
+
+//GoJuice Genes also remove chance of getting vat-juice pain effect
+[HarmonyPatch(typeof(GeneDefGenerator), nameof(GeneDefGenerator.ImpliedGeneDefs))]
+public static class GeneDefGenerator_ImpliedGeneDefs_HP
+{
+    public static IEnumerable<GeneDef> Postfix(IEnumerable<GeneDef> __result)
+    {
+        foreach (GeneDef geneDef in __result)
+        {
+            if (geneDef.defName is "ChemicalDependency_GoJuice" or "AddictionResistant_GoJuice" or "AddictionImmune_GoJuice")
+                geneDef.makeImmuneTo.Add(GVODefOf.VatJuicePain);
+
+            yield return geneDef;
+        }
+    }
+}
+
+//refresh vatcomp to apply hediffs when babies age up
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild), nameof(LifeStageWorker_HumanlikeChild.Notify_LifeStageStarted))]
+public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
+{
+    public static void Postfix(Pawn pawn)
+    {
+        if (Current.ProgramState != ProgramState.Playing ||
+            !pawn.IsColonist ||
+            pawn.ParentHolder is not Building_GrowthVat growthVat ||
+            growthVat.GetComp<CompOverclockedGrowthVat>() is not { } vatComp)
+            return;
+
+        //refresh
+        vatComp.EnableOverclocking(vatComp.IsOverclocked);
+    }
+}
+
+//set vat backstory on when aging to adult
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), nameof(LifeStageWorker_HumanlikeAdult.Notify_LifeStageStarted))]
+public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
+{
+    public static void Postfix(Pawn pawn)
+    {
+        if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || GrowthVatsOverclockedMod.GetTrackerFor(pawn) is not { } tracker)
+            return;
+
+        if (tracker.RequiresVatBackstory && !(tracker.NormalGrowthPercent > tracker.MostUsedModePercent))
+            GrowthVatsOverclockedMod.SetVatBackstoryFor(pawn, tracker.MostUsedMode);
+
+        //remove the tracker now we're done with the backstory. No littering!
+        GrowthVatsOverclockedMod.RemoveTrackerFor(pawn);
+    }
+}
+
+//makes the growth tier gizmo visible for children in growth vats.
+[HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
+public static class Gizmo_GrowthTier_Visible_HP
+{
+    public static bool Postfix(bool __result, Pawn ___child) =>
+        __result || ___child is { ParentHolder: Building_GrowthVat } and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
+}
+
+//Patch vat learning hediff to 
+[HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
+public static class Hediff_VatLearning_Learn_HP
+{
+    public static bool Prefix(Hediff_VatLearning __instance)
+    {
+        if (__instance.TryGetComp<HediffComp_VatLearningExtension>() is not { } comp)
+            return true; //not our hediff, continue.
+
+        //use our comp instead of default Learn()
+        comp.Learn();
+        return false;
+    }
+}
+
+//postfix to check if a vatshock memory was counseled and notify the thoughtWorker about it.
+[HarmonyPatch(typeof(CompAbilityEffect_Counsel))]
+public static class CompAbilityEffect_Counsel_HP
+{
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(CompAbilityEffect_Counsel.Apply))]
+    public static void Apply_Postfix(LocalTargetInfo target)
+    {
+        Pawn pawn = target.Pawn;
+        if (pawn.needs.mood.thoughts.memories.GetFirstMemoryOfDef(ThoughtDefOf.Counselled) is Thought_Counselled counselledThought &&
+            pawn.needs.mood.thoughts.memories.GetFirstMemoryOfDef(GVODefOf.VatshockThought) is { def.Worker: ThoughtWorker_Vatshock vatshockThoughtWorker } vatshockThought &&
+            counselledThought.MoodOffset() == -vatshockThought.MoodOffset())
+            vatshockThoughtWorker.Notify_CounseledThoughtAdded(pawn, counselledThought);
+    }
+}

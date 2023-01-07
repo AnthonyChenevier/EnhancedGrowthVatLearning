@@ -12,7 +12,14 @@ using System.Reflection;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.ThingComps;
+namespace GrowthVatsOverclocked.VatExtensions;
+
+public class CompProperties_PowerMulti : CompProperties_Power
+{
+    public Dictionary<string, CompProperties_Power> powerProfiles;
+
+    public CompProperties_PowerMulti() { compClass = typeof(CompPowerMulti); }
+}
 
 public class CompPowerMulti : ThingComp
 {

@@ -7,14 +7,14 @@
 
 
 using GrowthVatsOverclocked.Data;
-using GrowthVatsOverclocked.ThingComps;
+using GrowthVatsOverclocked.VatExtensions;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace GrowthVatsOverclocked.Thoughts;
 
-public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
+public abstract class ThoughtWorker_Precept_ChildVatModeBase : ThoughtWorker_Precept
 {
     protected abstract bool ActiveForMode(LearningMode mode);
 
@@ -33,12 +33,22 @@ public abstract class ThoughtWorker_Precept_EnhancedVat : ThoughtWorker_Precept
             if (child.MapHeld == pawn.MapHeld &&
                 child.DevelopmentalStage.Child() &&
                 child.ParentHolder is Building_GrowthVat growthVat &&
-                growthVat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } vatComp &&
-                ActiveForMode(vatComp.Mode))
+                growthVat.GetComp<CompOverclockedGrowthVat>() is { IsOverclocked: true } vatComp &&
+                ActiveForMode(vatComp.CurrentMode))
                 count++;
 
         return count;
     }
 
     public override float MoodMultiplier(Pawn p) => Mathf.Min(def.stackLimit, VatChildrenInActiveModes(p));
+}
+
+public class ThoughtWorker_Precept_ChildVatModePlay : ThoughtWorker_Precept_ChildVatModeBase
+{
+    protected override bool ActiveForMode(LearningMode mode) => mode is LearningMode.Play;
+}
+
+public class ThoughtWorker_Precept_ChildVatModeNotPlay : ThoughtWorker_Precept_ChildVatModeBase
+{
+    protected override bool ActiveForMode(LearningMode mode) => mode is not LearningMode.Play;
 }

@@ -3,8 +3,8 @@
     <!-- child labor thoughts -->
     <!-- Encouraged -->
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_EnhancedVatLearning</defName>
-        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Encouraged_ChildVatModeNotPlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModeNotPlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -19,8 +19,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_EnhancedVatPlaying</defName>
-        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <defName>ChildLabor_Encouraged_ChildVatModePlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModePlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -52,8 +52,8 @@
 
     <!-- Disapproved -->
     <ThoughtDef>
-        <defName>ChildLabor_Disapproved_EnhancedVatLearning</defName>
-        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Disapproved_ChildVatModeNotPlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModeNotPlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -68,8 +68,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Disapproved_EnhancedVatPlaying</defName>
-        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <defName>ChildLabor_Disapproved_ChildVatModePlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModePlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -85,40 +85,6 @@
 
 
     <!-- Other thoughts -->
-    <!-- vatgrown stress mental effects -->
-    <ThoughtDef>
-        <defName>VatgrownStressThought</defName>
-        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_VatgrownStress</workerClass>
-        <hediff>VatgrowthStress</hediff>
-        <validWhileDespawned>true</validWhileDespawned>
-        <nullifyingPrecepts>
-            <li>GrowthVat_Essential</li>
-        </nullifyingPrecepts>
-        <developmentalStageFilter>Child, Adult</developmentalStageFilter>
-        <stages>
-            <li>
-                <label>foggy vat memories</label>
-                <description>I'm a bit foggy after coming out of the growth vat. Sometimes I feel like I'm back in the simulation and get disoriented. I think I know who and where I am though.</description>
-                <baseMoodEffect>-3</baseMoodEffect>
-            </li>
-            <li>
-                <label>confusing vat memories</label>
-                <description>I was grown in a vat? I'm still not sure about myself or this place. I have dreams and fading memories of another life that seemed so real.</description>
-                <baseMoodEffect>-7</baseMoodEffect>
-            </li>
-            <li>
-                <label>strong vat memories</label>
-                <description>This place can't be real. The idea that I was grown in a vat isn't believable, is it? I remember so much of my life, even if the memories are hard to recall clearly.</description>
-                <baseMoodEffect>-10</baseMoodEffect>
-            </li>
-            <li>
-                <label>overwhelming vat memories</label>
-                <description>These people are trying to brainwash me into believing my whole life was a lie. I must have been captured and now I'm being subjected to some kind of psychological torture. I know the story they are telling me is fake. I wasn't grown in a vat!</description>
-                <baseMoodEffect>-15</baseMoodEffect>
-            </li>
-        </stages>
-    </ThoughtDef>
-
     <!-- Vat-juice effect thoughts -->
     <ThoughtDef>
         <defName>VatJuiceEffectChild</defName>

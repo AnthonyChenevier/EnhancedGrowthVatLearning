@@ -11,8 +11,11 @@ using GrowthVatsOverclocked.Data;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.Stats;
+namespace GrowthVatsOverclocked.GrowthTracker;
 
+/// <summary>
+/// Shows tracking data from pawn's growth tracker if it exists.
+/// </summary>
 public class StatWorker_VatTime : StatWorker
 {
     public override bool ShouldShowFor(StatRequest req)

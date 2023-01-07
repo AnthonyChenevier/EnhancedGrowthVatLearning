@@ -12,7 +12,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
-namespace GrowthVatsOverclocked;
+namespace GrowthVatsOverclocked.GrowthTracker;
 
 public class GrowthTrackerRepository : WorldComponent
 {

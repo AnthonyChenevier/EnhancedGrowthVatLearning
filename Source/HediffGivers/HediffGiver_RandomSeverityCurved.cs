@@ -9,14 +9,14 @@
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.Hediffs;
+namespace GrowthVatsOverclocked.HediffGivers;
 
 public class HediffGiver_RandomSeverityCurved : HediffGiver
 {
     public float minAge;
     public float minCauseSeverity = 0.5f;
-    public SimpleCurve mtbSeverityCurve;
-    public SimpleCurve severityMapCurve = null;
+    public SimpleCurve causeSeverityMtbCurve; //cause severity -> mtbDays
+    public SimpleCurve causeSeverityMapCurve; //cause severity -> hediff severity
 
     public override void OnIntervalPassed(Pawn pawn, Hediff cause)
     {
@@ -26,10 +26,10 @@ public class HediffGiver_RandomSeverityCurved : HediffGiver
             pawn.health.immunity.AnyGeneMakesFullyImmuneTo(hediff))
             return;
 
-        if (!Rand.MTBEventOccurs(mtbSeverityCurve.Evaluate(cause.Severity), GenDate.TicksPerDay, HealthTuning.HediffGiverUpdateInterval) || !TryApply(pawn))
+        if (!Rand.MTBEventOccurs(causeSeverityMtbCurve.Evaluate(cause.Severity), GenDate.TicksPerDay, HealthTuning.HediffGiverUpdateInterval) || !TryApply(pawn))
             return;
 
-        pawn.health.hediffSet.GetFirstHediffOfDef(hediff).Severity = severityMapCurve?.Evaluate(cause.Severity) ?? cause.Severity;
+        pawn.health.hediffSet.GetFirstHediffOfDef(hediff).Severity = causeSeverityMapCurve?.Evaluate(cause.Severity) ?? cause.Severity;
         SendLetter(pawn, cause);
     }
 }

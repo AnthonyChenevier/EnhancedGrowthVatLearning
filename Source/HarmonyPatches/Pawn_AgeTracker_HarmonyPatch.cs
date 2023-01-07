@@ -6,11 +6,9 @@
 // Last edited by: Anthony Chenevier on 2023/01/03 7:00 PM
 
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using GrowthVatsOverclocked.Hediffs;
-using GrowthVatsOverclocked.ThingComps;
+using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -30,14 +28,14 @@ public static class Pawn_AgeTracker_HarmonyPatch
     {
         if (___pawn.ParentHolder is not Building_GrowthVat growthVat ||
             ___pawn.needs.learning is not { } learning ||
-            growthVat.GetComp<CompOverclockedGrowthVat>() is not { Enabled: true } comp ||
+            growthVat.GetComp<CompOverclockedGrowthVat>() is not { IsOverclocked: true } comp ||
             typeof(Pawn_AgeTracker).GetMethod("GrowthPointsPerDayAtLearningLevel", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod) is not
                 { } methodInfo)
             return __result;
 
-        //if overclocking is enabled, get normal growth point value for learning need level and scale it by the daily growth point factor.
+        //if overclocking is enabled, get normal growth point value for learning need level and scale it by the daily growth point factor (comp growth speed/child aging rate).
         //Run it through the GrowthPointsPerDayAtLearningLevel method to scale result for storyteller settings and age like natural aged kids' need.
-        return (float)methodInfo.Invoke(__instance, new object[] { learning.CurLevel * comp.DailyGrowthPointFactor });
+        return (float)methodInfo.Invoke(__instance, new object[] { learning.CurLevel * (comp.StatDerivedGrowthSpeed / Find.Storyteller.difficulty.childAgingRate) });
     }
 
     [HarmonyPrefix]
@@ -49,21 +47,21 @@ public static class Pawn_AgeTracker_HarmonyPatch
 
         //attempt simple check. Not as robust as using GetStatValue, but muuuuuch more performant
         //should only allow the dev gizmo through without modification now. 
-        if (comp.Enabled && ticks < GenDate.TicksPerYear)
+        if (comp.IsOverclocked && ticks < GenDate.TicksPerYear)
         {
             //Stop processing and prevent original tracker from running
             //if aging is paused for a growth moment letter
-            if (comp.PausedForLetter)
+            if (comp.VatgrowthPaused)
                 return false;
 
-            //use Aging factor and decompose the modifier from ticks
+            //use mode growth speed and decompose the modifier from ticks
             //with math so we don't have to touch GetStatValue at all here.
-            ticks = Mathf.FloorToInt(comp.ModeAgingFactor * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
+            ticks = Mathf.FloorToInt(comp.ModeGrowthSpeed * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
         }
 
         //finally, track ticks for backstories and stats ourselves.
         //tracker might be null because of dev tools so check for that
-        GrowthVatsOverclockedMod.GetTrackerFor(___pawn)?.TrackGrowthTicks(ticks, comp.Enabled, comp.Mode);
+        GrowthVatsOverclockedMod.GetTrackerFor(___pawn)?.TrackGrowthTicks(ticks, comp.IsOverclocked, comp.CurrentMode);
         return true;
     }
 
@@ -73,9 +71,8 @@ public static class Pawn_AgeTracker_HarmonyPatch
     [HarmonyPatch(nameof(Pawn_AgeTracker.Notify_TickedInGrowthVat))]
     public static void Notify_TickedInGrowthVat_Postfix(Pawn ___pawn)
     {
-        //tick all hediffs with TickInGrowthVatComp
-        List<Hediff> vatHediffs = ___pawn.health.hediffSet.hediffs.Where(h => HediffUtility.TryGetComp<HediffComp_TickInGrowthVat>(h) is { tickInVat: true }).ToList();
-        foreach (Hediff hediff in vatHediffs)
+        //tick all hediffs with TickInGrowthVatModExtension
+        foreach (Hediff hediff in ___pawn.health.hediffSet.hediffs.Where(h => h.def.GetModExtension<DefModExtension_HediffTickInGrowthVat>() is { tickInVat: true }))
         {
             hediff.Tick();
             hediff.PostTick();

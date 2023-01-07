@@ -36,7 +36,7 @@
             <chairSearchRadius>0</chairSearchRadius>
             <babiesCanIngest>true</babiesCanIngest>
             <outcomeDoers>
-                <li Class="GrowthVatsOverclocked.Hediffs.IngestionOutcomeDoer_GiveHediff_Level">
+                <li Class="GrowthVatsOverclocked.Drugs.IngestionOutcomeDoer_GiveHediff_Level">
                     <hediffDef>VatJuiceEffect</hediffDef>
                     <severity>1</severity>
                 </li>
@@ -70,20 +70,20 @@
 
     <HediffDef>
         <defName>VatJuiceEffect</defName>
-        <hediffClass>GrowthVatsOverclocked.Hediffs.Hediff_LevelWithComps</hediffClass>
+        <hediffClass>GrowthVatsOverclocked.Drugs.Hediff_LevelWithComps</hediffClass>
+        <modExtensions>
+            <li Class="GrowthVatsOverclocked.DefModExtension_HediffTickInGrowthVat"/>
+        </modExtensions>
         <label>effected by vat-juice</label>
         <labelNoun>a vat-juice effect</labelNoun>
-        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects.</description>
+        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects. Young adults have a chance of developing vat growing pains when under the effects of the drug. </description>
         <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
         <minSeverity>0</minSeverity>
         <isBad>false</isBad>
         <levelIsQuantity>true</levelIsQuantity>
         <hediffGivers>
             <li Class="GrowthVatsOverclocked.Hediffs.HediffGiver_RandomSeverityCurved">
-                <hediff>VatjuicePain</hediff>
-                <!-- partsToAffect>
-                    <li>Brain</li>
-                </partsToAffect -->
+                <hediff>VatJuicePain</hediff>
                 <minAge>13</minAge>
                 <minCauseSeverity>1</minCauseSeverity>
                 <mtbSeverityCurve>
@@ -101,14 +101,11 @@
             </li>
         </hediffGivers>
         <comps>
-            <li>
-                <compClass>GrowthVatsOverclocked.Hediffs.HediffComp_TickInGrowthVat</compClass>
-            </li>
             <li Class="HediffCompProperties_Disappears">
-                <disappearsAfterTicks>180000</disappearsAfterTicks>
+                <disappearsAfterTicks>180000</disappearsAfterTicks><!-- 3 days. ticks in or out of vat -->
                 <showRemainingTime>true</showRemainingTime>
                 <canUseDecimalsShortForm>true</canUseDecimalsShortForm>
-                <messageOnDisappear>The effects of vat-juice have worn off {PAWN_nameDef}. {PAWN_definite} will need some time out of the vat for the drug to be flushed from {PAWN_possessive} system.</messageOnDisappear>
+                <messageOnDisappear>The effects of vat-juice have worn off {PAWN_nameDef}. {PAWN_definite} will need some time out of the vat for the drug to be flushed from {PAWN_possessive} system before re-application.</messageOnDisappear>
             </li>
         </comps>
         <stages>
@@ -122,7 +119,7 @@
     </HediffDef>
 
     <HediffDef>
-        <defName>VatjuicePain</defName>
+        <defName>VatJuicePain</defName>
         <label>vatjuice growing pains</label>
         <description>Physical pain caused by sustained use of vat-juice to accelerate vat growth. High lifetime dosage increases the severity of the condition. Symptoms include pain, vomiting and reduced physical and mental abilities. While the effect is long-lasting if left untreated, sustained medical attention will reduce symptoms and cure the condition after a few treatments.</description>
         <descriptionShort>Physical after-effects of accelerated growth in a vat using vat-juice, including generalized pain, nausea and reduced physical capabilities.</descriptionShort>

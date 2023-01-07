@@ -8,9 +8,9 @@
 
 using Verse;
 
-namespace GrowthVatsOverclocked.Hediffs;
+namespace GrowthVatsOverclocked;
 
-public class HediffComp_TickInGrowthVat : HediffComp
+public class DefModExtension_HediffTickInGrowthVat : DefModExtension
 {
     public bool tickInVat = true;
 }

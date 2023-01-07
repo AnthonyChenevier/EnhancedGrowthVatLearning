@@ -11,7 +11,7 @@ using GrowthVatsOverclocked.Data;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked;
+namespace GrowthVatsOverclocked.GrowthTracker;
 
 public class VatGrowthTracker : IExposable
 {

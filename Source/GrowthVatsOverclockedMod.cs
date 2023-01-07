@@ -9,7 +9,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using GrowthVatsOverclocked.Data;
-using GrowthVatsOverclocked.ThingComps;
+using GrowthVatsOverclocked.GrowthTracker;
+using GrowthVatsOverclocked.VatExtensions;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -105,7 +106,7 @@ public class GrowthVatsOverclockedMod : Mod
         int i = 0;
         foreach (Building_GrowthVat growthVat in from map in Current.Game.Maps from growthVat in map.spawnedThings.OfType<Building_GrowthVat>() select growthVat)
         {
-            growthVat.GetComp<CompOverclockedGrowthVat>().Enabled = false;
+            growthVat.GetComp<CompOverclockedGrowthVat>().EnableOverclocking(false);
             i++;
         }
 

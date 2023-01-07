@@ -4,7 +4,9 @@
     <Operation Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
         <value>
-            <li Class="GrowthVatsOverclocked.ThingComps.CompProperties_EnhancedGrowthVat" />
+            <li>
+                <compClass>GrowthVatsOverclocked.VatExtensions.CompOverclockedGrowthVat</compClass>
+            </li>
         </value>
     </Operation>
 
@@ -14,7 +16,7 @@
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
             </li>
-            <li Class="GrowthVatsOverclocked.ThingComps.CompProperties_PowerMulti">
+            <li Class="GrowthVatsOverclocked.VatExtensions.CompProperties_PowerMulti">
                 <powerProfiles>
                     <li>
                         <key>Default</key>
@@ -35,16 +37,45 @@
         </value>
     </Operation>
 
-    <!-- Modify precepts with our thoughts -->
+    <!-- Replace vat hediff comps -->
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/HediffDef[defName="VatGrowing"]/comps</xpath>
+        <value>
+            <comps>
+                <li Class="GrowthVatsOverclocked.VatExtensions.HediffCompProperties_VatGrowingExtended">
+                    <descriptionExtraOverclocked>Growth is running at reduced speed to free up resources for overclocked learning hardware.</descriptionExtraOverclocked>
+                    <tipStringExtraPaused>Growth is paused pending growth moment selections.</tipStringExtraPaused>
+                    <tipStringExtraGrowthSpeedStat>Affected by growth stat multiplier: {0}</tipStringExtraGrowthSpeedStat>
+                </li>
+            </comps>
+        </value>
+    </Operation>
+    <Operation Class="PatchOperationReplace">
+        <xpath>*/HediffDef[defName="VatLearning"]/comps</xpath>
+        <value>
+            <comps>
+                <li Class="HediffCompProperties_SeverityPerDay">
+                    <severityPerDay>3</severityPerDay>
+                </li>
+                <li Class="GrowthVatsOverclocked.VatExtensions.HediffComp_VatLearningExtension">
+                    <labelExtraOverclocked>overclocked</labelExtraOverclocked>
+                    <descriptionExtraOverclocked>By overclocking the simulation hardware the vat is able to provide higher resolution experiences, allowing for greater skill gain and personal growth moments.</descriptionExtraOverclocked>
+                    <tipStringExtraPaused>Learning is paused pending growth moment selections.</tipStringExtraPaused>
+                </li>
+            </comps>
+        </value>
+    </Operation>
+
+    <!-- Add new thoughts to precepts -->
     <Operation Class="PatchOperationAdd">
         <xpath>*/PreceptDef[defName="ChildLabor_Encouraged"]/comps</xpath>
         <value>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Encouraged_EnhancedVatLearning</thought>
+                <thought>ChildLabor_Encouraged_ChildVatModeNotPlay</thought>
                 <description>My vat child is learning</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Encouraged_EnhancedVatPlaying</thought>
+                <thought>ChildLabor_Encouraged_ChildVatModePlay</thought>
                 <description>My vat child is playing</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
@@ -58,11 +89,11 @@
         <xpath>*/PreceptDef[defName="ChildLabor_Disapproved"]/comps</xpath>
         <value>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Disapproved_EnhancedVatLearning</thought>
+                <thought>ChildLabor_Disapproved_ChildVatModeNotPlay</thought>
                 <description>My vat child is learning</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Disapproved_EnhancedVatPlaying</thought>
+                <thought>ChildLabor_Disapproved_ChildVatModeNotPlay</thought>
                 <description>My vat child is playing</description>
             </li>
         </value>

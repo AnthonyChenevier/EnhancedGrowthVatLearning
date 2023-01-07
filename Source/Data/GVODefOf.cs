@@ -34,14 +34,15 @@ public static class GVODefOf
     public static HediffDef EnhancedVatGrowingHediff;
     public static HediffDef EnhancedVatLearningHediff;
 
-    public static HediffDef VatgrowthStressBuildup;
-    public static HediffDef VatgrowthStress;
+    public static HediffDef VatgrowthExposureHediff;
+    public static HediffDef VatshockHediff;
+    public static ThoughtDef VatshockThought;
 
 
     public static HediffDef VatJuiceEffect;
+    public static HediffDef VatJuicePain;
 
     //other
-    public static ThoughtDef VatgrownStressThought;
 
 
     public static StatDef VatGrowthTime;

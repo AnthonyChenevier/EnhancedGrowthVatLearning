@@ -9,8 +9,9 @@
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.Hediffs;
+namespace GrowthVatsOverclocked.Drugs;
 
+//No vanilla ingestionoutcomedoer handles Hediff_Level. So here it is.
 public class IngestionOutcomeDoer_GiveHediff_Level : IngestionOutcomeDoer_GiveHediff
 {
     protected override void DoIngestionOutcomeSpecial(Pawn pawn, Thing ingested)

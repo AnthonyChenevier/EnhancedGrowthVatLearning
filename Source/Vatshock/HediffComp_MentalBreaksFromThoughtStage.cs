@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.Hediffs;
+namespace GrowthVatsOverclocked.Vatshock;
 
 public class ThoughtBreak
 {
@@ -43,28 +43,30 @@ public class HediffComp_MentalBreaksFromThoughtStage : HediffComp
         }
     }
 
+
+    //check for and start mental breaks if possible to have them
     public override void CompPostTick(ref float severityAdjustment)
     {
         base.CompPostTick(ref severityAdjustment);
 
-        //check for mental breaks
-        if (Pawn.IsHashIntervalTick(CheckInterval) &&
-            !Pawn.Downed &&
-            Pawn.Awake() &&
-            !Pawn.InMentalState &&
-            Pawn.Faction == Faction.OfPlayer &&
-            TestStressBreaks(out MentalBreakDef breakDef))
-            //do break
-            breakDef.Worker.TryStart(Pawn, "MentalStateReason_Hediff".Translate(), false);
+        if (!Pawn.IsHashIntervalTick(CheckInterval) ||
+            Pawn.Downed ||
+            !Pawn.Awake() ||
+            Pawn.InMentalState ||
+            Pawn.Faction != Faction.OfPlayer ||
+            !TestMentalBreaks(out MentalBreakDef breakDef))
+            return;
+
+        breakDef.Worker.TryStart(Pawn, "MentalStateReason_Hediff".Translate(), false);
     }
 
-    private bool TestStressBreaks(out MentalBreakDef breakDef)
+    private bool TestMentalBreaks(out MentalBreakDef breakDef)
     {
         Thought stressThought = PawnThoughts.FirstOrDefault(t => t.def == Props.thoughtDef);
         foreach (ThoughtBreak stressBreak in Props.thoughtBreaks)
         {
-            float mtbDays = Props.thoughtStageMtbCurve.Evaluate(stressThought.CurStageIndex) * stressBreak.mtbDays;
-            if (mtbDays >= Props.cutoffOverMtbDays || !Rand.MTBEventOccurs(mtbDays, GenDate.TicksPerDay, CheckInterval))
+            float mtbDays = stressBreak.mtbDays * Props.thoughtStageMtbCurve.Evaluate(stressThought.CurStageIndex);
+            if (!(mtbDays < Props.cutoffOverMtbDays) || !Rand.MTBEventOccurs(mtbDays, GenDate.TicksPerDay, CheckInterval))
                 continue;
 
             breakDef = stressBreak.mentalBreak;

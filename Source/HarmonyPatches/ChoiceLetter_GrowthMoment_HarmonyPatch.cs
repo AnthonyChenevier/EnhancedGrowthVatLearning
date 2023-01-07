@@ -7,7 +7,7 @@
 
 
 using GrowthVatsOverclocked.Data;
-using GrowthVatsOverclocked.ThingComps;
+using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -22,8 +22,8 @@ public static class ChoiceLetter_GrowthMoment_HarmonyPatch
     [HarmonyPatch(nameof(ChoiceLetter_GrowthMoment.ConfigureGrowthLetter))]
     public static void ConfigureGrowthLetter_Postfix(Pawn pawn)
     {
-        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<CompOverclockedGrowthVat>() is { Enabled: true } comp)
-            comp.PausedForLetter = true;
+        if (pawn.ParentHolder is Building_GrowthVat growthVat && growthVat.GetComp<CompOverclockedGrowthVat>() is { IsOverclocked: true } comp)
+            comp.VatgrowthPaused = true;
     }
 
     //unpause vat growth once the growth moment is completed.
@@ -34,15 +34,15 @@ public static class ChoiceLetter_GrowthMoment_HarmonyPatch
     public static void MakeChoices_Postfix(ChoiceLetter_GrowthMoment __instance)
     {
         Pawn pawn = __instance.pawn;
-        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<CompOverclockedGrowthVat>() is not { Enabled: true } comp)
+        if (pawn.ParentHolder is not Building_GrowthVat growthVat || growthVat.GetComp<CompOverclockedGrowthVat>() is not { IsOverclocked: true } comp)
             return;
 
-        comp.PausedForLetter = false;
+        comp.VatgrowthPaused = false;
 
-        if (!pawn.ageTracker.Adult || comp.Mode != LearningMode.Play)
+        if (!pawn.ageTracker.Adult || comp.CurrentMode != LearningMode.Play)
             return;
 
         Messages.Message("PlayModeOver13_Message".Translate(pawn.LabelCap), MessageTypeDefOf.RejectInput);
-        comp.Mode = LearningMode.Default;
+        comp.CurrentMode = LearningMode.Default;
     }
 }

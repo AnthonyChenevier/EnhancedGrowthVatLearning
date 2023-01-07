@@ -7,24 +7,23 @@
 
 
 using System.Collections.Generic;
-using GrowthVatsOverclocked.Data;
 using Verse;
 
-namespace GrowthVatsOverclocked;
+namespace GrowthVatsOverclocked.Data;
 
 public class ModSettingsData
 {
     public class LearningModeSettings : IExposable
     {
         public float baseLearningNeed;
-        public int baseAgingFactor;
+        public int growthSpeed;
         public float skillXP;
         public Dictionary<string, float> skillSelectionWeights;
 
         public void ExposeData()
         {
             Scribe_Values.Look(ref baseLearningNeed, nameof(baseLearningNeed));
-            Scribe_Values.Look(ref baseAgingFactor, nameof(baseAgingFactor));
+            Scribe_Values.Look(ref growthSpeed, nameof(growthSpeed));
             Scribe_Values.Look(ref skillXP, nameof(skillXP));
             Scribe_Collections.Look(ref skillSelectionWeights, nameof(skillSelectionWeights), LookMode.Value, LookMode.Value);
         }
@@ -46,6 +45,8 @@ public class ModSettingsData
     public float vatDaysForBackstory;
     public float learningHediffRate;
 
+    public ModSettingsData() { SetDefaults(); }
+
     public void SetDefaults()
     {
         learningNeedVariance = 0.15f;
@@ -59,7 +60,7 @@ public class ModSettingsData
         learningHediffRate = 3f;
 
         modeSettings[LearningMode.Default].baseLearningNeed = 0.7f;
-        modeSettings[LearningMode.Default].baseAgingFactor = 18;
+        modeSettings[LearningMode.Default].growthSpeed = 18;
         modeSettings[LearningMode.Default].skillXP = 2000f;
         modeSettings[LearningMode.Default].skillSelectionWeights = new Dictionary<string, float>
         {
@@ -78,7 +79,7 @@ public class ModSettingsData
         };
 
         modeSettings[LearningMode.Labor].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Labor].baseAgingFactor = 18;
+        modeSettings[LearningMode.Labor].growthSpeed = 18;
         modeSettings[LearningMode.Labor].skillXP = 2000f;
         modeSettings[LearningMode.Labor].skillSelectionWeights = new Dictionary<string, float>
         {
@@ -97,7 +98,7 @@ public class ModSettingsData
         };
 
         modeSettings[LearningMode.Combat].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Combat].baseAgingFactor = 18;
+        modeSettings[LearningMode.Combat].growthSpeed = 18;
         modeSettings[LearningMode.Combat].skillXP = 2000f;
         modeSettings[LearningMode.Combat].skillSelectionWeights = new Dictionary<string, float>
         {
@@ -116,7 +117,7 @@ public class ModSettingsData
         };
 
         modeSettings[LearningMode.Leader].baseLearningNeed = 0.85f;
-        modeSettings[LearningMode.Leader].baseAgingFactor = 16;
+        modeSettings[LearningMode.Leader].growthSpeed = 16;
         modeSettings[LearningMode.Leader].skillXP = 2200f;
         modeSettings[LearningMode.Leader].skillSelectionWeights = new Dictionary<string, float>
         {
@@ -135,7 +136,7 @@ public class ModSettingsData
         };
 
         modeSettings[LearningMode.Play].baseLearningNeed = 0.98f;
-        modeSettings[LearningMode.Play].baseAgingFactor = 18;
+        modeSettings[LearningMode.Play].growthSpeed = 18;
         modeSettings[LearningMode.Play].skillXP = 800f;
         modeSettings[LearningMode.Play].skillSelectionWeights = new Dictionary<string, float>
         {

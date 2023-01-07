@@ -9,8 +9,7 @@
 using System;
 using System.Collections.Generic;
 using GrowthVatsOverclocked.Data;
-using GrowthVatsOverclocked.Hediffs;
-using GrowthVatsOverclocked.ThingComps;
+using GrowthVatsOverclocked.VatExtensions;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -46,7 +45,6 @@ public class GrowthVatsOverclockedSettings : ModSettings
     public GrowthVatsOverclockedSettings()
     {
         Data = new ModSettingsData();
-        Data.SetDefaults();
         ResetBuffers();
     }
 
@@ -167,7 +165,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
                                                       1f);
 
             scrollView.TextFieldNumericLabeledTooltip("ModeVatAgingFactor_SettingsLabel".Translate(mode.Label()),
-                                                      ref settings.baseAgingFactor,
+                                                      ref settings.growthSpeed,
                                                       "ModeVatAgingFactor_Tooltip".Translate(mode.Label()),
                                                       ref modeSettingBuffers[j++],
                                                       1,
@@ -254,7 +252,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
             CompPowerMulti.SetGlobalSetting_PowerConsumption("Overclocked", Data.overclockedPowerConsumption);
 
         if (Data.learningHediffRate != 3f)
-            HediffComp_VatLearningModeOverride.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+            HediffComp_VatLearningExtension.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
     }
 
     public void ApplyDirtySettings()
@@ -270,7 +268,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
 
         if (SettingLearningRateDirty)
         {
-            HediffComp_VatLearningModeOverride.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+            HediffComp_VatLearningExtension.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
             SettingLearningRateDirty = false;
         }
     }
