@@ -34,7 +34,8 @@ public class HediffComp_VatLearningModeOverride : HediffComp
     public void LearnMode(Pawn_SkillTracker skillTracker, LearningMode mode)
     {
         Dictionary<string, float> skillsMatrix = EnhancedGrowthVatMod.Settings.SkillsMatrix(mode);
-        SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
+        SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled && skillsMatrix.ContainsKey(s.def.defName))
+                                        .RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
         float modeXPToAward = EnhancedGrowthVatMod.Settings.XpToAward[mode.ToString()] * LearningUtility.LearningRateFactor(Parent.pawn);
         skill.Learn(modeXPToAward, true);
