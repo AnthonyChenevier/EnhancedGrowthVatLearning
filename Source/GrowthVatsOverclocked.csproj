@@ -59,9 +59,11 @@
     <Compile Include="HarmonyPatches\Pawn_AgeTracker_HarmonyPatch.cs" />
     <Compile Include="Vatshock\HediffComp_Vatshock.cs" />
     <Compile Include="Vatshock\HediffComp_SeverityFromVatExposure.cs" />
-    <Compile Include="Vatshock\HediffComp_SeverityFromWorldExposure.cs" />
+    <Compile Include="Vatshock\HediffComp_SeverityFromChildhoodEvent.cs" />
     <Compile Include="DefModExtension_HediffTickInGrowthVat.cs" />
-    <Compile Include="HediffGivers\HediffGiver_RandomSeverityCurved.cs" />
+    <Compile Include="HediffGivers\HediffGiver_CauseHediffSeverityBase.cs" />
+    <Compile Include="HediffGivers\HediffGiver_OnVatExit.cs" />
+    <Compile Include="HediffGivers\HediffGiver_RandomFromCauseSeverity.cs" />
     <Compile Include="Vatshock\HediffComp_MentalBreaksFromThoughtStage.cs" />
     <Compile Include="HarmonyPatches\BackCompatibility_HarmonyPatch.cs" />
     <Compile Include="Data\ModSettingsData.cs" />
@@ -76,7 +78,6 @@
     <Compile Include="VatExtensions\CompPowerMulti.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_ChildVatModes.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_TeenInGrowthVat.cs" />
-    <Compile Include="Vatshock\ThoughtWorker_Vatshock.cs" />
     <Compile Include="GrowthTracker\VatGrowthTracker.cs" />
   </ItemGroup>
   <ItemGroup>

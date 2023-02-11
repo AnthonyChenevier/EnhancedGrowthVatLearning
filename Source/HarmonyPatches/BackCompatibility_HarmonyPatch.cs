@@ -12,6 +12,7 @@ using GrowthVatsOverclocked.Drugs;
 using GrowthVatsOverclocked.GrowthTracker;
 using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
+using RimWorld;
 using Verse;
 
 namespace GrowthVatsOverclocked.HarmonyPatches;
@@ -47,14 +48,28 @@ public static class BackCompatibility_HarmonyPatch
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_LevelWithComps" or "EnhancedGrowthVatLearning.VatJuice.Hediff_LevelWithComps")
             return typeof(Hediff_LevelWithComps);
 
-        //vat hediff overrides
+        //vat growth hediff overrides
+        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.EnhancedVatGrowingHediff")
+            return typeof(HediffComp_VatGrowing);
+
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_EnhancedVatGrowing")
             return typeof(HediffComp_VatGrowingExtended);
 
-        //TODO: Check comp is created properly
+        //vat learning hediff overrides
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
             return typeof(Hediff_VatLearning);
 
+        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride")
+            return typeof(HediffComp_VatLearningExtension);
+
         return __result;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(BackCompatibility.PostExposeData))]
+    private static void PostExposeData_HP(object obj)
+    {
+        if (Scribe.mode == LoadSaveMode.Saving || VersionControl.CurrentBuild == ScribeMetaHeaderUtility.loadedGameVersionBuild)
+            return;
     }
 }

@@ -37,7 +37,7 @@
         </value>
     </Operation>
 
-    <!-- Replace vat hediff comps -->
+    <!-- Replace/Add vat hediff comps -->
     <Operation Class="PatchOperationReplace">
         <xpath>*/HediffDef[defName="VatGrowing"]/comps</xpath>
         <value>
@@ -50,19 +50,14 @@
             </comps>
         </value>
     </Operation>
-    <Operation Class="PatchOperationReplace">
+    <Operation Class="PatchOperationAdd">
         <xpath>*/HediffDef[defName="VatLearning"]/comps</xpath>
         <value>
-            <comps>
-                <li Class="HediffCompProperties_SeverityPerDay">
-                    <severityPerDay>3</severityPerDay>
-                </li>
-                <li Class="GrowthVatsOverclocked.VatExtensions.HediffComp_VatLearningExtension">
-                    <labelExtraOverclocked>overclocked</labelExtraOverclocked>
-                    <descriptionExtraOverclocked>By overclocking the simulation hardware the vat is able to provide higher resolution experiences, allowing for greater skill gain and personal growth moments.</descriptionExtraOverclocked>
-                    <tipStringExtraPaused>Learning is paused pending growth moment selections.</tipStringExtraPaused>
-                </li>
-            </comps>
+            <li Class="GrowthVatsOverclocked.VatExtensions.HediffCompProperties_VatLearningExtension">
+                <labelExtraOverclocked>overclocked</labelExtraOverclocked>
+                <descriptionExtraOverclocked>By overclocking the simulation hardware the vat is able to provide higher resolution experiences, allowing for greater skill gain and personal growth moments.</descriptionExtraOverclocked>
+                <tipStringExtraPaused>Learning is paused pending growth moment selections.</tipStringExtraPaused>
+            </li>
         </value>
     </Operation>
 

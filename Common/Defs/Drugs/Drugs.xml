@@ -76,28 +76,28 @@
         </modExtensions>
         <label>effected by vat-juice</label>
         <labelNoun>a vat-juice effect</labelNoun>
-        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects. Young adults have a chance of developing vat growing pains when under the effects of the drug. </description>
+        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects. Young adults have a chance of developing vat growing pains when under the effects of the drug.</description>
         <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
         <minSeverity>0</minSeverity>
         <isBad>false</isBad>
         <levelIsQuantity>true</levelIsQuantity>
         <hediffGivers>
-            <li Class="GrowthVatsOverclocked.Hediffs.HediffGiver_RandomSeverityCurved">
+            <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_RandomFromCauseSeverity">
                 <hediff>VatJuicePain</hediff>
                 <minAge>13</minAge>
                 <minCauseSeverity>1</minCauseSeverity>
-                <mtbSeverityCurve>
+                <causeSeverityMtbDaysCurve>
                     <points>
                         <li>(1, 8)</li>
                         <li>(8, 0.5)</li>
                     </points>
-                </mtbSeverityCurve>
-                <severityMapCurve>
+                </causeSeverityMtbDaysCurve>
+                <causeSeverityMappingCurve>
                     <points>
                         <li>(0, 0)</li>
                         <li>(6, 1)</li>
                     </points>
-                </severityMapCurve>
+                </causeSeverityMappingCurve>
             </li>
         </hediffGivers>
         <comps>

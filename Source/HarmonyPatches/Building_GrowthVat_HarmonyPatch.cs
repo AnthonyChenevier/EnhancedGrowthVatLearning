@@ -7,7 +7,9 @@
 
 
 using System.Collections.Generic;
+using System.Linq;
 using GrowthVatsOverclocked.Data;
+using GrowthVatsOverclocked.HediffGivers;
 using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
 using RimWorld;
@@ -22,17 +24,25 @@ public static class Building_GrowthVat_HarmonyPatch
     //also ensures VatgrothStressBuildup hediff is applied at the same time as the other hediffs
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Building_GrowthVat.TryAcceptPawn))]
-    public static void TryAcceptPawn_Postfix(Pawn pawn, Building_GrowthVat __instance)
+    public static void TryAcceptPawn_Postfix(Pawn ___selectedPawn, Building_GrowthVat __instance)
     {
-        //make sure we were accepted
-        if (pawn.ParentHolder == __instance)
-        {
-            if (!pawn.health.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
-                pawn.health.AddHediff(GVODefOf.VatgrowthExposureHediff);
+        if (!___selectedPawn.health.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
+            ___selectedPawn.health.AddHediff(GVODefOf.VatgrowthExposureHediff);
 
-            //refresh vat comp
-            __instance.GetComp<CompOverclockedGrowthVat>().Refresh();
-        }
+        //refresh vat comp
+        __instance.GetComp<CompOverclockedGrowthVat>().Refresh();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch("Notify_PawnRemoved")]
+    public static void Notify_PawnRemoved_Postfix(Pawn ___selectedPawn, Building_GrowthVat __instance)
+    {
+        //make sure we were ejected first
+        if (___selectedPawn.ParentHolder != null || ___selectedPawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff) is not { } hediff)
+            return;
+
+        //find any hediff givers 
+        hediff.def.hediffGivers.OfType<HediffGiver_OnVatExit>().FirstOrDefault()?.Notify_PawnRemoved(___selectedPawn, hediff);
     }
 
     //Override to fix DEV: Learn gizmo

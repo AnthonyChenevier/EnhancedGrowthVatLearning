@@ -28,19 +28,20 @@ public static class PatchInitializer
     }
 }
 
-//GoJuice Genes also remove chance of getting vat-juice pain effect
-[HarmonyPatch(typeof(GeneDefGenerator), nameof(GeneDefGenerator.ImpliedGeneDefs))]
-public static class GeneDefGenerator_ImpliedGeneDefs_HP
-{
-    public static IEnumerable<GeneDef> Postfix(IEnumerable<GeneDef> __result)
-    {
-        foreach (GeneDef geneDef in __result)
-        {
-            if (geneDef.defName is "ChemicalDependency_GoJuice" or "AddictionResistant_GoJuice" or "AddictionImmune_GoJuice")
-                geneDef.makeImmuneTo.Add(GVODefOf.VatJuicePain);
+//Overclocked learning patches
 
-            yield return geneDef;
-        }
+//Patch vat learning hediff to use our comp instead
+[HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
+public static class Hediff_VatLearning_Learn_HP
+{
+    public static bool Prefix(Hediff_VatLearning __instance)
+    {
+        if (__instance.TryGetComp<HediffComp_VatLearningExtension>() is not { } comp)
+            return true; //not our hediff, continue.
+
+        //use our comp instead of default Learn()
+        comp.Learn();
+        return false;
     }
 }
 
@@ -61,7 +62,7 @@ public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
     }
 }
 
-//set vat backstory on when aging to adult
+//set vat backstory on aging to adult
 [HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), nameof(LifeStageWorker_HumanlikeAdult.Notify_LifeStageStarted))]
 public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 {
@@ -78,7 +79,7 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
     }
 }
 
-//makes the growth tier gizmo visible for children in growth vats.
+//makes the growth tier gizmo visible for all children in growth vats.
 [HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
 public static class Gizmo_GrowthTier_Visible_HP
 {
@@ -86,22 +87,63 @@ public static class Gizmo_GrowthTier_Visible_HP
         __result || ___child is { ParentHolder: Building_GrowthVat } and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
 }
 
-//Patch vat learning hediff to 
-[HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
-public static class Hediff_VatLearning_Learn_HP
-{
-    public static bool Prefix(Hediff_VatLearning __instance)
-    {
-        if (__instance.TryGetComp<HediffComp_VatLearningExtension>() is not { } comp)
-            return true; //not our hediff, continue.
+//vat-juice hooks
 
-        //use our comp instead of default Learn()
-        comp.Learn();
-        return false;
+//GoJuice Genes also remove chance of getting vat-juice pain effect
+[HarmonyPatch(typeof(GeneDefGenerator), nameof(GeneDefGenerator.ImpliedGeneDefs))]
+public static class GeneDefGenerator_ImpliedGeneDefs_HP
+{
+    public static IEnumerable<GeneDef> Postfix(IEnumerable<GeneDef> __result)
+    {
+        foreach (GeneDef geneDef in __result)
+        {
+            if (geneDef.defName is "ChemicalDependency_GoJuice" or "AddictionResistant_GoJuice" or "AddictionImmune_GoJuice")
+                geneDef.makeImmuneTo.Add(GVODefOf.VatJuicePain);
+
+            yield return geneDef;
+        }
     }
 }
 
-//postfix to check if a vatshock memory was counseled and notify the thoughtWorker about it.
+//Vat exposure and vatshock hooks
+
+//add check for vat exposure and notify it if learning complete
+[HarmonyPatch(typeof(LearningUtility))]
+public static class LearningUtility_HP
+{
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(LearningUtility.LearningTickCheckEnd))]
+    public static void LearningTickCheckEnd_Postfix(Pawn pawn, bool __result)
+    {
+        if (!__result) //quick exit if learning not complete
+            return;
+
+        if (pawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff)?.TryGetComp<HediffComp_SeverityFromChildhoodEvent>() is { } eventComp)
+            eventComp.Notify_LearningEvent();
+    }
+}
+
+//similarly check for exposure 
+[HarmonyPatch(typeof(Pawn_InteractionsTracker))]
+public static class Pawn_InteractionsTracker_HP
+{
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Pawn_InteractionsTracker.TryInteractWith))]
+    public static void TryInteractWith_Postfix(bool __result, Pawn recipient, Pawn ___pawn, InteractionDef intDef)
+    {
+        if (!__result) //exit quickly if interaction failed or violent
+            return;
+
+        //try notifying both pawns if either have exposure hediff
+        if (___pawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff)?.TryGetComp<HediffComp_SeverityFromChildhoodEvent>() is { } interactorExposureComp)
+            interactorExposureComp.Notify_SocialEvent(recipient);
+
+        if (recipient.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff)?.TryGetComp<HediffComp_SeverityFromChildhoodEvent>() is { } recipientExposureComp)
+            recipientExposureComp.Notify_SocialEvent(recipient);
+    }
+}
+
+//check if a vatshock memory was successfully counseled and notify the thoughtWorker about it.
 [HarmonyPatch(typeof(CompAbilityEffect_Counsel))]
 public static class CompAbilityEffect_Counsel_HP
 {
@@ -110,9 +152,26 @@ public static class CompAbilityEffect_Counsel_HP
     public static void Apply_Postfix(LocalTargetInfo target)
     {
         Pawn pawn = target.Pawn;
-        if (pawn.needs.mood.thoughts.memories.GetFirstMemoryOfDef(ThoughtDefOf.Counselled) is Thought_Counselled counselledThought &&
-            pawn.needs.mood.thoughts.memories.GetFirstMemoryOfDef(GVODefOf.VatshockThought) is { def.Worker: ThoughtWorker_Vatshock vatshockThoughtWorker } vatshockThought &&
-            counselledThought.MoodOffset() == -vatshockThought.MoodOffset())
-            vatshockThoughtWorker.Notify_CounseledThoughtAdded(pawn, counselledThought);
+        MemoryThoughtHandler memories = pawn.needs.mood.thoughts.memories;
+        if (memories.GetFirstMemoryOfDef(ThoughtDefOf.Counselled) is { } counselledThought &&
+            memories.GetFirstMemoryOfDef(GVODefOf.VatshockFlashback) is { } vatshockThought &&
+            counselledThought.MoodOffset() == -vatshockThought.MoodOffset() &&
+            pawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatshockHediff)?.TryGetComp<HediffComp_Vatshock>() is { } vatshockComp)
+            vatshockComp.Notify_RecoveryAction();
+    }
+}
+
+//check for inspiration use 
+[HarmonyPatch(typeof(InspirationHandler))]
+public static class InspirationHandler_HP
+{
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(InspirationHandler.EndInspiration), typeof(InspirationDef))]
+    public static void EndInspiration_Prefix(InspirationHandler __instance, InspirationDef inspirationDef)
+    {
+        //try notifying vatshock hediff
+        if (__instance.CurStateDef == inspirationDef &&
+            __instance.pawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatshockHediff)?.TryGetComp<HediffComp_Vatshock>() is { } vatshock)
+            vatshock.Notify_RecoveryAction();
     }
 }

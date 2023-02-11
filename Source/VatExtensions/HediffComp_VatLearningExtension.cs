@@ -70,7 +70,8 @@ public class HediffComp_VatLearningExtension : HediffComp
     public void LearnMode(Pawn_SkillTracker skillTracker, LearningMode mode)
     {
         Dictionary<string, float> skillsMatrix = mode.Settings().skillSelectionWeights;
-        SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled).RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
+        SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled && skillsMatrix.ContainsKey(s.def.defName))
+                                        .RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
         float modeXPToAward = mode.Settings().skillXP * LearningUtility.LearningRateFactor(Parent.pawn);
         skill.Learn(modeXPToAward, true);
@@ -87,7 +88,7 @@ public class HediffComp_VatLearningExtension : HediffComp
     public static void SetGlobalSetting_SeverityPerDay(float severityPerDay)
     {
         HediffCompProperties_SeverityPerDay compProps =
-            (HediffCompProperties_SeverityPerDay)GVODefOf.EnhancedVatLearningHediff.comps.FirstOrDefault(c => c.compClass == typeof(HediffCompProperties_SeverityPerDay));
+            (HediffCompProperties_SeverityPerDay)HediffDefOf.VatLearning.comps.FirstOrDefault(c => c.compClass == typeof(HediffCompProperties_SeverityPerDay));
 
         compProps.severityPerDay = severityPerDay;
 

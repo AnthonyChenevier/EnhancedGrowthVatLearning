@@ -11,13 +11,13 @@ using Verse;
 
 namespace GrowthVatsOverclocked.VatExtensions;
 
-public class HediffCompProperties_VatGrowingExtension : HediffCompProperties
+public class HediffCompProperties_VatGrowingExtended : HediffCompProperties
 {
     public string descriptionExtraOverclocked;
     public string tipStringExtraPaused;
     public string tipStringExtraGrowthSpeedStat;
 
-    public HediffCompProperties_VatGrowingExtension() { compClass = typeof(HediffComp_VatGrowingExtended); }
+    public HediffCompProperties_VatGrowingExtended() { compClass = typeof(HediffComp_VatGrowingExtended); }
 }
 
 /// <summary>
@@ -25,7 +25,7 @@ public class HediffCompProperties_VatGrowingExtension : HediffCompProperties
 /// </summary>
 public class HediffComp_VatGrowingExtended : HediffComp
 {
-    private HediffCompProperties_VatGrowingExtension Props => (HediffCompProperties_VatGrowingExtension)props;
+    private HediffCompProperties_VatGrowingExtended Props => (HediffCompProperties_VatGrowingExtended)props;
 
     private CompOverclockedGrowthVat GrowthVatComp => ((Building_GrowthVat)Pawn.ParentHolder).GetComp<CompOverclockedGrowthVat>();
 

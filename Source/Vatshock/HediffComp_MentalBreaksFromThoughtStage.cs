@@ -21,7 +21,7 @@ public class ThoughtBreak
 public class HediffCompProperties_MentalBreaksFromThoughtStage : HediffCompProperties
 {
     public ThoughtDef thoughtDef;
-    public SimpleCurve thoughtStageMtbCurve;
+    public SimpleCurve thoughtStageMtbMultiplierCurve;
     public float cutoffOverMtbDays;
     public List<ThoughtBreak> thoughtBreaks;
     public HediffCompProperties_MentalBreaksFromThoughtStage() => compClass = typeof(HediffComp_MentalBreaksFromThoughtStage);
@@ -65,7 +65,7 @@ public class HediffComp_MentalBreaksFromThoughtStage : HediffComp
         Thought stressThought = PawnThoughts.FirstOrDefault(t => t.def == Props.thoughtDef);
         foreach (ThoughtBreak stressBreak in Props.thoughtBreaks)
         {
-            float mtbDays = stressBreak.mtbDays * Props.thoughtStageMtbCurve.Evaluate(stressThought.CurStageIndex);
+            float mtbDays = stressBreak.mtbDays * Props.thoughtStageMtbMultiplierCurve.Evaluate(stressThought.CurStageIndex);
             if (!(mtbDays < Props.cutoffOverMtbDays) || !Rand.MTBEventOccurs(mtbDays, GenDate.TicksPerDay, CheckInterval))
                 continue;
 

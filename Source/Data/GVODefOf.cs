@@ -29,14 +29,9 @@ public static class GVODefOf
     public static BackstoryDef VatgrownLeaderEGVL;
     public static BackstoryDef VatgrownPlaylandEGVL;
 
-
-    //hediffs
-    public static HediffDef EnhancedVatGrowingHediff;
-    public static HediffDef EnhancedVatLearningHediff;
-
     public static HediffDef VatgrowthExposureHediff;
     public static HediffDef VatshockHediff;
-    public static ThoughtDef VatshockThought;
+    public static ThoughtDef VatshockFlashback;
 
 
     public static HediffDef VatJuiceEffect;
