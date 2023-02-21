@@ -29,7 +29,7 @@ public class GrowthTrackerRepository : WorldComponent
     public override void ExposeData()
     {
         Scribe_Collections.Look(ref _trackers, nameof(_trackers), LookMode.Value, LookMode.Deep);
-        if (Scribe.mode != LoadSaveMode.LoadingVars)
+        if (Scribe.mode != LoadSaveMode.PostLoadInit)
             return;
 
         //on load

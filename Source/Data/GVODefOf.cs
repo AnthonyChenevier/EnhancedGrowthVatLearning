@@ -37,6 +37,8 @@ public static class GVODefOf
     public static HediffDef VatJuiceEffect;
     public static HediffDef VatJuicePain;
 
+    public static HediffDef OverclockedVatLearningHediff;
+
     //other
 
 

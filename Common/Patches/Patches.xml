@@ -50,16 +50,6 @@
             </comps>
         </value>
     </Operation>
-    <Operation Class="PatchOperationAdd">
-        <xpath>*/HediffDef[defName="VatLearning"]/comps</xpath>
-        <value>
-            <li Class="GrowthVatsOverclocked.VatExtensions.HediffCompProperties_VatLearningExtension">
-                <labelExtraOverclocked>overclocked</labelExtraOverclocked>
-                <descriptionExtraOverclocked>By overclocking the simulation hardware the vat is able to provide higher resolution experiences, allowing for greater skill gain and personal growth moments.</descriptionExtraOverclocked>
-                <tipStringExtraPaused>Learning is paused pending growth moment selections.</tipStringExtraPaused>
-            </li>
-        </value>
-    </Operation>
 
     <!-- Add new thoughts to precepts -->
     <Operation Class="PatchOperationAdd">

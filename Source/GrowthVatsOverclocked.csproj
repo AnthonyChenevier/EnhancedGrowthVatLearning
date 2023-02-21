@@ -73,7 +73,7 @@
     <Compile Include="GrowthTracker\StatWorker_VatTime.cs" />
     <Compile Include="VatExtensions\CompOverclockedGrowthVat.cs" />
     <Compile Include="VatExtensions\HediffComp_VatGrowingExtended.cs" />
-    <Compile Include="VatExtensions\HediffComp_VatLearningExtension.cs" />
+    <Compile Include="VatExtensions\HediffComp_OverclockedVatLearning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VatExtensions\CompPowerMulti.cs" />
     <Compile Include="Thoughts\ThoughtWorker_Precept_ChildVatModes.cs" />

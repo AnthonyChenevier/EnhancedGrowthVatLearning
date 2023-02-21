@@ -56,6 +56,19 @@ public class CompOverclockedGrowthVat : ThingComp
     public int StatDerivedGrowthSpeed => Mathf.FloorToInt(ModeGrowthSpeed * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
 
 
+    public Hediff VatLearning
+    {
+        get
+        {
+            HediffDef learningHediffDef;
+            if (overclockingEnabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+                learningHediffDef = GVODefOf.OverclockedVatLearningHediff;
+            else
+                learningHediffDef = HediffDefOf.VatLearning;
+
+            return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
+        }
+    }
     //Overrides
 
     //cache power multi comp and refresh on spawn
@@ -145,6 +158,11 @@ public class CompOverclockedGrowthVat : ThingComp
 
         //set working power profile
         SetPowerProfile();
+        //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
+        if (overclockingEnabled)
+            SwapHediffs(pawn.health, HediffDefOf.VatLearning, GVODefOf.OverclockedVatLearningHediff, true);
+        else
+            SwapHediffs(pawn.health, GVODefOf.OverclockedVatLearningHediff, HediffDefOf.VatLearning); //no severity copy back to prevent gaming for XP boost
 
         //update learning need if required
         CalculateLearningNeed();
@@ -173,6 +191,20 @@ public class CompOverclockedGrowthVat : ThingComp
         //randomize learning need by variance value
         float randRange = GrowthVatsOverclockedMod.Settings.Data.learningNeedVariance;
         learning.CurLevel = currentMode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * pawn.GetStatValue(StatDefOf.LearningRateFactor);
+    }
+
+    private void SwapHediffs(Pawn_HealthTracker healthTracker, HediffDef currentDef, HediffDef nextDef, bool copySeverity = false)
+    {
+        if (!healthTracker.hediffSet.HasHediff(currentDef))
+            return;
+
+        Hediff current = healthTracker.hediffSet.GetFirstHediffOfDef(currentDef);
+
+        healthTracker.RemoveHediff(current);
+        Hediff next = healthTracker.AddHediff(nextDef);
+
+        if (copySeverity)
+            next.Severity = current.Severity;
     }
 
     private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,

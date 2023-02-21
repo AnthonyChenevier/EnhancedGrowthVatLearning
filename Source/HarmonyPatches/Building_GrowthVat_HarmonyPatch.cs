@@ -20,6 +20,18 @@ namespace GrowthVatsOverclocked.HarmonyPatches;
 [HarmonyPatch(typeof(Building_GrowthVat))]
 public static class Building_GrowthVat_HarmonyPatch
 {
+    //Override to get our property instead. Destructive prefix instead of postfix
+    //to prevent a loop of referencing and re-caching the original VatLearning hediff
+    [HarmonyPatch(typeof(Building_GrowthVat), "VatLearning", MethodType.Getter)]
+    public static class Building_GrowthVat_VatLearning_HP
+    {
+        public static bool Prefix(Building_GrowthVat __instance, ref Hediff __result)
+        {
+            __result = __instance.GetComp<CompOverclockedGrowthVat>().VatLearning;
+            return false;
+        }
+    }
+
     //Refresh comp on pawn entry to ensure everything is set correctly
     //also ensures VatgrothStressBuildup hediff is applied at the same time as the other hediffs
     [HarmonyPostfix]
@@ -54,7 +66,7 @@ public static class Building_GrowthVat_HarmonyPatch
         {
             //rebuild the dev:learn gizmo to use our extension comp's Learn() if possible
             if (gizmo is Command_Action { defaultLabel: "DEV: Learn" } command)
-                if (__instance.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatLearning)?.TryGetComp<HediffComp_VatLearningExtension>() is { } comp)
+                if (__instance.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatLearning)?.TryGetComp<HediffComp_OverclockedVatLearning>() is { } comp)
                     yield return new Command_Action
                     {
                         defaultLabel = $"{command.defaultLabel} Enhanced",

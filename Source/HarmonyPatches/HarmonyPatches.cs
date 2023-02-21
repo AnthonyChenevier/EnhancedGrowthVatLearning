@@ -34,14 +34,16 @@ public static class PatchInitializer
 [HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
 public static class Hediff_VatLearning_Learn_HP
 {
-    public static bool Prefix(Hediff_VatLearning __instance)
+    public static bool Learn_Prefix(Hediff_VatLearning __instance)
     {
-        if (__instance.TryGetComp<HediffComp_VatLearningExtension>() is not { } comp)
-            return true; //not our hediff, continue.
+        if (__instance.TryGetComp<HediffComp_OverclockedVatLearning>() is { } comp)
+        {
+            //use our comp instead of default Learn()
+            comp.Learn();
+            return false;
+        }
 
-        //use our comp instead of default Learn()
-        comp.Learn();
-        return false;
+        return true; //not our hediff, continue.
     }
 }
 
@@ -49,7 +51,7 @@ public static class Hediff_VatLearning_Learn_HP
 [HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild), nameof(LifeStageWorker_HumanlikeChild.Notify_LifeStageStarted))]
 public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
 {
-    public static void Postfix(Pawn pawn)
+    public static void Notify_LifeStageStarted_Postfix(Pawn pawn)
     {
         if (Current.ProgramState != ProgramState.Playing ||
             !pawn.IsColonist ||
@@ -66,7 +68,7 @@ public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
 [HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), nameof(LifeStageWorker_HumanlikeAdult.Notify_LifeStageStarted))]
 public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 {
-    public static void Postfix(Pawn pawn)
+    public static void Notify_LifeStageStarted_Postfix(Pawn pawn)
     {
         if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || GrowthVatsOverclockedMod.GetTrackerFor(pawn) is not { } tracker)
             return;
@@ -83,7 +85,8 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 [HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
 public static class Gizmo_GrowthTier_Visible_HP
 {
-    public static bool Postfix(bool __result, Pawn ___child) =>
+    [HarmonyPostfix]
+    public static bool Visible_Postfix(bool __result, Pawn ___child) =>
         __result || ___child is { ParentHolder: Building_GrowthVat } and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
 }
 
@@ -93,7 +96,7 @@ public static class Gizmo_GrowthTier_Visible_HP
 [HarmonyPatch(typeof(GeneDefGenerator), nameof(GeneDefGenerator.ImpliedGeneDefs))]
 public static class GeneDefGenerator_ImpliedGeneDefs_HP
 {
-    public static IEnumerable<GeneDef> Postfix(IEnumerable<GeneDef> __result)
+    public static IEnumerable<GeneDef> ImpliedGeneDefs_Postfix(IEnumerable<GeneDef> __result)
     {
         foreach (GeneDef geneDef in __result)
         {

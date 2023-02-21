@@ -252,7 +252,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
             CompPowerMulti.SetGlobalSetting_PowerConsumption("Overclocked", Data.overclockedPowerConsumption);
 
         if (Data.learningHediffRate != 3f)
-            HediffComp_VatLearningExtension.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+            HediffComp_OverclockedVatLearning.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
     }
 
     public void ApplyDirtySettings()
@@ -268,7 +268,7 @@ public class GrowthVatsOverclockedSettings : ModSettings
 
         if (SettingLearningRateDirty)
         {
-            HediffComp_VatLearningExtension.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
+            HediffComp_OverclockedVatLearning.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
             SettingLearningRateDirty = false;
         }
     }

@@ -60,7 +60,7 @@ public static class BackCompatibility_HarmonyPatch
             return typeof(Hediff_VatLearning);
 
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride")
-            return typeof(HediffComp_VatLearningExtension);
+            return typeof(HediffComp_OverclockedVatLearning);
 
         return __result;
     }

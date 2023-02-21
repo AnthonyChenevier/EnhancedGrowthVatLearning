@@ -1,9 +1,9 @@
-﻿// HediffComp_VatLearningModeOverride.cs
+﻿// HediffComp_OverclockedVatLearning.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
-// Created by: Anthony Chenevier on 2023/01/02 2:03 PM
-// Last edited by: Anthony Chenevier on 2023/01/02 6:46 PM
+// Created by: Anthony Chenevier on 2023/02/12 10:54 AM
+// Last edited by: Anthony Chenevier on 2023/02/21 5:33 PM
 
 
 using System.Collections.Generic;
@@ -15,21 +15,21 @@ using Verse;
 
 namespace GrowthVatsOverclocked.VatExtensions;
 
-public class HediffCompProperties_VatLearningExtension : HediffCompProperties
+public class HediffCompProperties_OverclockedVatLearning : HediffCompProperties
 {
     public string labelExtraOverclocked;
     public string descriptionExtraOverclocked;
     public string tipStringExtraPaused;
-    public HediffCompProperties_VatLearningExtension() { compClass = typeof(HediffCompProperties_VatLearningExtension); }
+    public HediffCompProperties_OverclockedVatLearning() { compClass = typeof(HediffComp_OverclockedVatLearning); }
 }
 
 /// <summary>
 /// Extension for VatLearning hediff to override parent.Learn() functionality and add more details to the hediff.
 /// </summary>
-public class HediffComp_VatLearningExtension : HediffComp
+public class HediffComp_OverclockedVatLearning : HediffComp
 {
     private const float BasicXPToAward = 8000f;
-    private HediffCompProperties_VatLearningExtension Props => (HediffCompProperties_VatLearningExtension)props;
+    private HediffCompProperties_OverclockedVatLearning Props => (HediffCompProperties_OverclockedVatLearning)props;
     private Hediff_VatLearning Parent => (Hediff_VatLearning)parent;
     private CompOverclockedGrowthVat GrowthVatComp => ((Building_GrowthVat)Pawn.ParentHolder).GetComp<CompOverclockedGrowthVat>();
 
@@ -91,15 +91,5 @@ public class HediffComp_VatLearningExtension : HediffComp
             (HediffCompProperties_SeverityPerDay)HediffDefOf.VatLearning.comps.FirstOrDefault(c => c.compClass == typeof(HediffCompProperties_SeverityPerDay));
 
         compProps.severityPerDay = severityPerDay;
-
-        //IEnumerable<Hediff_VatLearning> allVatLearningHediffs = Find.World.worldPawns.AllPawnsAlive.Where(p => p.health.hediffSet.HasHediff(GVODefOf.EnhancedVatLearningHediff))
-        //                                                            .Select(p => p.health.hediffSet.GetFirstHediffOfDef(GVODefOf.EnhancedVatLearningHediff) as Hediff_VatLearning);
-
-        //foreach (Hediff_VatLearning hediff in allVatLearningHediffs)
-        //{
-        //    HediffComp_SeverityPerDay comp = hediff.TryGetComp<HediffComp_SeverityPerDay>();
-        //    if (comp != null)
-        //        ((HediffCompProperties_SeverityPerDay)comp.props).severityPerDay = severityPerDay;
-        //}
     }
 }

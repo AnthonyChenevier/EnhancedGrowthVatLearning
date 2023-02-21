@@ -44,7 +44,7 @@ public class HediffComp_SeverityFromVatExposure : HediffComp
 
     private float SeverityChangePerTick()
     { //convert yearly growth severity to per-tick
-        float severityChange = (float)((double)Props.severityPerGrownYear / GenDate.TicksPerYear) * VatComp.StatDerivedGrowthSpeed;
+        float severityChange = (float)((double)Props.severityPerGrownYear / GenDate.TicksPerYear) * VatComp?.StatDerivedGrowthSpeed ?? 0f;
         //sum and apply modifiers
         severityChange += severityChange * (VatJuiceSeverityModifer + LearningNeedSeverityModifer);
         return severityChange;

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!-- Hediffs -->
+    <HediffDef>
+        <defName>OverclockedVatLearningHediff</defName>
+        <label>vat learning</label>
+        <description>The growth vat is rapidly stimulating this person's brain with electricity to induce skill development and personal growth. This process is nearly as effective as growing in the outside world.</description>
+        <hediffClass>Hediff_VatLearning</hediffClass>
+        <everCurableByItem>false</everCurableByItem>
+        <initialSeverity>0.001</initialSeverity>
+        <maxSeverity>1</maxSeverity>
+        <isBad>false</isBad>
+        <comps>
+            <li Class="HediffCompProperties_SeverityPerDay">
+                <severityPerDay>3</severityPerDay>
+            </li>
+            <li Class="GrowthVatsOverclocked.VatExtensions.HediffCompProperties_OverclockedVatLearning">
+                <labelExtraOverclocked>overclocked</labelExtraOverclocked>
+                <descriptionExtraOverclocked>By overclocking the simulation hardware the vat is able to provide higher resolution experiences, allowing for greater skill gain and personal growth moments.</descriptionExtraOverclocked>
+                <tipStringExtraPaused>Learning is paused pending growth moment selections.</tipStringExtraPaused>
+            </li>
+        </comps>
+    </HediffDef>
+</Defs>
