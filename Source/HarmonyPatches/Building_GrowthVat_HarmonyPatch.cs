@@ -56,7 +56,7 @@ public static class Building_GrowthVat_HarmonyPatch
                 if (__instance.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.VatLearning)?.TryGetComp<HediffComp_OverclockedVatLearning>() is { } comp)
                     yield return new Command_Action
                     {
-                        defaultLabel = $"{command.defaultLabel} Enhanced",
+                        defaultLabel = $"{command.defaultLabel} (overclocked)",
                         action = comp.Learn
                     };
 
