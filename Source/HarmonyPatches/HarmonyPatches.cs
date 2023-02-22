@@ -36,14 +36,12 @@ public static class Hediff_VatLearning_Learn_HP
 {
     public static bool Learn_Prefix(Hediff_VatLearning __instance)
     {
-        if (__instance.TryGetComp<HediffComp_OverclockedVatLearning>() is { } comp)
-        {
-            //use our comp instead of default Learn()
-            comp.Learn();
-            return false;
-        }
+        if (__instance.TryGetComp<HediffComp_OverclockedVatLearning>() is not { } comp)
+            return true; //not our hediff, continue.
 
-        return true; //not our hediff, continue.
+        //use our comp instead of default Learn()
+        comp.Learn();
+        return false;
     }
 }
 

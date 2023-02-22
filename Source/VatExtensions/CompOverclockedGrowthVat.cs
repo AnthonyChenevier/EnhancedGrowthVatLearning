@@ -60,11 +60,9 @@ public class CompOverclockedGrowthVat : ThingComp
     {
         get
         {
-            HediffDef learningHediffDef;
-            if (overclockingEnabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
-                learningHediffDef = GVODefOf.OverclockedVatLearningHediff;
-            else
-                learningHediffDef = HediffDefOf.VatLearning;
+            HediffDef learningHediffDef = overclockingEnabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby()
+                                              ? GVODefOf.OverclockedVatLearningHediff
+                                              : HediffDefOf.VatLearning;
 
             return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
         }
@@ -142,10 +140,10 @@ public class CompOverclockedGrowthVat : ThingComp
         base.PostExposeData();
     }
 
+    //comp methods
 
     public void Refresh() { EnableOverclocking(overclockingEnabled); }
 
-    //comp methods
     public void EnableOverclocking(bool enable)
     {
         overclockingEnabled = enable;
@@ -158,11 +156,13 @@ public class CompOverclockedGrowthVat : ThingComp
 
         //set working power profile
         SetPowerProfile();
+
         //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
-        if (overclockingEnabled)
-            SwapHediffs(pawn.health, HediffDefOf.VatLearning, GVODefOf.OverclockedVatLearningHediff, true);
-        else
-            SwapHediffs(pawn.health, GVODefOf.OverclockedVatLearningHediff, HediffDefOf.VatLearning); //no severity copy back to prevent gaming for XP boost
+        SetLearningHediff(pawn.health);
+
+        //add exposure hediff if it doesn't exist
+        if (!pawn.health.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
+            pawn.health.AddHediff(GVODefOf.VatgrowthExposureHediff);
 
         //update learning need if required
         CalculateLearningNeed();
@@ -193,18 +193,21 @@ public class CompOverclockedGrowthVat : ThingComp
         learning.CurLevel = currentMode.Settings().baseLearningNeed * (1f - Rand.Range(-randRange, randRange)) * pawn.GetStatValue(StatDefOf.LearningRateFactor);
     }
 
-    private void SwapHediffs(Pawn_HealthTracker healthTracker, HediffDef currentDef, HediffDef nextDef, bool copySeverity = false)
+    private void SetLearningHediff(Pawn_HealthTracker healthTracker)
     {
-        if (!healthTracker.hediffSet.HasHediff(currentDef))
+        HediffDef oldDef = overclockingEnabled ? HediffDefOf.VatLearning : GVODefOf.OverclockedVatLearningHediff;
+        HediffDef newDef = overclockingEnabled ? GVODefOf.OverclockedVatLearningHediff : HediffDefOf.VatLearning;
+
+        if (!healthTracker.hediffSet.HasHediff(oldDef))
             return;
 
-        Hediff current = healthTracker.hediffSet.GetFirstHediffOfDef(currentDef);
+        Hediff oldHediff = healthTracker.hediffSet.GetFirstHediffOfDef(oldDef);
 
-        healthTracker.RemoveHediff(current);
-        Hediff next = healthTracker.AddHediff(nextDef);
+        healthTracker.RemoveHediff(oldHediff);
+        Hediff newHediff = healthTracker.AddHediff(newDef);
 
-        if (copySeverity)
-            next.Severity = current.Severity;
+        if (overclockingEnabled)
+            newHediff.Severity = oldHediff.Severity;
     }
 
     private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,

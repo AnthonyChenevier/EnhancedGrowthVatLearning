@@ -16,7 +16,6 @@ public static class GVODefOf
 {
     //researches
     public static ResearchProjectDef GrowthVatOverclockingResearch;
-
     public static ResearchProjectDef VatLearningLaborResearch;
     public static ResearchProjectDef VatLearningSoldierResearch;
     public static ResearchProjectDef VatLearningLeaderResearch;
@@ -29,19 +28,17 @@ public static class GVODefOf
     public static BackstoryDef VatgrownLeaderEGVL;
     public static BackstoryDef VatgrownPlaylandEGVL;
 
+    //hediffs
+    public static HediffDef OverclockedVatLearningHediff;
     public static HediffDef VatgrowthExposureHediff;
     public static HediffDef VatshockHediff;
-    public static ThoughtDef VatshockFlashback;
-
-
     public static HediffDef VatJuiceEffect;
     public static HediffDef VatJuicePain;
 
-    public static HediffDef OverclockedVatLearningHediff;
+    //thoughts
+    public static ThoughtDef VatshockFlashback;
 
     //other
-
-
     public static StatDef VatGrowthTime;
 
     static GVODefOf() { DefOfHelper.EnsureInitializedInCtor(typeof(GVODefOf)); }

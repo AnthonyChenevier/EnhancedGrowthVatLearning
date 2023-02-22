@@ -27,6 +27,9 @@ public static class BackCompatibility_HarmonyPatch
         if (defType == typeof(ResearchProjectDef) && defName == "EnhancedGrowthVatLearningResearch")
             return "GrowthVatOverclockingResearch";
 
+        if (defType == typeof(HediffComp) && defName == "EnhancedVatLearningHediff")
+            return "OverclockedVatLearningHediff";
+
         return __result;
     }
 
@@ -56,11 +59,11 @@ public static class BackCompatibility_HarmonyPatch
             return typeof(HediffComp_VatGrowingExtended);
 
         //vat learning hediff overrides
-        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
-            return typeof(Hediff_VatLearning);
+        //if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
+        //    return typeof(Hediff_VatLearning);
 
-        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride")
-            return typeof(HediffComp_OverclockedVatLearning);
+        //if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride")
+        //    return typeof(HediffComp_OverclockedVatLearning);
 
         return __result;
     }

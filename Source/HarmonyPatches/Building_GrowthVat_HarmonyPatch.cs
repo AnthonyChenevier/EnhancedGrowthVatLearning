@@ -25,24 +25,11 @@ public static class Building_GrowthVat_HarmonyPatch
     [HarmonyPatch(typeof(Building_GrowthVat), "VatLearning", MethodType.Getter)]
     public static class Building_GrowthVat_VatLearning_HP
     {
-        public static bool Prefix(Building_GrowthVat __instance, ref Hediff __result)
+        public static bool VatLearning_Prefix(Building_GrowthVat __instance, ref Hediff __result)
         {
             __result = __instance.GetComp<CompOverclockedGrowthVat>().VatLearning;
             return false;
         }
-    }
-
-    //Refresh comp on pawn entry to ensure everything is set correctly
-    //also ensures VatgrothStressBuildup hediff is applied at the same time as the other hediffs
-    [HarmonyPostfix]
-    [HarmonyPatch(nameof(Building_GrowthVat.TryAcceptPawn))]
-    public static void TryAcceptPawn_Postfix(Pawn ___selectedPawn, Building_GrowthVat __instance)
-    {
-        if (!___selectedPawn.health.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
-            ___selectedPawn.health.AddHediff(GVODefOf.VatgrowthExposureHediff);
-
-        //refresh vat comp
-        __instance.GetComp<CompOverclockedGrowthVat>().Refresh();
     }
 
     [HarmonyPostfix]
