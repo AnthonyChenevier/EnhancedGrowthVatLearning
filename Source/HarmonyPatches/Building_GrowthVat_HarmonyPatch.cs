@@ -22,14 +22,12 @@ public static class Building_GrowthVat_HarmonyPatch
 {
     //Override to get our property instead. Destructive prefix instead of postfix
     //to prevent a loop of referencing and re-caching the original VatLearning hediff
-    [HarmonyPatch(typeof(Building_GrowthVat), "VatLearning", MethodType.Getter)]
-    public static class Building_GrowthVat_VatLearning_HP
+    [HarmonyPrefix]
+    [HarmonyPatch("VatLearning", MethodType.Getter)]
+    public static bool VatLearning_Prefix(Building_GrowthVat __instance, ref Hediff __result)
     {
-        public static bool VatLearning_Prefix(Building_GrowthVat __instance, ref Hediff __result)
-        {
-            __result = __instance.GetComp<CompOverclockedGrowthVat>().VatLearning;
-            return false;
-        }
+        __result = __instance.GetComp<CompOverclockedGrowthVat>().VatLearning;
+        return false;
     }
 
     [HarmonyPostfix]

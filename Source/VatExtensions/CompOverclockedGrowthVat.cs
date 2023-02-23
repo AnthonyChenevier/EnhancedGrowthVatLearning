@@ -20,9 +20,9 @@ namespace GrowthVatsOverclocked.VatExtensions;
 public class CompOverclockedGrowthVat : ThingComp
 {
     //exposed comp vars
-    private bool overclockingEnabled; //main switch for all overclocked behaviour
-    private LearningMode currentMode; //the selected learning suite/mode
-    private bool vatgrowthPaused; //overclocked vats pause growth and learning when a growth letter is pending so growth points aren't wasted.
+    internal bool overclockingEnabled; //main switch for all overclocked behaviour
+    internal LearningMode currentMode; //the selected learning suite/mode
+    internal bool vatgrowthPaused; //overclocked vats pause growth and learning when a growth letter is pending so growth points aren't wasted.
 
     //overclocked vats have higher power requirements. Cache comp here for easy access
     private CompPowerMulti powerMulti;
@@ -134,10 +134,11 @@ public class CompOverclockedGrowthVat : ThingComp
     //save/load
     public override void PostExposeData()
     {
+        base.PostExposeData();
         Scribe_Values.Look(ref overclockingEnabled, nameof(overclockingEnabled));
         Scribe_Values.Look(ref vatgrowthPaused, nameof(vatgrowthPaused));
         Scribe_Values.Look(ref currentMode, nameof(currentMode));
-        base.PostExposeData();
+        BackCompatibility.PostExposeData(this);
     }
 
     //comp methods

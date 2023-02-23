@@ -27,8 +27,11 @@ public static class BackCompatibility_HarmonyPatch
         if (defType == typeof(ResearchProjectDef) && defName == "EnhancedGrowthVatLearningResearch")
             return "GrowthVatOverclockingResearch";
 
-        if (defType == typeof(HediffComp) && defName == "EnhancedVatLearningHediff")
+        if (defType == typeof(HediffDef) && defName == "EnhancedVatLearningHediff")
             return "OverclockedVatLearningHediff";
+
+        if (defType == typeof(HediffDef) && defName == "EnhancedVatGrowingHediff")
+            return HediffDefOf.VatGrowing.defName;
 
         return __result;
     }
@@ -44,26 +47,20 @@ public static class BackCompatibility_HarmonyPatch
         if (providedClassName is "EnhancedGrowthVatLearning.VatGrowthTracker")
             return typeof(VatGrowthTracker);
 
-        //mod hediffs
+        //vat juice ingestion
         if (providedClassName is "EnhancedGrowthVatLearning.VatJuice.IngestionOutcomeDoer_GiveHediff_Level")
             return typeof(IngestionOutcomeDoer_GiveHediff_Level);
 
+        //vat juice base class
         if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_LevelWithComps" or "EnhancedGrowthVatLearning.VatJuice.Hediff_LevelWithComps")
             return typeof(Hediff_LevelWithComps);
 
-        //vat growth hediff overrides
-        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.EnhancedVatGrowingHediff")
-            return typeof(HediffComp_VatGrowing);
+        //growth vat overclocked comp class
+        if (providedClassName == "EnhancedGrowthVatLearning.ThingComps.EnhancedGrowthVatComp")
+            return typeof(CompOverclockedGrowthVat);
 
-        if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_EnhancedVatGrowing")
-            return typeof(HediffComp_VatGrowingExtended);
-
-        //vat learning hediff overrides
-        //if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.Hediff_EnhancedVatLearning")
-        //    return typeof(Hediff_VatLearning);
-
-        //if (providedClassName is "EnhancedGrowthVatLearning.Hediffs.HediffComp_VatLearningModeOverride")
-        //    return typeof(HediffComp_OverclockedVatLearning);
+        if (providedClassName == "EnhancedGrowthVatLearning.ThingComps.HediffComp_VatLearningModeOverride")
+            return typeof(HediffComp_OverclockedVatLearning);
 
         return __result;
     }
@@ -72,7 +69,14 @@ public static class BackCompatibility_HarmonyPatch
     [HarmonyPatch(nameof(BackCompatibility.PostExposeData))]
     private static void PostExposeData_HP(object obj)
     {
-        if (Scribe.mode == LoadSaveMode.Saving || VersionControl.CurrentBuild == ScribeMetaHeaderUtility.loadedGameVersionBuild)
+        if (Scribe.mode != LoadSaveMode.LoadingVars)
             return;
+
+        if (obj is CompOverclockedGrowthVat vatComp)
+        {
+            Scribe_Values.Look(ref vatComp.overclockingEnabled, "enabled");
+            Scribe_Values.Look(ref vatComp.currentMode, "mode");
+            Scribe_Values.Look(ref vatComp.vatgrowthPaused, "pausedForLetter");
+        }
     }
 }
