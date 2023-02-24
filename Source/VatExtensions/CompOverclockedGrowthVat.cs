@@ -51,7 +51,11 @@ public class CompOverclockedGrowthVat : ThingComp
 
     //re-cache occupant speed once per day to reduce expensive computation
 
-    public int ModeGrowthSpeed => IsOverclocked ? currentMode.Settings().growthSpeed : Building_GrowthVat.AgeTicksPerTickInGrowthVat;
+    public int ModeGrowthSpeed => IsOverclocked && !OccupantIsBaby ? currentMode.Settings().growthSpeed : Building_GrowthVat.AgeTicksPerTickInGrowthVat;
+
+    private bool OccupantIsBaby => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage: DevelopmentalStage.Baby };
+
+    private bool OccupantIsAdult => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage : DevelopmentalStage.Adult };
 
     public int StatDerivedGrowthSpeed => Mathf.FloorToInt(ModeGrowthSpeed * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
 
@@ -60,9 +64,7 @@ public class CompOverclockedGrowthVat : ThingComp
     {
         get
         {
-            HediffDef learningHediffDef = overclockingEnabled && GrowthVat.SelectedPawn is { } pawn && !pawn.ageTracker.CurLifeStage.developmentalStage.Baby()
-                                              ? GVODefOf.OverclockedVatLearningHediff
-                                              : HediffDefOf.VatLearning;
+            HediffDef learningHediffDef = overclockingEnabled && !OccupantIsBaby ? GVODefOf.OverclockedVatLearningHediff : HediffDefOf.VatLearning;
 
             return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
         }
@@ -95,7 +97,7 @@ public class CompOverclockedGrowthVat : ThingComp
 
         //enhanced learning toggle
         string disabledForBabyNotice = "";
-        if (GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+        if (OccupantIsBaby)
             disabledForBabyNotice = $"\n\n{"EnhancedLearningDisabledBabies_Notice".Translate().Colorize(ColorLibrary.RedReadable)}";
 
         Command_Toggle enhancedLearningGizmo = new()
@@ -148,32 +150,26 @@ public class CompOverclockedGrowthVat : ThingComp
     public void EnableOverclocking(bool enable)
     {
         overclockingEnabled = enable;
+
         if (!overclockingEnabled)
             vatgrowthPaused = false; //if we're turning off unpause growth
 
-        //empty vats, embryos & babies skip overclocked features. Refresh on pawn entry and life stage started to re-check
-        if (GrowthVat.SelectedPawn is not { } pawn || pawn.ageTracker.CurLifeStage.developmentalStage.Baby())
+        //only non-baby pawns do anything beside change the overclocked setting
+        if (GrowthVat.selectedEmbryo != null || GrowthVat.SelectedPawn == null || OccupantIsBaby)
             return;
 
-        //set working power profile
-        SetPowerProfile();
+        //set power profile for this vat
+        string profileName = overclockingEnabled ? "Overclocked" : "Default";
+        if (!powerMulti.TrySetPowerProfile(profileName))
+            Log.Error($"GrowthVatsOverclocked :: VariablePowerComp profile named \"{profileName}\" could not be found.");
 
-        //13-18 (child & teenager(adult)) can still benefit from skill learning and growth speed hediffs
-        SetLearningHediff(pawn.health);
-
+        Pawn_HealthTracker pawnHealth = GrowthVat.SelectedPawn.health;
         //add exposure hediff if it doesn't exist
-        if (!pawn.health.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
-            pawn.health.AddHediff(GVODefOf.VatgrowthExposureHediff);
+        if (!pawnHealth.hediffSet.HasHediff(GVODefOf.VatgrowthExposureHediff))
+            pawnHealth.AddHediff(GVODefOf.VatgrowthExposureHediff);
 
-        //update learning need if required
+        SetLearningHediff(pawnHealth);
         CalculateLearningNeed();
-    }
-
-    private void SetPowerProfile()
-    {
-        string powerProfile = overclockingEnabled ? "Overclocked" : "Default";
-        if (!powerMulti.TrySetPowerProfile(powerProfile))
-            Log.Error($"GrowthVatsOverclocked :: VariablePowerComp profile name \"{powerProfile}\" could not be found when attempting to set.");
     }
 
     private void CalculateLearningNeed()
@@ -220,9 +216,8 @@ public class CompOverclockedGrowthVat : ThingComp
 
         if (playResearch.IsFinished)
         {
-            bool overPlayAge = GrowthVat.SelectedPawn is { } pawn && pawn.ageTracker.CurLifeStage.developmentalStage.Adult();
-            string disabledForTeenNotice = overPlayAge ? $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}" : "";
-            options.Add(ModeMenuOption(LearningMode.Play, $"{LearningMode.Play.Description()}{disabledForTeenNotice}", overPlayAge));
+            string disabledForTeenNotice = OccupantIsAdult ? $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}" : "";
+            options.Add(ModeMenuOption(LearningMode.Play, $"{LearningMode.Play.Description()}{disabledForTeenNotice}", OccupantIsAdult));
         }
 
         if (soldierResearch.IsFinished)

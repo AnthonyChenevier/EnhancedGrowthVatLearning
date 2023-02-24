@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\About\About.xml = ..\About\About.xml
 		..\Common\Defs\Backstories\BackstoryDefs.xml = ..\Common\Defs\Backstories\BackstoryDefs.xml
 		..\Common\Defs\Drugs\Drugs.xml = ..\Common\Defs\Drugs\Drugs.xml
-		..\Common\Defs\Hediffs\Hediffs.xml = ..\Common\Defs\Hediffs\Hediffs.xml
+		..\Common\Defs\HediffDefs\HediffDefs.xml = ..\Common\Defs\HediffDefs\HediffDefs.xml
 		Install.bat = Install.bat
 		..\Common\Languages\English\Keyed\Keys.xml = ..\Common\Languages\English\Keyed\Keys.xml
 		..\LICENSE.txt = ..\LICENSE.txt
@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Common\Defs\Stats\StatDefs.xml = ..\Common\Defs\Stats\StatDefs.xml
 		..\steam formatted description.txt = ..\steam formatted description.txt
 		..\Common\Defs\Thoughts\ThoughtDefs.xml = ..\Common\Defs\Thoughts\ThoughtDefs.xml
-		..\Common\Patches\VatJuice_DrugPolicy_Patch.xml = ..\Common\Patches\VatJuice_DrugPolicy_Patch.xml
 		..\Common\Defs\VatEffects\Vatshock.xml = ..\Common\Defs\VatEffects\Vatshock.xml
 	EndProjectSection
 EndProject

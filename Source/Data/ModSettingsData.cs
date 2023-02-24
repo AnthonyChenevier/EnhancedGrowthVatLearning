@@ -27,6 +27,14 @@ public class ModSettingsData
             Scribe_Values.Look(ref skillXP, nameof(skillXP));
             Scribe_Collections.Look(ref skillSelectionWeights, nameof(skillSelectionWeights), LookMode.Value, LookMode.Value);
         }
+
+        public void SetDefaults(float baseLearningNeed, int growthSpeed, float skillXP, Dictionary<string, float> skillSelectionWeights)
+        {
+            this.baseLearningNeed = baseLearningNeed;
+            this.growthSpeed = growthSpeed;
+            this.skillXP = skillXP;
+            this.skillSelectionWeights = skillSelectionWeights;
+        }
     }
 
     public Dictionary<LearningMode, LearningModeSettings> modeSettings = new()
@@ -40,10 +48,16 @@ public class ModSettingsData
 
     public float learningNeedVariance;
     public int learningNeedDailyChangeRate;
+
     public float overclockedPowerConsumption;
+
     public bool generateBackstories;
     public float vatDaysForBackstory;
+
     public float learningHediffRate;
+
+    public bool allowVatshock;
+    public bool allowVatjuicePain;
 
     public ModSettingsData() { SetDefaults(); }
 
@@ -59,100 +73,103 @@ public class ModSettingsData
 
         learningHediffRate = 3f;
 
-        modeSettings[LearningMode.Default].baseLearningNeed = 0.7f;
-        modeSettings[LearningMode.Default].growthSpeed = 18;
-        modeSettings[LearningMode.Default].skillXP = 2000f;
-        modeSettings[LearningMode.Default].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 10 },
-            { "Social", 10 },
-            { "Animals", 10 },
-            { "Cooking", 10 },
-            { "Construction", 10 },
-            { "Plants", 10 },
-            { "Mining", 10 },
-            { "Crafting", 10 },
-            { "Artistic", 10 },
-            { "Intellectual", 10 },
-        };
+        allowVatshock = true;
+        allowVatjuicePain = false;
 
-        modeSettings[LearningMode.Labor].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Labor].growthSpeed = 18;
-        modeSettings[LearningMode.Labor].skillXP = 2000f;
-        modeSettings[LearningMode.Labor].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 5 },
-            { "Melee", 5 },
-            { "Medicine", 5 },
-            { "Social", 5 },
-            { "Animals", 15 },
-            { "Cooking", 15 },
-            { "Construction", 10 },
-            { "Plants", 20 },
-            { "Mining", 10 },
-            { "Crafting", 20 },
-            { "Artistic", 5 },
-            { "Intellectual", 5 },
-        };
+        modeSettings[LearningMode.Default].SetDefaults(0.7f,
+                                                       18,
+                                                       2000f,
+                                                       new Dictionary<string, float>
+                                                       {
+                                                           { "Shooting", 10 },
+                                                           { "Melee", 10 },
+                                                           { "Medicine", 10 },
+                                                           { "Social", 10 },
+                                                           { "Animals", 10 },
+                                                           { "Cooking", 10 },
+                                                           { "Construction", 10 },
+                                                           { "Plants", 10 },
+                                                           { "Mining", 10 },
+                                                           { "Crafting", 10 },
+                                                           { "Artistic", 10 },
+                                                           { "Intellectual", 10 },
+                                                       });
 
-        modeSettings[LearningMode.Combat].baseLearningNeed = 0.6f;
-        modeSettings[LearningMode.Combat].growthSpeed = 18;
-        modeSettings[LearningMode.Combat].skillXP = 2000f;
-        modeSettings[LearningMode.Combat].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 20 },
-            { "Melee", 20 },
-            { "Medicine", 15 },
-            { "Social", 5 },
-            { "Animals", 5 },
-            { "Cooking", 5 },
-            { "Construction", 15 },
-            { "Plants", 5 },
-            { "Mining", 15 },
-            { "Crafting", 5 },
-            { "Artistic", 5 },
-            { "Intellectual", 5 },
-        };
+        modeSettings[LearningMode.Labor].SetDefaults(0.6f,
+                                                     18,
+                                                     2000f,
+                                                     new Dictionary<string, float>
+                                                     {
+                                                         { "Shooting", 5 },
+                                                         { "Melee", 5 },
+                                                         { "Medicine", 5 },
+                                                         { "Social", 5 },
+                                                         { "Animals", 15 },
+                                                         { "Cooking", 15 },
+                                                         { "Construction", 10 },
+                                                         { "Plants", 20 },
+                                                         { "Mining", 10 },
+                                                         { "Crafting", 20 },
+                                                         { "Artistic", 5 },
+                                                         { "Intellectual", 5 },
+                                                     });
 
-        modeSettings[LearningMode.Leader].baseLearningNeed = 0.85f;
-        modeSettings[LearningMode.Leader].growthSpeed = 16;
-        modeSettings[LearningMode.Leader].skillXP = 2200f;
-        modeSettings[LearningMode.Leader].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 15 },
-            { "Social", 20 },
-            { "Animals", 5 },
-            { "Cooking", 5 },
-            { "Construction", 5 },
-            { "Plants", 5 },
-            { "Mining", 5 },
-            { "Crafting", 5 },
-            { "Artistic", 15 },
-            { "Intellectual", 40 }, //double because its only available to train after 13 years of age and we want a chance to get it.
-        };
+        modeSettings[LearningMode.Combat].SetDefaults(0.6f,
+                                                      18,
+                                                      2000f,
+                                                      new Dictionary<string, float>
+                                                      {
+                                                          { "Shooting", 20 },
+                                                          { "Melee", 20 },
+                                                          { "Medicine", 15 },
+                                                          { "Social", 5 },
+                                                          { "Animals", 5 },
+                                                          { "Cooking", 5 },
+                                                          { "Construction", 15 },
+                                                          { "Plants", 5 },
+                                                          { "Mining", 15 },
+                                                          { "Crafting", 5 },
+                                                          { "Artistic", 5 },
+                                                          { "Intellectual", 5 },
+                                                      });
 
-        modeSettings[LearningMode.Play].baseLearningNeed = 0.98f;
-        modeSettings[LearningMode.Play].growthSpeed = 18;
-        modeSettings[LearningMode.Play].skillXP = 800f;
-        modeSettings[LearningMode.Play].skillSelectionWeights = new Dictionary<string, float>
-        {
-            { "Shooting", 10 },
-            { "Melee", 10 },
-            { "Medicine", 10 },
-            { "Social", 10 },
-            { "Animals", 10 },
-            { "Cooking", 10 },
-            { "Construction", 10 },
-            { "Plants", 10 },
-            { "Mining", 10 },
-            { "Crafting", 10 },
-            { "Artistic", 10 },
-            { "Intellectual", 10 },
-        };
+        modeSettings[LearningMode.Leader].SetDefaults(0.85f,
+                                                      16,
+                                                      2200f,
+                                                      new Dictionary<string, float>
+                                                      {
+                                                          { "Shooting", 10 },
+                                                          { "Melee", 10 },
+                                                          { "Medicine", 15 },
+                                                          { "Social", 20 },
+                                                          { "Animals", 5 },
+                                                          { "Cooking", 5 },
+                                                          { "Construction", 5 },
+                                                          { "Plants", 5 },
+                                                          { "Mining", 5 },
+                                                          { "Crafting", 5 },
+                                                          { "Artistic", 15 },
+                                                          { "Intellectual", 40 }, //double because its only available to train after 13 years of age and we want a chance to get it.
+                                                      });
+
+        modeSettings[LearningMode.Play].SetDefaults(0.98f,
+                                                    18,
+                                                    800f,
+                                                    new Dictionary<string, float>
+                                                    {
+                                                        { "Shooting", 10 },
+                                                        { "Melee", 10 },
+                                                        { "Medicine", 10 },
+                                                        { "Social", 10 },
+                                                        { "Animals", 10 },
+                                                        { "Cooking", 10 },
+                                                        { "Construction", 10 },
+                                                        { "Plants", 10 },
+                                                        { "Mining", 10 },
+                                                        { "Crafting", 10 },
+                                                        { "Artistic", 10 },
+                                                        { "Intellectual", 10 },
+                                                    });
     }
 
     public void Expose()

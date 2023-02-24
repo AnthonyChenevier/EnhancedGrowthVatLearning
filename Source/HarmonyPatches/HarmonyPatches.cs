@@ -31,9 +31,11 @@ public static class PatchInitializer
 //Overclocked learning patches
 
 //Patch vat learning hediff to use our comp instead
-[HarmonyPatch(typeof(Hediff_VatLearning), "Learn")]
-public static class Hediff_VatLearning_Learn_HP
+[HarmonyPatch(typeof(Hediff_VatLearning))]
+public static class Hediff_VatLearning_HarmonyPatch
 {
+    [HarmonyPrefix]
+    [HarmonyPatch(nameof(Hediff_VatLearning.Learn))]
     public static bool Learn_Prefix(Hediff_VatLearning __instance)
     {
         if (__instance.TryGetComp<HediffComp_OverclockedVatLearning>() is not { } comp)
@@ -46,12 +48,15 @@ public static class Hediff_VatLearning_Learn_HP
 }
 
 //refresh vatcomp to apply hediffs when babies age up
-[HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild), nameof(LifeStageWorker_HumanlikeChild.Notify_LifeStageStarted))]
-public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeChild))]
+public static class LifeStageWorker_HumanlikeChild_HarmonyPatch
 {
-    public static void Notify_LifeStageStarted_Postfix(Pawn pawn)
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(LifeStageWorker_HumanlikeChild.Notify_LifeStageStarted))]
+    public static void Notify_LifeStageStarted_Postfix(Pawn pawn, LifeStageDef previousLifeStage)
     {
         if (Current.ProgramState != ProgramState.Playing ||
+            previousLifeStage is not { developmentalStage: DevelopmentalStage.Baby } ||
             !pawn.IsColonist ||
             pawn.ParentHolder is not Building_GrowthVat growthVat ||
             growthVat.GetComp<CompOverclockedGrowthVat>() is not { } vatComp)
@@ -63,9 +68,11 @@ public static class LifeStageWorker_HumanlikeChild_Notify_LifeStageStarted_HP
 }
 
 //set vat backstory on aging to adult
-[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult), nameof(LifeStageWorker_HumanlikeAdult.Notify_LifeStageStarted))]
-public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
+[HarmonyPatch(typeof(LifeStageWorker_HumanlikeAdult))]
+public static class LifeStageWorker_HumanlikeAdult_HarmonyPatch
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(LifeStageWorker_HumanlikeAdult.Notify_LifeStageStarted))]
     public static void Notify_LifeStageStarted_Postfix(Pawn pawn)
     {
         if (Current.ProgramState != ProgramState.Playing || !pawn.IsColonist || GrowthVatsOverclockedMod.GetTrackerFor(pawn) is not { } tracker)
@@ -80,10 +87,11 @@ public static class LifeStageWorker_HumanlikeAdult_Notify_LifeStageStarted_HP
 }
 
 //makes the growth tier gizmo visible for all children in growth vats.
-[HarmonyPatch(typeof(Gizmo_GrowthTier), "Visible", MethodType.Getter)]
-public static class Gizmo_GrowthTier_Visible_HP
+[HarmonyPatch(typeof(Gizmo_GrowthTier))]
+public static class Gizmo_GrowthTier_HarmonyPatch
 {
     [HarmonyPostfix]
+    [HarmonyPatch("Visible", MethodType.Getter)]
     public static bool Visible_Postfix(bool __result, Pawn ___child) =>
         __result || ___child is { ParentHolder: Building_GrowthVat } and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
 }
@@ -91,9 +99,11 @@ public static class Gizmo_GrowthTier_Visible_HP
 //vat-juice hooks
 
 //GoJuice Genes also remove chance of getting vat-juice pain effect
-[HarmonyPatch(typeof(GeneDefGenerator), nameof(GeneDefGenerator.ImpliedGeneDefs))]
-public static class GeneDefGenerator_ImpliedGeneDefs_HP
+[HarmonyPatch(typeof(GeneDefGenerator))]
+public static class GeneDefGenerator_HarmonyPatch
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(GeneDefGenerator.ImpliedGeneDefs))]
     public static IEnumerable<GeneDef> ImpliedGeneDefs_Postfix(IEnumerable<GeneDef> __result)
     {
         foreach (GeneDef geneDef in __result)
@@ -110,7 +120,7 @@ public static class GeneDefGenerator_ImpliedGeneDefs_HP
 
 //add check for vat exposure and notify it if learning complete
 [HarmonyPatch(typeof(LearningUtility))]
-public static class LearningUtility_HP
+public static class LearningUtility_HarmonyPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(LearningUtility.LearningTickCheckEnd))]
@@ -126,7 +136,7 @@ public static class LearningUtility_HP
 
 //similarly check for exposure 
 [HarmonyPatch(typeof(Pawn_InteractionsTracker))]
-public static class Pawn_InteractionsTracker_HP
+public static class Pawn_InteractionsTracker_HarmonyPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(Pawn_InteractionsTracker.TryInteractWith))]
@@ -140,13 +150,13 @@ public static class Pawn_InteractionsTracker_HP
             interactorExposureComp.Notify_SocialEvent(recipient);
 
         if (recipient.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff)?.TryGetComp<HediffComp_SeverityFromChildhoodEvent>() is { } recipientExposureComp)
-            recipientExposureComp.Notify_SocialEvent(recipient);
+            recipientExposureComp.Notify_SocialEvent(___pawn);
     }
 }
 
 //check if a vatshock memory was successfully counseled and notify the thoughtWorker about it.
 [HarmonyPatch(typeof(CompAbilityEffect_Counsel))]
-public static class CompAbilityEffect_Counsel_HP
+public static class CompAbilityEffect_Counsel_HarmonyPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(CompAbilityEffect_Counsel.Apply))]
@@ -164,7 +174,7 @@ public static class CompAbilityEffect_Counsel_HP
 
 //check for inspiration use 
 [HarmonyPatch(typeof(InspirationHandler))]
-public static class InspirationHandler_HP
+public static class InspirationHandler_HarmonyPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch(nameof(InspirationHandler.EndInspiration), typeof(InspirationDef))]

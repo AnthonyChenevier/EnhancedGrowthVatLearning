@@ -79,17 +79,18 @@ public class HediffComp_SeverityFromChildhoodEvent : HediffComp
 
     public override string CompDebugString()
     {
+        if (Pawn.Dead)
+            return "";
+
         StringBuilder stringBuilder = new();
-        if (!Pawn.Dead)
-        {
-            stringBuilder.AppendLine("Severity changes applied next long tick:");
-            stringBuilder.AppendLine("from learning actions: " + LearningActionSeverity.ToStringPercent("F3"));
-            stringBuilder.AppendLine("from social actions: " + SocialActionSeverity.ToStringPercent("F3"));
-            stringBuilder.AppendLine("from family social actions: " + FamilySocialActionSeverity.ToStringPercent("F3"));
-            stringBuilder.AppendLine("from rituals: " + RitualSeverity.ToStringPercent("F3"));
-            stringBuilder.AppendLine("modifier for age: " + (PawnIsYoung ? Props.youngChildModifier : 1).ToStringPercent("F3"));
-            stringBuilder.AppendLine("final value: " + ActionCountSeverityAdjustment().ToStringPercent("F3"));
-        }
+        stringBuilder.AppendLine("Severity changes applied next long tick:");
+        stringBuilder.AppendLine($"from ({learningActionCount}) learning actions: {LearningActionSeverity.ToStringPercent()}");
+        stringBuilder.AppendLine($"from ({socialActionCount}) social actions: {SocialActionSeverity.ToStringPercent()}");
+        stringBuilder.AppendLine($"from ({familySocialActionCount}) family social actions: {FamilySocialActionSeverity.ToStringPercent()}");
+        stringBuilder.AppendLine($"from ({ritualPercentage.ToStringPercent()}) re-centering ritual quality: {RitualSeverity.ToStringPercent()}");
+        stringBuilder.AppendLine($"modifier for age: {(PawnIsYoung ? Props.youngChildModifier : 1).ToStringPercent()}");
+        stringBuilder.AppendLine();
+        stringBuilder.AppendLine($"final value: {ActionCountSeverityAdjustment().ToStringPercent()}");
 
         return stringBuilder.ToString().TrimEndNewlines();
     }
