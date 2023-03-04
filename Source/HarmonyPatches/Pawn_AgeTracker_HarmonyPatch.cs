@@ -11,7 +11,6 @@ using System.Reflection;
 using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace GrowthVatsOverclocked.HarmonyPatches;
@@ -19,6 +18,15 @@ namespace GrowthVatsOverclocked.HarmonyPatches;
 [HarmonyPatch(typeof(Pawn_AgeTracker))]
 public static class Pawn_AgeTracker_HarmonyPatch
 {
+    [HarmonyPrefix]
+    [HarmonyPatch("BirthdayBiological")]
+    public static void BirthdayBiological_Prefix(Pawn ___pawn, int birthdayAge)
+    {
+        //remove ownership of vat if over 18
+        if (birthdayAge >= 18f && ___pawn.ownership.AssignedGrowthVat() != null)
+            ___pawn.ownership.UnclaimGrowthVat();
+    }
+
     //override to use enhanced growth point rate if enhanced learning is enabled, and to modify
     //this rate by child growth stage and storyteller settings so the results are more balanced
     //to naturally grown pawns
@@ -38,6 +46,8 @@ public static class Pawn_AgeTracker_HarmonyPatch
         return (float)methodInfo.Invoke(__instance, new object[] { learning.CurLevel * (comp.StatDerivedGrowthSpeed / Find.Storyteller.difficulty.childAgingRate) });
     }
 
+
+    //override to use our growth point formula 
     [HarmonyPrefix]
     [HarmonyPatch(nameof(Pawn_AgeTracker.Notify_TickedInGrowthVat))]
     public static bool Notify_TickedInGrowthVat_Prefix(ref int ticks, Pawn ___pawn)
@@ -45,8 +55,7 @@ public static class Pawn_AgeTracker_HarmonyPatch
         if (___pawn.ParentHolder is not Building_GrowthVat vat || vat.GetComp<CompOverclockedGrowthVat>() is not { } comp)
             return true;
 
-        //attempt simple check. Not as robust as using GetStatValue, but muuuuuch more performant
-        //should only allow the dev gizmo through without modification now. 
+        //allow dev: aging gizmo ticks and un-overclocked vats through without modification.
         if (comp.IsOverclocked && ticks < GenDate.TicksPerYear)
         {
             //Stop processing and prevent original tracker from running
@@ -54,13 +63,11 @@ public static class Pawn_AgeTracker_HarmonyPatch
             if (comp.VatgrowthPaused)
                 return false;
 
-            //use mode growth speed and decompose the modifier from ticks
-            //with math so we don't have to touch GetStatValue at all here.
-            ticks = Mathf.FloorToInt(comp.ModeGrowthSpeed * ((float)ticks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
+            //get ticks for the current mode
+            ticks = comp.ModeAgeTicks(ticks);
         }
 
-        //finally, track ticks for backstories and stats ourselves.
-        //tracker might be null because of dev tools so check for that
+        //track ticks for backstories and stats.
         GrowthVatsOverclockedMod.GetTrackerFor(___pawn)?.TrackGrowthTicks(ticks, comp.IsOverclocked, comp.CurrentMode);
         return true;
     }

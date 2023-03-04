@@ -96,6 +96,22 @@ public static class Gizmo_GrowthTier_HarmonyPatch
         __result || ___child is { ParentHolder: Building_GrowthVat } and ({ IsColonist: true } or { IsPrisonerOfColony: true } or { IsSlaveOfColony: true });
 }
 
+//makes growth vats assign ownership on selection
+[HarmonyPatch(typeof(Building_Enterable))]
+public static class Building_Enterable_HarmonyPatch
+{
+    [HarmonyPostfix]
+    [HarmonyPatch("SelectPawn")]
+    public static void SelectPawn_Postfix(Pawn pawn, Building_Enterable __instance)
+    {
+        if (__instance is not Building_GrowthVat) //pity I can't override the child class's version instead
+            return;
+
+        //try assigning vat ownership on selection
+        __instance.TryGetComp<CompAssignableToPawn_GrowthVat>()?.TryAssignPawn(pawn);
+    }
+}
+
 //vat-juice hooks
 
 //GoJuice Genes also remove chance of getting vat-juice pain effect

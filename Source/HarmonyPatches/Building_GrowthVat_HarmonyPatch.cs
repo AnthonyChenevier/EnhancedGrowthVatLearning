@@ -32,15 +32,13 @@ public static class Building_GrowthVat_HarmonyPatch
 
     [HarmonyPostfix]
     [HarmonyPatch("Notify_PawnRemoved")]
-    public static void Notify_PawnRemoved_Postfix(Pawn ___selectedPawn, Building_GrowthVat __instance)
+    public static void Notify_PawnRemoved_Postfix(Building_GrowthVat __instance)
     {
-        //only process if we have exposure
-        if (___selectedPawn.health.hediffSet.GetFirstHediffOfDef(GVODefOf.VatgrowthExposureHediff) is not { } hediff)
-            return;
-
-        //find any hediff givers and notify them
+        Pawn pawn = __instance.SelectedPawn;
+        //find any OnVatExit hediff givers and notify them
+        foreach (Hediff hediff in pawn.health.hediffSet.hediffs.Where(h => h.def.hediffGivers != null && h.def.hediffGivers.Any(g => g is HediffGiver_OnVatExit)))
         foreach (HediffGiver_OnVatExit giver in hediff.def.hediffGivers.OfType<HediffGiver_OnVatExit>())
-            giver.Notify_PawnRemoved(___selectedPawn, hediff);
+            giver.Notify_PawnRemoved(pawn, hediff);
     }
 
     //Override to fix DEV: Learn gizmo

@@ -8,6 +8,7 @@
 
 using System;
 using System.Xml;
+using GrowthVatsOverclocked.Data;
 using GrowthVatsOverclocked.Drugs;
 using GrowthVatsOverclocked.GrowthTracker;
 using GrowthVatsOverclocked.VatExtensions;
@@ -74,9 +75,25 @@ public static class BackCompatibility_HarmonyPatch
 
         if (obj is CompOverclockedGrowthVat vatComp)
         {
-            Scribe_Values.Look(ref vatComp.overclockingEnabled, "enabled");
-            Scribe_Values.Look(ref vatComp.currentMode, "mode");
-            Scribe_Values.Look(ref vatComp.vatgrowthPaused, "pausedForLetter");
+            bool? oldEnabled = new();
+            LearningMode? oldMode = new();
+            bool? oldPaused = new();
+
+            Scribe_Values.Look(ref oldEnabled, "enabled");
+            Scribe_Values.Look(ref oldMode, "mode");
+            Scribe_Values.Look(ref oldPaused, "pausedForLetter");
+
+            if (oldEnabled.HasValue)
+                vatComp.overclockingEnabled = oldEnabled.Value;
+
+            if (oldMode.HasValue)
+                vatComp.currentMode = oldMode.Value;
+
+            if (oldPaused.HasValue)
+                vatComp.vatgrowthPaused = oldPaused.Value;
+
+            if (oldPaused.HasValue || oldEnabled.HasValue || oldMode.HasValue)
+                Log.Message($"GrowthVatsOverclockedMod :: converted old save values for {vatComp.ToStringSafe()}");
         }
     }
 }

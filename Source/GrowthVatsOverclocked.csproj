@@ -57,6 +57,8 @@
     <Compile Include="HarmonyPatches\ChoiceLetter_GrowthMoment_HarmonyPatch.cs" />
     <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
     <Compile Include="HarmonyPatches\Pawn_AgeTracker_HarmonyPatch.cs" />
+    <Compile Include="VatExtensions\CompAssignableToPawn_GrowthVat.cs" />
+    <Compile Include="VatExtensions\VatOwnershipRepository.cs" />
     <Compile Include="Vatshock\HediffComp_Vatshock.cs" />
     <Compile Include="Vatshock\HediffComp_SeverityFromVatExposure.cs" />
     <Compile Include="Vatshock\HediffComp_SeverityFromChildhoodEvent.cs" />

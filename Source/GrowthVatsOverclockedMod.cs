@@ -30,8 +30,7 @@ public class GrowthVatsOverclockedMod : Mod
                 return _growthTrackerRepository;
 
             World world = Find.World;
-            GrowthTrackerRepository repository = world.GetComponent<GrowthTrackerRepository>();
-            if (repository == null)
+            if (world.GetComponent<GrowthTrackerRepository>() is not { } repository)
             {
                 _growthTrackerRepository = new GrowthTrackerRepository();
                 world.components.Add(_growthTrackerRepository);
@@ -42,6 +41,30 @@ public class GrowthVatsOverclockedMod : Mod
             }
 
             return _growthTrackerRepository;
+        }
+    }
+
+    private static VatOwnershipRepository _vatOwnership;
+
+    public static VatOwnershipRepository VatOwnership
+    {
+        get
+        {
+            if (_vatOwnership != null)
+                return _vatOwnership;
+
+            World world = Find.World;
+            if (world.GetComponent<VatOwnershipRepository>() is not { } repository)
+            {
+                _vatOwnership = new VatOwnershipRepository();
+                world.components.Add(_vatOwnership);
+            }
+            else
+            {
+                _vatOwnership = repository;
+            }
+
+            return _vatOwnership;
         }
     }
 

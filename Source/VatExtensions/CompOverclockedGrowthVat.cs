@@ -24,9 +24,6 @@ public class CompOverclockedGrowthVat : ThingComp
     internal LearningMode currentMode; //the selected learning suite/mode
     internal bool vatgrowthPaused; //overclocked vats pause growth and learning when a growth letter is pending so growth points aren't wasted.
 
-    //overclocked vats have higher power requirements. Cache comp here for easy access
-    private CompPowerMulti powerMulti;
-
     //accessors for comp vars
     public bool IsOverclocked => overclockingEnabled;
 
@@ -48,6 +45,8 @@ public class CompOverclockedGrowthVat : ThingComp
     }
 
     private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
+    public CompAssignableToPawn_GrowthVat CompAssignableToPawn => parent.GetComp<CompAssignableToPawn_GrowthVat>();
+    private CompPowerMulti PowerMulti => parent.GetComp<CompPowerMulti>();
 
     //re-cache occupant speed once per day to reduce expensive computation
 
@@ -69,13 +68,14 @@ public class CompOverclockedGrowthVat : ThingComp
             return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
         }
     }
+
+    public Pawn AssignedPawn => !CompAssignableToPawn.AssignedPawnsForReading.Any() ? null : CompAssignableToPawn.AssignedPawnsForReading[0];
     //Overrides
 
     //cache power multi comp and refresh on spawn
     public override void PostSpawnSetup(bool respawningAfterLoad)
     {
         base.PostSpawnSetup(respawningAfterLoad);
-        powerMulti = parent.GetComp<CompPowerMulti>();
         Refresh();
     }
 
@@ -140,10 +140,17 @@ public class CompOverclockedGrowthVat : ThingComp
         Scribe_Values.Look(ref overclockingEnabled, nameof(overclockingEnabled));
         Scribe_Values.Look(ref vatgrowthPaused, nameof(vatgrowthPaused));
         Scribe_Values.Look(ref currentMode, nameof(currentMode));
+
         BackCompatibility.PostExposeData(this);
     }
 
     //comp methods
+
+    //use mode growth speed and decompose the modifier from ticks
+    //with math so we don't have to touch GetStatValue at all here.
+    public int ModeAgeTicks(int originalTicks) => Mathf.FloorToInt(ModeGrowthSpeed * ((float)originalTicks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
+
+    //pawn ownership
 
     public void Refresh() { EnableOverclocking(overclockingEnabled); }
 
@@ -160,7 +167,7 @@ public class CompOverclockedGrowthVat : ThingComp
 
         //set power profile for this vat
         string profileName = overclockingEnabled ? "Overclocked" : "Default";
-        if (!powerMulti.TrySetPowerProfile(profileName))
+        if (!PowerMulti.TrySetPowerProfile(profileName))
             Log.Error($"GrowthVatsOverclocked :: VariablePowerComp profile named \"{profileName}\" could not be found.");
 
         Pawn_HealthTracker pawnHealth = GrowthVat.SelectedPawn.health;

@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Patch>
-    <!-- Modify GrowthVat to add our comps -->
+    <!-- add ownership overlay and our new comps to growth vat -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName="GrowthVat"]</xpath>
+        <value>
+            <drawGUIOverlay>True</drawGUIOverlay>
+        </value>
+    </Operation>
     <Operation Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
         <value>
             <li>
                 <compClass>GrowthVatsOverclocked.VatExtensions.CompOverclockedGrowthVat</compClass>
             </li>
+            <li Class="CompProperties_AssignableToPawn">
+                <drawUnownedAssignmentOverlay>false</drawUnownedAssignmentOverlay>
+                <compClass>GrowthVatsOverclocked.VatExtensions.CompAssignableToPawn_GrowthVat</compClass>
+            </li>
         </value>
     </Operation>
 
+    <!-- Add multi-power profile comp-->
     <Operation Class="PatchOperationReplace">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps/li[@Class="CompProperties_Power"]</xpath>
         <value>
