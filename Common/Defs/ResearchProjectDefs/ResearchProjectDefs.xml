@@ -13,7 +13,7 @@
         <label>overclocked growth vats</label>
         <description>Overclocks the inbuilt hardware of growth vats to support better simulation software, and upgrades the software to enable higher quality skill learning and personal growth. Enables 'enhanced learning' mode for Growth Vats, which enhances occupant growth and skill outcomes with higher quality simulations, at a cost of slower growth and high power requirements.</description>
         <techLevel>Spacer</techLevel>
-        <baseCost>2000</baseCost>
+        <baseCost>3000</baseCost>
         <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
         <requiredResearchFacilities>
             <li>MultiAnalyzer</li>
@@ -23,13 +23,25 @@
         </prerequisites>
         <researchViewX>0.00</researchViewX>
         <researchViewY>0.70</researchViewY>
-        <techprintCount>2</techprintCount>
-        <techprintCommonality>3</techprintCommonality>
-        <techprintMarketValue>700</techprintMarketValue>
-        <heldByFactionCategoryTags>
-            <li>Outlander</li>
-            <li>Empire</li>
-        </heldByFactionCategoryTags>
+       
+    </ResearchProjectDef>
+
+    <ResearchProjectDef>
+        <tab>GrowthVatUpgrades_ResearchTab</tab>
+        <defName>VatTimersResearch</defName>
+        <label>growth vat timers</label>
+        <description>Unlocks settable timers on growth vats for more control over when occupants are automatically ejected and recalled to their vats</description>
+        <techLevel>Spacer</techLevel>
+        <baseCost>500</baseCost>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <requiredResearchFacilities>
+            <li>MultiAnalyzer</li>
+        </requiredResearchFacilities>
+        <prerequisites>
+            <li>GrowthVats</li>
+        </prerequisites>
+        <researchViewX>0.00</researchViewX>
+        <researchViewY>1.20</researchViewY>
     </ResearchProjectDef>
 
     <ResearchProjectDef Abstract="True" Name="VatLearningMode_Base">
@@ -65,17 +77,6 @@
     </ResearchProjectDef>
 
     <ResearchProjectDef ParentName="VatLearningMode_Base">
-        <defName>VatLearningPlayResearch</defName>
-        <label>Learning suite - Play</label>
-        <description>Unlocks the playland suite for growth vats with enhanced learning. The playland suite is configured to provide a completely unstructured environment in an imaginary world based on a popular child's cartoon. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</description>
-        <prerequisites>
-            <li>GrowthVatOverclockingResearch</li>
-        </prerequisites>
-        <researchViewX>1.00</researchViewX>
-        <researchViewY>1.80</researchViewY>
-    </ResearchProjectDef>
-
-    <ResearchProjectDef ParentName="VatLearningMode_Base">
         <defName>VatLearningLeaderResearch</defName>
         <label>Learning suite - Leader</label>
         <description>Unlocks the leader training suite for growth vats with enhanced learning. The leadership training suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes.</description>
@@ -83,14 +84,23 @@
             <li>VatLearningLaborResearch</li>
             <li>VatLearningSoldierResearch</li>
         </prerequisites>
+        <baseCost>1000</baseCost>
         <techLevel>Ultra</techLevel>
-        <techprintCount>1</techprintCount>
-        <techprintCommonality>3</techprintCommonality>
-        <techprintMarketValue>500</techprintMarketValue>
-        <heldByFactionCategoryTags>
-            <li>Empire</li>
-        </heldByFactionCategoryTags>
         <researchViewX>2.00</researchViewX>
         <researchViewY>0.70</researchViewY>
+
+    </ResearchProjectDef>
+
+    <ResearchProjectDef ParentName="VatLearningMode_Base">
+        <defName>VatLearningPlayResearch</defName>
+        <label>Learning suite - Play</label>
+        <description>Unlocks the playland suite for growth vats with enhanced learning. The playland suite is configured to provide a completely unstructured environment in an imaginary world based on a popular child's cartoon. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</description>
+        <prerequisites>
+            <li>VatLearningLeaderResearch</li>
+        </prerequisites>
+        <baseCost>1000</baseCost>
+        <techLevel>Ultra</techLevel>
+        <researchViewX>1.00</researchViewX>
+        <researchViewY>1.80</researchViewY>
     </ResearchProjectDef>
 </Defs>

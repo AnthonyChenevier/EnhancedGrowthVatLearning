@@ -8,18 +8,30 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{986808F8-336F-4491-8A8D-D69634ABC21E}"
 	ProjectSection(SolutionItems) = preProject
 		..\About\About.xml = ..\About\About.xml
-		..\Common\Defs\Backstories\BackstoryDefs.xml = ..\Common\Defs\Backstories\BackstoryDefs.xml
-		..\Common\Defs\Drugs\Drugs.xml = ..\Common\Defs\Drugs\Drugs.xml
-		..\Common\Defs\HediffDefs\HediffDefs.xml = ..\Common\Defs\HediffDefs\HediffDefs.xml
 		Install.bat = Install.bat
-		..\Common\Languages\English\Keyed\Keys.xml = ..\Common\Languages\English\Keyed\Keys.xml
 		..\LICENSE.txt = ..\LICENSE.txt
 		..\LoadFolders.xml = ..\LoadFolders.xml
 		..\Common\Patches\Patches.xml = ..\Common\Patches\Patches.xml
 		..\README.md = ..\README.md
+		..\steam formatted description.txt = ..\steam formatted description.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keys", "Keys", "{8363CB22-6238-4036-8A0F-3A69C701FAEB}"
+	ProjectSection(SolutionItems) = preProject
+		..\Common\Languages\English\Keyed\Keys_LearningSuites.xml = ..\Common\Languages\English\Keyed\Keys_LearningSuites.xml
+		..\Common\Languages\English\Keyed\Keys_Misc.xml = ..\Common\Languages\English\Keyed\Keys_Misc.xml
+		..\Common\Languages\English\Keyed\Keys_Settings.xml = ..\Common\Languages\English\Keyed\Keys_Settings.xml
+		..\Common\Languages\English\Keyed\Keys_TimerTab.xml = ..\Common\Languages\English\Keyed\Keys_TimerTab.xml
+		..\Common\Languages\English\Keyed\Keys_VatTimers.xml = ..\Common\Languages\English\Keyed\Keys_VatTimers.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{8EA6A25C-7A48-433F-A774-CBBE95493E06}"
+	ProjectSection(SolutionItems) = preProject
+		..\Common\Defs\Backstories\BackstoryDefs.xml = ..\Common\Defs\Backstories\BackstoryDefs.xml
+		..\Common\Defs\Drugs\Drugs.xml = ..\Common\Defs\Drugs\Drugs.xml
+		..\Common\Defs\HediffDefs\HediffDefs.xml = ..\Common\Defs\HediffDefs\HediffDefs.xml
 		..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml = ..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml
 		..\Common\Defs\Stats\StatDefs.xml = ..\Common\Defs\Stats\StatDefs.xml
-		..\steam formatted description.txt = ..\steam formatted description.txt
 		..\Common\Defs\Thoughts\ThoughtDefs.xml = ..\Common\Defs\Thoughts\ThoughtDefs.xml
 		..\Common\Defs\VatEffects\Vatshock.xml = ..\Common\Defs\VatEffects\Vatshock.xml
 	EndProjectSection
@@ -40,6 +52,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8363CB22-6238-4036-8A0F-3A69C701FAEB} = {986808F8-336F-4491-8A8D-D69634ABC21E}
+		{8EA6A25C-7A48-433F-A774-CBBE95493E06} = {986808F8-336F-4491-8A8D-D69634ABC21E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {463FA201-6352-4AD6-93FF-2404C780B7EE}

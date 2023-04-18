@@ -1,13 +1,12 @@
-﻿// HarmonyPatches.cs
+﻿// ClassExtensions.cs
 // 
 // Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
-// Created by: Anthony Chenevier on 2023/01/03 6:47 PM
-// Last edited by: Anthony Chenevier on 2023/01/03 6:47 PM
+// Created by: Anthony Chenevier on 2023/02/21 5:47 PM
+// Last edited by: Anthony Chenevier on 2023/03/31 2:56 PM
 
 
 using System.Collections.Generic;
-using System.Reflection;
 using GrowthVatsOverclocked.Data;
 using GrowthVatsOverclocked.VatExtensions;
 using GrowthVatsOverclocked.Vatshock;
@@ -15,18 +14,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.HarmonyPatches;
-
-[StaticConstructorOnStartup]
-public static class PatchInitializer
-{
-    static PatchInitializer()
-    {
-        //Harmony.DEBUG = true;
-        Harmony harmony = new("makeitso.growthvatsoverclocked");
-        harmony.PatchAll(Assembly.GetExecutingAssembly());
-    }
-}
+namespace GrowthVatsOverclocked.ClassExtensions;
 
 //Overclocked learning patches
 

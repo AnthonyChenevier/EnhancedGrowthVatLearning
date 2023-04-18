@@ -48,16 +48,23 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CountdownTimers\ICountdownTimerParent.cs" />
+    <Compile Include="CountdownTimers\CountdownTimerSettings.cs" />
+    <Compile Include="CountdownTimers\TimerSettingsClipboard.cs" />
     <Compile Include="GrowthVatsOverclockedMod.cs" />
     <Compile Include="GrowthVatsOverclockedSettings.cs" />
     <Compile Include="Data\LearningMode.cs" />
     <Compile Include="Data\GVODefOf.cs" />
     <Compile Include="GrowthTracker\GrowthTrackerRepository.cs" />
-    <Compile Include="HarmonyPatches\Building_GrowthVat_HarmonyPatch.cs" />
-    <Compile Include="HarmonyPatches\ChoiceLetter_GrowthMoment_HarmonyPatch.cs" />
-    <Compile Include="HarmonyPatches\HarmonyPatches.cs" />
-    <Compile Include="HarmonyPatches\Pawn_AgeTracker_HarmonyPatch.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_Building_GrowthVat.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_ChoiceLetter_GrowthMoment.cs" />
+    <Compile Include="ClassExtensions\ClassExtensions.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_Pawn_AgeTracker.cs" />
+    <Compile Include="CountdownTimers\ITab_CountdownTimers.cs" />
+    <Compile Include="CountdownTimers\CountdownTimer.cs" />
     <Compile Include="VatExtensions\CompAssignableToPawn_GrowthVat.cs" />
+    <Compile Include="CountdownTimers\CompCountdownTimerOwner.cs" />
+    <Compile Include="VatExtensions\CompCountdownTimerOwner_GrowthVat.cs" />
     <Compile Include="VatExtensions\VatOwnershipRepository.cs" />
     <Compile Include="Vatshock\HediffComp_Vatshock.cs" />
     <Compile Include="Vatshock\HediffComp_SeverityFromVatExposure.cs" />
@@ -67,7 +74,7 @@
     <Compile Include="HediffGivers\HediffGiver_OnVatExit.cs" />
     <Compile Include="HediffGivers\HediffGiver_RandomFromCauseSeverity.cs" />
     <Compile Include="Vatshock\HediffComp_MentalBreaksFromThoughtStage.cs" />
-    <Compile Include="HarmonyPatches\BackCompatibility_HarmonyPatch.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_BackCompatibility.cs" />
     <Compile Include="Data\ModSettingsData.cs" />
     <Compile Include="Drugs\Hediff_LevelWithComps.cs" />
     <Compile Include="Drugs\IngestionOutcomeDoer_GiveHediff_Level.cs" />

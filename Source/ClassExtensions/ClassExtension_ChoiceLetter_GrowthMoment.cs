@@ -12,10 +12,10 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.HarmonyPatches;
+namespace GrowthVatsOverclocked.ClassExtensions;
 
 [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment))]
-public static class ChoiceLetter_GrowthMoment_HarmonyPatch
+public static class ClassExtension_ChoiceLetter_GrowthMoment
 {
     //pause vat growth while waiting for growth moment letter to be completed.
     [HarmonyPostfix]

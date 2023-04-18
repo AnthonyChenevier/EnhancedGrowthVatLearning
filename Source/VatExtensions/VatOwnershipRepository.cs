@@ -9,31 +9,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
 
 namespace GrowthVatsOverclocked.VatExtensions;
 
+[HarmonyPatch(typeof(Pawn_Ownership))]
+public static class Pawn_Ownership_HarmonyPatch
+{
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(Pawn_Ownership.UnclaimAll))]
+    public static void UnclaimAll_Postfix(Pawn_Ownership __instance) { __instance.UnclaimGrowthVat(); }
+}
+
 public static class Pawn_OwnershipExtensions
 {
     public static Pawn Pawn(this Pawn_Ownership ownership) => (Pawn)typeof(Pawn_Ownership).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ownership);
 
-    public static bool ClaimGrowthVat(this Pawn_Ownership own, Building_GrowthVat newVat) =>
-        GrowthVatsOverclockedMod.VatOwnership.ClaimGrowthVat(own.Pawn(), newVat.GetComp<CompOverclockedGrowthVat>());
-
+    public static bool ClaimGrowthVat(this Pawn_Ownership own, Building_GrowthVat newVat) => GrowthVatsOverclockedMod.VatOwnership.ClaimGrowthVat(own.Pawn(), newVat);
     public static bool UnclaimGrowthVat(this Pawn_Ownership own) => GrowthVatsOverclockedMod.VatOwnership.UnclaimGrowthVat(own.Pawn());
-    public static Building_GrowthVat AssignedGrowthVat(this Pawn_Ownership own) => AssignedGrowthVatOverclockingComp(own)?.parent as Building_GrowthVat;
-    public static CompOverclockedGrowthVat AssignedGrowthVatOverclockingComp(this Pawn_Ownership own) => GrowthVatsOverclockedMod.VatOwnership.GetAssignedGrowthVat(own.Pawn());
+    public static Building_GrowthVat AssignedGrowthVat(this Pawn_Ownership own) => GrowthVatsOverclockedMod.VatOwnership.GetAssignedGrowthVat(own.Pawn());
 }
 
 public class VatOwnershipRepository : WorldComponent
 {
-    public Dictionary<Pawn, CompOverclockedGrowthVat> vatAssignedPawns = new();
+    public Dictionary<Pawn, Building_GrowthVat> vatAssignedPawns = new();
 
-    public CompOverclockedGrowthVat GetAssignedGrowthVat(Pawn ownerPawn) => vatAssignedPawns.ContainsKey(ownerPawn) ? vatAssignedPawns[ownerPawn] : null;
+    public Building_GrowthVat GetAssignedGrowthVat(Pawn ownerPawn) => vatAssignedPawns.ContainsKey(ownerPawn) ? vatAssignedPawns[ownerPawn] : null;
 
-    private void SetAssignedGrowthVat(Pawn ownerPawn, CompOverclockedGrowthVat vat)
+    private void SetAssignedGrowthVat(Pawn ownerPawn, Building_GrowthVat vat)
     {
         if (vat == null)
         {
@@ -50,16 +56,17 @@ public class VatOwnershipRepository : WorldComponent
     public VatOwnershipRepository(World world) : base(world) { }
     public VatOwnershipRepository() : base(Find.World) { }
 
-    public bool ClaimGrowthVat(Pawn ownerPawn, CompOverclockedGrowthVat newVat)
+    public bool ClaimGrowthVat(Pawn ownerPawn, Building_GrowthVat newVat)
     {
-        if (newVat.AssignedPawn == ownerPawn)
+        Pawn assignedPawn = newVat.GetAssignedPawn();
+        if (assignedPawn == ownerPawn)
             return false;
 
         UnclaimGrowthVat(ownerPawn);
-        if (newVat.AssignedPawn != null)
-            UnclaimGrowthVat(newVat.AssignedPawn);
+        if (assignedPawn != null)
+            UnclaimGrowthVat(assignedPawn);
 
-        newVat.CompAssignableToPawn.ForceAddPawn(ownerPawn);
+        newVat.GetComp<CompAssignableToPawn>().ForceAddPawn(ownerPawn);
         SetAssignedGrowthVat(ownerPawn, newVat);
         return true;
     }
@@ -69,7 +76,7 @@ public class VatOwnershipRepository : WorldComponent
         if (GetAssignedGrowthVat(ownerPawn) is not { } assignedGrowthVat)
             return false;
 
-        assignedGrowthVat.CompAssignableToPawn.ForceRemovePawn(ownerPawn);
+        assignedGrowthVat.GetComp<CompAssignableToPawn>().ForceRemovePawn(ownerPawn);
         SetAssignedGrowthVat(ownerPawn, null);
         return true;
     }
@@ -81,9 +88,9 @@ public class VatOwnershipRepository : WorldComponent
         if (Scribe.mode != LoadSaveMode.PostLoadInit)
             return;
 
-        foreach ((Pawn ownerPawn, CompOverclockedGrowthVat assignedGrowthVat) in vatAssignedPawns)
+        foreach ((Pawn ownerPawn, Building_GrowthVat assignedGrowthVat) in vatAssignedPawns)
         {
-            CompAssignableToPawn_GrowthVat comp = assignedGrowthVat?.CompAssignableToPawn;
+            CompAssignableToPawn comp = assignedGrowthVat?.GetComp<CompAssignableToPawn>();
             if (comp == null || comp.AssignedPawns.Contains(ownerPawn))
                 continue;
 

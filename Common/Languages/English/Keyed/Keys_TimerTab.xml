@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <TabTimers>Timers</TabTimers>
+    <CbxEnableTimer>Enabled</CbxEnableTimer>
+
+    <GameTimeTick>Game Time</GameTimeTick>
+    <PawnAgeTick>Pawn Age</PawnAgeTick>
+    <VatTimeTick>Vat Time</VatTimeTick>
+
+    <HourSpan>Hour</HourSpan>
+    <DaySpan>Day</DaySpan>
+    <QuadrumSpan>Quadrum</QuadrumSpan>
+    <YearSpan>Year</YearSpan>
+
+    <BtnSetTimer>Set Timer</BtnSetTimer>
+    <TimerSet>{0} set to {1}.</TimerSet>
+    <TimerSettingsNotValid>{0} settings are not valid. Reason: {1}</TimerSettingsNotValid>
+    <NotValidReason_PawnOverEighteen>Timer will not go off before {PAWN} reaches 18 years old</NotValidReason_PawnOverEighteen>
+
+    <TimerStatus>Status: {0}</TimerStatus>
+    <TimerRunning>Running - {0} remaining</TimerRunning>
+    <TimerStopped>Stopped - {0}</TimerStopped>
+    <TimerDisabled>Timer disabled</TimerDisabled>
+    <TimerFinished>Timer finished</TimerFinished>
+
+    <CommandCopyTimerSettingsLabel>Copy timers</CommandCopyTimerSettingsLabel>
+    <CommandCopyTimerSettingsDesc>Copy this object's timer settings to the clipboard so you can paste them onto another.</CommandCopyTimerSettingsDesc>
+
+    <CommandPasteTimerSettingsLabel>Paste timers</CommandPasteTimerSettingsLabel>
+    <CommandPasteTimerSettingsDesc>Overwrite this object's timer settings with those previously copied to the clipboard.</CommandPasteTimerSettingsDesc>
+
+    <TimerSettingsCopiedToClipboard>Timer settings copied to clipboard</TimerSettingsCopiedToClipboard>
+    <TimerSettingsPastedFromClipboard>Timer settings pasted from clipboard</TimerSettingsPastedFromClipboard>
+
+    <ToggleTimer_Label>Toggle {0}</ToggleTimer_Label>
+    <ToggleTimer_Desc>Toggles the {0} on or off.\n\nCurrent setting: {1}\n\n{2}</ToggleTimer_Desc>
+</LanguageData>

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -192,6 +194,46 @@ internal static class ListingHelper
         Rect r = l.LabeledSliderWithTextField(label, ref valFloat, ref buffer, min, max, roundTo > 1 ? roundTo : 1, tooltip);
         val = (int)valFloat;
         return r;
+    }
+
+    public static void ListSelector(Rect inRect, ref int index, List<string> labelList, bool cycle = true)
+    {
+        Rect backBtnRect = inRect with { y = inRect.y + (inRect.height - 24f) / 2f, width = 24f, height = 24f };
+        if (Widgets.ButtonImage(backBtnRect, ContentFinder<Texture2D>.Get("UI/Widgets/ArrowLeft")))
+        {
+            if (index == 0)
+                index = cycle ? labelList.Count - 1 : index;
+            else
+                index--;
+        }
+
+        Rect fwdBtnRect = backBtnRect with { x = inRect.xMax - 24f };
+        if (Widgets.ButtonImage(fwdBtnRect, ContentFinder<Texture2D>.Get("UI/Widgets/ArrowRight")))
+        {
+            if (index == labelList.Count - 1)
+                index = cycle ? 0 : index;
+            else
+                index++;
+        }
+
+        Rect labelRect = new(backBtnRect.xMax + 2f, inRect.y, inRect.width - 52f, inRect.height);
+        TextAnchor anchor = Text.Anchor;
+        Text.Anchor = TextAnchor.MiddleCenter;
+        Widgets.Label(labelRect, labelList[index].Translate());
+        Text.Anchor = anchor;
+    }
+
+    public static void EnumSelector<T>(Rect inRect, ref T enumValue, List<T> disallowedValues = null, bool cycle = true) where T : Enum
+    {
+        List<string> labelList = disallowedValues == null
+                                     ? Enum.GetNames(typeof(T)).ToList()
+                                     : Enum.GetNames(typeof(T)).Where(n => !disallowedValues.Contains((T)Enum.Parse(typeof(T), n))).ToList();
+
+        int selectedIndex = Mathf.Max(labelList.IndexOf(Enum.GetName(typeof(T), enumValue)), 0);
+
+        ListSelector(inRect, ref selectedIndex, labelList, cycle);
+
+        enumValue = (T)Enum.Parse(typeof(T), labelList[selectedIndex]);
     }
 }
 

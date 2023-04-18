@@ -8,6 +8,12 @@
         </value>
     </Operation>
     <Operation Class="PatchOperationAdd">
+        <xpath>*/ThingDef[defName="GrowthVat"]/inspectorTabs</xpath>
+        <value>
+            <li>GrowthVatsOverclocked.CountdownTimers.ITab_CountdownTimers</li>
+        </value>
+    </Operation>
+    <Operation Class="PatchOperationAdd">
         <xpath>*/ThingDef[defName="GrowthVat"]/comps</xpath>
         <value>
             <li>
@@ -16,6 +22,9 @@
             <li Class="CompProperties_AssignableToPawn">
                 <drawUnownedAssignmentOverlay>false</drawUnownedAssignmentOverlay>
                 <compClass>GrowthVatsOverclocked.VatExtensions.CompAssignableToPawn_GrowthVat</compClass>
+            </li>
+            <li>
+                <compClass>GrowthVatsOverclocked.VatExtensions.CompCountdownTimerOwner_GrowthVat</compClass>
             </li>
         </value>
     </Operation>

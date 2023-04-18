@@ -13,10 +13,10 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace GrowthVatsOverclocked.HarmonyPatches;
+namespace GrowthVatsOverclocked.ClassExtensions;
 
 [HarmonyPatch(typeof(Pawn_AgeTracker))]
-public static class Pawn_AgeTracker_HarmonyPatch
+public static class ClassExtension_Pawn_AgeTracker
 {
     [HarmonyPrefix]
     [HarmonyPatch("BirthdayBiological")]

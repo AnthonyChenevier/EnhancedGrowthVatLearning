@@ -19,7 +19,7 @@ using Verse;
 namespace GrowthVatsOverclocked.HarmonyPatches;
 
 [HarmonyPatch(typeof(BackCompatibility))]
-public static class BackCompatibility_HarmonyPatch
+public static class ClassExtension_BackCompatibility
 {
     [HarmonyPostfix]
     [HarmonyPatch(nameof(BackCompatibility.BackCompatibleDefName))]

@@ -20,6 +20,7 @@ public static class GVODefOf
     public static ResearchProjectDef VatLearningSoldierResearch;
     public static ResearchProjectDef VatLearningLeaderResearch;
     public static ResearchProjectDef VatLearningPlayResearch;
+    public static ResearchProjectDef VatTimersResearch;
 
     //backstories
     public static BackstoryDef VatgrownChildEGVL;

@@ -41,45 +41,4 @@
 
     <ModeSkillWeights_SettingsLabel>{0} mode skill selection weights</ModeSkillWeights_SettingsLabel>
     <ModeSkillWeights_Tooltip>Selection weights for each skill in {0} mode. Change this to influence which skills are randomly given experience during training.</ModeSkillWeights_Tooltip>
-    
-    <!-- Learning modes -->
-    <DefaultMode>Default</DefaultMode>
-    <CombatMode>Combat</CombatMode>
-    <LaborMode>Labor</LaborMode>
-    <LeaderMode>Leader</LeaderMode>
-    <PlayMode>Playland</PlayMode>
-
-    <!-- Gizmos - toggle enhance learning -->
-    <ToggleLearning_Label>overclock vat</ToggleLearning_Label>
-    <ToggleLearning_Desc>Overclocks and upgrades software for this vat. When active this greatly increases the personal growth outcomes and skills gained by the occupant, but drains more power and slows growth speed.</ToggleLearning_Desc>
-    <EnhancedLearningDisabledBabies_Notice>Babies cannot use enhanced learning, but will automatically enter the selected learning suite when they reach the appropriate age.</EnhancedLearningDisabledBabies_Notice>
-    <EnhancedLearningResearchRequired_DisabledReason>'{0}' research required.</EnhancedLearningResearchRequired_DisabledReason>
-    
-    <!-- Gizmos - switch program -->
-    <LearningModeSwitch_Label>Switch suite...</LearningModeSwitch_Label>
-    <LearningModeSwitch_Desc>Switch between available learning suites.</LearningModeSwitch_Desc>
-    <SwitchToMode_Label>Select '{0}' learning suite</SwitchToMode_Label>
-    <LearningModeResearchRequired_DisabledReason>'{0}', '{1}' or '{2}' research required to switch training suite.</LearningModeResearchRequired_DisabledReason>
-
-    <!-- Switch suite gizmo description -->
-    <CurrentMode_Label>Currently configured for the '{0}' learning suite.</CurrentMode_Label>
-    <DefaultMode_Desc>The default suite is configured to provide a fairly unstructured learning environment in a common urbworld school. Vat occupants can gain random skills available at their age and enough growth is simulated to achieve growth tier 4-6 at each growth moment.</DefaultMode_Desc>
-    <CombatMode_Desc>The combat suite is configured to provide a heavily structured learning environment in an urbworld military cadet school. Vat occupants will gain more knowledge of combat and combat-related operations such as building defenses, breaching entrenched positions and triage. As more focus is put on certain skills being trained vat occupants have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</CombatMode_Desc>
-    <LaborMode_Desc>The labor suite is configured to provide a heavily structured learning environment on an off-grid agriworld homestead. Vat occupants will gain more knowledge of farming, animal husbandry, housekeeping and maker skills. As occupants experience a harder, more work-oriented life they have less personal growth opportunities and can expect to achieve a growth tier of 3-5.</LaborMode_Desc>
-    <LeaderMode_Desc>The leader suite is configured to provide a lightly structured learning environment in a glitterworld private academy. Vat occupants gain more knowledge of the arts, medicine, trading, science and general leadership qualities. As the vat occupant experiences a very high resolution facsimile of life they are able to achieve even higher growth tiers of 5-7. Note that this mode runs at a higher resolution and requires more of the growth vat's available processing power, slowing down the growth of the occupant even further than other enhanced modes. NOTE: as intellectual work is disabled for children under 13 it is recommended to keep vat grown leaders in a vat until they are 18 so that they have any chance at all to study this skill.</LeaderMode_Desc>
-    <PlayMode_Desc>The playland suite is configured to provide a completely unstructured environment in an imaginary world. Vat occupants gain very few skills, but enough growth is simulated to achieve the maximum growth tier at each growth moment.</PlayMode_Desc>
-    <TrainingPrioritiesList>Training priorities</TrainingPrioritiesList>
-    <LearningModeDisabled_Notice>Learning suite effects are only active when enhanced learning is enabled.</LearningModeDisabled_Notice>
-    <PlayModeDisabled_Notice>Teenagers cannot use the Playland suite.</PlayModeDisabled_Notice>
-    <PlayModeOver13_Message>{0} cannot use the play suite now they are no longer a child.</PlayModeOver13_Message>
-    <!-- Stats -->
-    <StatsReport_TotalVatTime>Simulated time experienced: {0}</StatsReport_TotalVatTime>
-    <StatsReport_VatNoLearningTime>Percentage of vat time spent with enhanced learning off: {0}</StatsReport_VatNoLearningTime>
-    <StatsReport_VatLearningTime>Percentage of vat time spent in {0} learning suite: {1}</StatsReport_VatLearningTime>
-
-    <!-- Letters -->
-    <LetterTextVatgrownStress>{PAWN} has developed {1} due to extensive use of growth vats.\n\n{PAWN_definite} will need counseling to reduce the negative mental effects of the illness.</LetterTextVatgrownStress>
-
-    <!-- Vatshock breaks nullified by messages-->
-    <BreakDisabledBy>{0}-specific mental breaks disabled by</BreakDisabledBy>
 </LanguageData>

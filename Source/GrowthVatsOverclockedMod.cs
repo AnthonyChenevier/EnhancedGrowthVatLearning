@@ -8,15 +8,28 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using GrowthVatsOverclocked.Data;
 using GrowthVatsOverclocked.GrowthTracker;
 using GrowthVatsOverclocked.VatExtensions;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
 namespace GrowthVatsOverclocked;
+
+[StaticConstructorOnStartup]
+public static class HarmonyPatchInitializer
+{
+    static HarmonyPatchInitializer()
+    {
+        //Harmony.DEBUG = true;
+        Harmony harmony = new("makeitso.growthvatsoverclocked");
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
+    }
+}
 
 public class GrowthVatsOverclockedMod : Mod
 {

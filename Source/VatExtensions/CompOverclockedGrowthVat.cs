@@ -44,32 +44,31 @@ public class CompOverclockedGrowthVat : ThingComp
         set => vatgrowthPaused = value;
     }
 
+    //comp and parent accessors
+    //internal caches
+    private CompPowerMulti _powerMultiInt;
+    private CompAssignableToPawn_GrowthVat _assignableToPawnInt;
     private Building_GrowthVat GrowthVat => (Building_GrowthVat)parent;
-    public CompAssignableToPawn_GrowthVat CompAssignableToPawn => parent.GetComp<CompAssignableToPawn_GrowthVat>();
-    private CompPowerMulti PowerMulti => parent.GetComp<CompPowerMulti>();
+    private CompPowerMulti PowerMulti => _powerMultiInt ??= parent.GetComp<CompPowerMulti>();
+    public CompAssignableToPawn_GrowthVat CompAssignableToPawn => _assignableToPawnInt ??= parent.GetComp<CompAssignableToPawn_GrowthVat>();
 
-    //re-cache occupant speed once per day to reduce expensive computation
+
+    public Pawn AssignedPawn => !CompAssignableToPawn.AssignedPawnsForReading.Any() ? null : CompAssignableToPawn.AssignedPawnsForReading[0];
+
+    private bool OccupantIsBaby => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage: DevelopmentalStage.Baby };
+    private bool OccupantIsAdult => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage : DevelopmentalStage.Adult };
 
     public int ModeGrowthSpeed => IsOverclocked && !OccupantIsBaby ? currentMode.Settings().growthSpeed : Building_GrowthVat.AgeTicksPerTickInGrowthVat;
 
-    private bool OccupantIsBaby => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage: DevelopmentalStage.Baby };
-
-    private bool OccupantIsAdult => GrowthVat.SelectedPawn is { ageTracker.CurLifeStage.developmentalStage : DevelopmentalStage.Adult };
-
+    /// <summary>
+    /// Uses expensive call to get stat value. Minimize downstream
+    /// usage as much as possible.
+    /// </summary>
     public int StatDerivedGrowthSpeed => Mathf.FloorToInt(ModeGrowthSpeed * GrowthVat.SelectedPawn.GetStatValue(StatDefOf.GrowthVatOccupantSpeed));
 
+    private HediffDef VatLearningDef => overclockingEnabled && !OccupantIsBaby ? GVODefOf.OverclockedVatLearningHediff : HediffDefOf.VatLearning;
+    public Hediff VatLearning => GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(VatLearningDef) ?? GrowthVat.SelectedPawn.health.AddHediff(VatLearningDef);
 
-    public Hediff VatLearning
-    {
-        get
-        {
-            HediffDef learningHediffDef = overclockingEnabled && !OccupantIsBaby ? GVODefOf.OverclockedVatLearningHediff : HediffDefOf.VatLearning;
-
-            return GrowthVat.SelectedPawn.health.hediffSet.GetFirstHediffOfDef(learningHediffDef) ?? GrowthVat.SelectedPawn.health.AddHediff(learningHediffDef);
-        }
-    }
-
-    public Pawn AssignedPawn => !CompAssignableToPawn.AssignedPawnsForReading.Any() ? null : CompAssignableToPawn.AssignedPawnsForReading[0];
     //Overrides
 
     //cache power multi comp and refresh on spawn
@@ -124,7 +123,7 @@ public class CompOverclockedGrowthVat : ThingComp
                 $"{"LearningModeSwitch_Desc".Translate()}\n\n{"CurrentMode_Label".Translate(currentMode.Label())}\n\n{currentMode.Description()}{disabledNotEnhancedNotice}",
             icon = currentMode.Icon(),
             activateSound = SoundDefOf.Click,
-            action = () => { Find.WindowStack.Add(new FloatMenu(ModeMenuOptions(playResearch, soldierResearch, laborResearch, leaderResearch))); },
+            action = () => { Find.WindowStack.Add(new FloatMenu(ModeSelectOptions(playResearch, soldierResearch, laborResearch, leaderResearch))); },
         };
 
         if (!laborResearch.IsFinished && !soldierResearch.IsFinished && !playResearch.IsFinished)
@@ -149,8 +148,6 @@ public class CompOverclockedGrowthVat : ThingComp
     //use mode growth speed and decompose the modifier from ticks
     //with math so we don't have to touch GetStatValue at all here.
     public int ModeAgeTicks(int originalTicks) => Mathf.FloorToInt(ModeGrowthSpeed * ((float)originalTicks / Building_GrowthVat.AgeTicksPerTickInGrowthVat));
-
-    //pawn ownership
 
     public void Refresh() { EnableOverclocking(overclockingEnabled); }
 
@@ -214,35 +211,35 @@ public class CompOverclockedGrowthVat : ThingComp
             newHediff.Severity = oldHediff.Severity;
     }
 
-    private List<FloatMenuOption> ModeMenuOptions(ResearchProjectDef playResearch,
-                                                  ResearchProjectDef soldierResearch,
-                                                  ResearchProjectDef laborResearch,
-                                                  ResearchProjectDef leaderResearch)
+    private List<FloatMenuOption> ModeSelectOptions(ResearchProjectDef playResearch,
+                                                    ResearchProjectDef soldierResearch,
+                                                    ResearchProjectDef laborResearch,
+                                                    ResearchProjectDef leaderResearch)
     {
         List<FloatMenuOption> options = new();
 
         if (playResearch.IsFinished)
         {
             string disabledForTeenNotice = OccupantIsAdult ? $"\n\n{"PlayModeDisabled_Notice".Translate().Colorize(ColorLibrary.RedReadable)}" : "";
-            options.Add(ModeMenuOption(LearningMode.Play, $"{LearningMode.Play.Description()}{disabledForTeenNotice}", OccupantIsAdult));
+            options.Add(CreateModeOption(LearningMode.Play, $"{LearningMode.Play.Description()}{disabledForTeenNotice}", OccupantIsAdult));
         }
 
         if (soldierResearch.IsFinished)
-            options.Add(ModeMenuOption(LearningMode.Combat, LearningMode.Combat.Description()));
+            options.Add(CreateModeOption(LearningMode.Combat, LearningMode.Combat.Description()));
 
         if (laborResearch.IsFinished)
-            options.Add(ModeMenuOption(LearningMode.Labor, LearningMode.Labor.Description()));
+            options.Add(CreateModeOption(LearningMode.Labor, LearningMode.Labor.Description()));
 
         if (leaderResearch.IsFinished)
-            options.Add(ModeMenuOption(LearningMode.Leader, LearningMode.Leader.Description()));
+            options.Add(CreateModeOption(LearningMode.Leader, LearningMode.Leader.Description()));
 
         //default always visible
-        options.Add(ModeMenuOption(LearningMode.Default, LearningMode.Default.Description()));
+        options.Add(CreateModeOption(LearningMode.Default, LearningMode.Default.Description()));
 
         return options;
     }
 
-    private FloatMenuOption ModeMenuOption(LearningMode learningMode, string tooltip, bool isDisabled = false)
+    private FloatMenuOption CreateModeOption(LearningMode learningMode, string tooltip, bool isDisabled = false)
     {
         return new FloatMenuOption("SwitchToMode_Label".Translate(learningMode.Label()), () => CurrentMode = learningMode, learningMode.Icon(), Color.white)
         {
