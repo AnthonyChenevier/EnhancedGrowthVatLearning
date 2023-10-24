@@ -38,6 +38,19 @@ public static class ClassExtension_BackCompatibility
     }
 
     [HarmonyPostfix]
+    [HarmonyPatch(nameof(BackCompatibility.WasDefRemoved))]
+    private static bool WasDefRemoved_HP(bool __result, string defName, Type type)
+    {
+        if (type == typeof(ThingDef) && defName == "Techprint_GrowthVatOverclockingResearch")
+            return true;
+
+        if (type == typeof(ThingDef) && defName == "Techprint_VatLearningLeaderResearch")
+            return true;
+
+        return __result;
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(nameof(BackCompatibility.GetBackCompatibleType))]
     private static Type GetBackCompatibleType_HP(Type __result, Type baseType, string providedClassName, XmlNode node)
     {
@@ -70,30 +83,42 @@ public static class ClassExtension_BackCompatibility
     [HarmonyPatch(nameof(BackCompatibility.PostExposeData))]
     private static void PostExposeData_HP(object obj)
     {
-        if (Scribe.mode != LoadSaveMode.LoadingVars)
+        if (Scribe.mode != LoadSaveMode.LoadingVars || obj is not CompOverclockedGrowthVat vatComp)
             return;
 
-        if (obj is CompOverclockedGrowthVat vatComp)
-        {
-            bool? oldEnabled = new();
-            LearningMode? oldMode = new();
-            bool? oldPaused = new();
+        bool? oldEnabled = new();
+        LearningMode? oldMode = new();
+        bool? oldPaused = new();
 
-            Scribe_Values.Look(ref oldEnabled, "enabled");
-            Scribe_Values.Look(ref oldMode, "mode");
-            Scribe_Values.Look(ref oldPaused, "pausedForLetter");
+        Scribe_Values.Look(ref oldEnabled, "enabled");
+        Scribe_Values.Look(ref oldMode, "mode");
+        Scribe_Values.Look(ref oldPaused, "pausedForLetter");
 
-            if (oldEnabled.HasValue)
-                vatComp.overclockingEnabled = oldEnabled.Value;
+        if (oldEnabled.HasValue)
+            vatComp.overclockingEnabled = oldEnabled.Value;
 
-            if (oldMode.HasValue)
-                vatComp.currentMode = oldMode.Value;
+        if (oldMode.HasValue)
+            vatComp.currentMode = oldMode.Value;
 
-            if (oldPaused.HasValue)
-                vatComp.vatgrowthPaused = oldPaused.Value;
+        if (oldPaused.HasValue)
+            vatComp.vatgrowthPaused = oldPaused.Value;
 
-            if (oldPaused.HasValue || oldEnabled.HasValue || oldMode.HasValue)
-                Log.Message($"GrowthVatsOverclockedMod :: converted old save values for {vatComp.ToStringSafe()}");
-        }
+        if (oldPaused.HasValue || oldEnabled.HasValue || oldMode.HasValue)
+            Log.Message($"GrowthVatsOverclockedMod :: converted old save values for {vatComp.ToStringSafe()}");
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(BackCompatibility.ResearchManagerPostLoadInit))]
+    private static void ResearchManagerPostLoadInit_HP()
+    {
+        ResearchManager researchManager = Find.ResearchManager;
+        if (researchManager.GetProgress(GVODefOf.GrowthVatOverclockingResearch) == 2000f)
+            researchManager.FinishProject(GVODefOf.GrowthVatOverclockingResearch);
+
+        if (researchManager.GetProgress(GVODefOf.VatLearningLeaderResearch) == 500f)
+            researchManager.FinishProject(GVODefOf.VatLearningLeaderResearch);
+
+        if (researchManager.GetProgress(GVODefOf.VatLearningPlayResearch) == 500f)
+            researchManager.FinishProject(GVODefOf.VatLearningPlayResearch);
     }
 }

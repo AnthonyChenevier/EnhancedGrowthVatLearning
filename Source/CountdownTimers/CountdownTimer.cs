@@ -73,12 +73,12 @@ public class CountdownTimer : IExposable
         }
     }
 
-    private int ParentVatFactor
+    private int ParentTimeFactor
     {
         get
         {
             if (parent != null)
-                return parent.VatTimeFactor;
+                return parent.TimeFactor;
 
             Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
             return Building_GrowthVat.AgeTicksPerTickInGrowthVat;
@@ -100,7 +100,7 @@ public class CountdownTimer : IExposable
         {
             if (IsRunning && IsEnabled)
             {
-                int timeRemaining = tickType == TickType.VatTimeTick ? TicksRemaining / ParentVatFactor : TicksRemaining;
+                int timeRemaining = tickType == TickType.VatTimeTick ? TicksRemaining / ParentTimeFactor : TicksRemaining;
                 return "TimerRunning".Translate(timeRemaining.ToStringTicksToPeriod()).Colorize(ColorLibrary.BrightGreen);
             }
 
@@ -133,6 +133,8 @@ public class CountdownTimer : IExposable
         this(parent, name, onCountdownCallback) =>
         Set(defaultSpanAmount, defaultSpanType, defaultTickType);
 
+    private bool IsClipboard() => name == "_";
+
     public void CopyFrom(CountdownTimer other)
     {
         enabled = other.enabled;
@@ -145,17 +147,20 @@ public class CountdownTimer : IExposable
         if (parent != null)
             return parent.ValidateSettings(newSpanAmount, newSpanType, newTickType);
 
+        if (!IsClipboard())
+            Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
 
-        Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
         return false;
     }
 
-    public void Set(float newSpanAmount, SpanType newSpanType, TickType newTickType)
+    public void Set(float newSpanAmount, SpanType newSpanType, TickType newTickType, bool showMessage = false)
     {
         AcceptanceReport settingValid = ValidateSettings(newSpanAmount, newSpanType, newTickType);
         if (!settingValid)
         {
-            Messages.Message("TimerSettingsNotValid".Translate(Label, settingValid.Reason).CapitalizeFirst(), null, MessageTypeDefOf.RejectInput, false);
+            if (showMessage)
+                Messages.Message("TimerSettingsNotValid".Translate(Label, settingValid.Reason).CapitalizeFirst(), null, MessageTypeDefOf.RejectInput, false);
+
             return;
         }
 
@@ -164,16 +169,17 @@ public class CountdownTimer : IExposable
 
         countdownTicks = Mathf.RoundToInt(newSpanAmount * TicksPerSpan(newSpanType));
 
-        Messages.Message("TimerSet".Translate(Label, CurrentSetting).CapitalizeFirst(), null, MessageTypeDefOf.NeutralEvent, false);
+        if (tickType != newTickType)
+        {
+            tickType = newTickType;
+            //change in tick type requires restarting timer
+            //as start tick value is no longer relevant to the tick type
+            if (IsRunning)
+                Start();
+        }
 
-        if (tickType == newTickType)
-            return;
-
-        tickType = newTickType;
-        //change in tick type requires restarting timer
-        //as start tick value is no longer relevant to the tick type
-        if (IsRunning)
-            Start();
+        if (showMessage)
+            Messages.Message("TimerSet".Translate(Label, CurrentSetting).CapitalizeFirst(), null, MessageTypeDefOf.NeutralEvent, false);
     }
 
     public static int TicksPerSpan(SpanType spanType)

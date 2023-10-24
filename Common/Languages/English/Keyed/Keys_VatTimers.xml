@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
     <EjectTimerLabel>eject timer</EjectTimerLabel>
-    <EjectTimerDesc>Ejects the registered occupant from the vat when the timer elapses. Note that occupants will be ejected at 18 years of age regardless of this timer.</EjectTimerDesc>
+    <EjectTimerDesc>Ejects the registered occupant from the vat when the timer elapses. Note: occupants will be ejected at 18 years old regardless of this.</EjectTimerDesc>
 
     <RecallTimerLabel>recall timer</RecallTimerLabel>
     <RecallTimerDesc>Recalls the registered occupant back to the vat when the timer elapses.</RecallTimerDesc>

@@ -14,7 +14,7 @@ namespace GrowthVatsOverclocked.CountdownTimers;
 public interface ICountdownTimerParent
 {
     bool TimerTabVisible { get; }
-    int VatTimeFactor { get; }
+    int TimeFactor { get; }
     IEnumerable<CountdownTimerSettings> GetSettings();
     int GetTicks(CountdownTimer.TickType tickType, bool startTicks = false);
     AcceptanceReport TimerCanStart(CountdownTimer timer);

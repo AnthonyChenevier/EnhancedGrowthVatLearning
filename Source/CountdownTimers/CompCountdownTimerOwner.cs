@@ -18,7 +18,7 @@ namespace GrowthVatsOverclocked.CountdownTimers;
 public abstract class CompCountdownTimerOwner : ThingComp, ICountdownTimerParent
 {
     public virtual bool TimerTabVisible => GetTimers().Any();
-    public virtual int VatTimeFactor => Building_GrowthVat.AgeTicksPerTickInGrowthVat;
+    public virtual int TimeFactor => 1;
 
     public abstract IEnumerable<CountdownTimer> GetTimers();
     public abstract IEnumerable<CountdownTimerSettings> GetSettings();

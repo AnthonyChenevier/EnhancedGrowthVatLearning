@@ -48,7 +48,7 @@ public class CountdownTimerSettings
         ResetUIValues();
     }
 
-    private void ResetUIValues()
+    public void ResetUIValues()
     {
         uiSpanAmount = timer.TimerSpanAmount;
         uiSpanType = timer.TimerSpanType;
@@ -56,7 +56,7 @@ public class CountdownTimerSettings
         editBuffer = $"{uiSpanAmount}";
     }
 
-    private void ApplyUIValues() { timer.Set(uiSpanAmount, uiSpanType, uiTickType); }
+    private void ApplyUIValues() { timer.Set(uiSpanAmount, uiSpanType, uiTickType, true); }
 
     public void DrawUI(Rect inRect)
     {
@@ -71,17 +71,8 @@ public class CountdownTimerSettings
         Rect footerRect = inRect;
         footerRect.yMin += 136f;
 
-        DrawHeader(headerRect);
-        Widgets.DrawLineHorizontal(inRect.x, headerRect.yMax + 4f, inRect.width - 2f);
-        DrawBody(bodyRect);
-        Widgets.DrawLineHorizontal(inRect.x, bodyRect.yMax + 4f, inRect.width - 2f);
-        DrawFooter(footerRect);
-    }
-
-    private void DrawHeader(Rect inRect)
-    {
         //Label, short description & enable timer controls
-        Rect headerRect = inRect with { height = Text.LineHeight };
+        Rect headerRect1 = headerRect with { height = Text.LineHeight };
 
         //Downsize text
         GameFont originalFont = Text.Font;
@@ -89,7 +80,7 @@ public class CountdownTimerSettings
         string label = "CbxEnableTimer".Translate() + ":";
         float enableWidth = Text.CalcSize(label).x + 24f + 10f;
 
-        Rect enableRect = headerRect;
+        Rect enableRect = headerRect1;
         enableRect.xMin = enableRect.xMax - enableWidth;
         bool timerEnabled = timer.IsEnabled;
         Widgets.CheckboxLabeled(enableRect, label, ref timerEnabled, placeCheckboxNearText: true);
@@ -99,7 +90,7 @@ public class CountdownTimerSettings
         //reset text size
         Text.Font = originalFont;
 
-        Rect timerLabelRect = headerRect;
+        Rect timerLabelRect = headerRect1;
         timerLabelRect.xMax -= enableWidth;
         Widgets.Label(timerLabelRect, timer.Label.CapitalizeFirst());
 
@@ -107,8 +98,8 @@ public class CountdownTimerSettings
         originalFont = Text.Font;
         Text.Font = GameFont.Tiny;
 
-        Rect descRect = inRect;
-        descRect.yMin += headerRect.height + 2f;
+        Rect descRect = headerRect;
+        descRect.yMin += headerRect1.height + 2f;
         float descContentHeight = Text.CalcHeight(timer.Desc, descRect.width - 20f);
         float descRectWidth = descContentHeight > descRect.height ? descRect.width - 20f : descRect.width;
         Rect viewRect = new(0f, 0f, descRectWidth, descContentHeight);
@@ -119,13 +110,10 @@ public class CountdownTimerSettings
 
         //reset text size
         Text.Font = originalFont;
-    }
+        Widgets.DrawLineHorizontal(inRect.x, headerRect.yMax + 4f, inRect.width - 2f);
+        Rect setTimerRect = bodyRect;
 
-    private void DrawBody(Rect inRect)
-    {
-        Rect setTimerRect = inRect;
-
-        GameFont originalFont = Text.Font;
+        GameFont originalFont1 = Text.Font;
         Text.Font = GameFont.Medium;
         Rect countRect = setTimerRect;
         //5-digit entry box
@@ -138,33 +126,30 @@ public class CountdownTimerSettings
         Rect tickRect = selectorsRect.BottomHalf();
         //get span amount
         Widgets.TextFieldNumeric(countRect, ref uiSpanAmount, ref editBuffer);
-        Text.Font = originalFont;
+        Text.Font = originalFont1;
         //set span type
         ListingHelper.EnumSelector(spanRect, ref uiSpanType);
 
         //set ticker type
         ListingHelper.EnumSelector(tickRect, ref uiTickType, disallowedTickTypes);
-    }
-
-    private void DrawFooter(Rect inRect)
-    {
-        Rect timerStatusRect = inRect.RightHalf();
+        Widgets.DrawLineHorizontal(inRect.x, bodyRect.yMax + 4f, inRect.width - 2f);
+        Rect timerStatusRect = footerRect.RightHalf();
         TextAnchor anchor = Text.Anchor;
-        GameFont originalFont = Text.Font;
+        GameFont originalFont2 = Text.Font;
         Text.Font = GameFont.Tiny;
         Text.Anchor = TextAnchor.LowerRight;
         Widgets.Label(timerStatusRect, timer.TimerStatus);
         Text.Anchor = anchor;
-        Text.Font = originalFont;
+        Text.Font = originalFont2;
 
-        Rect buttonsRect = inRect.LeftHalf();
+        Rect buttonsRect = footerRect.LeftHalf();
 
         Rect setButtonRect = buttonsRect with { width = 140f };
 
         if (Widgets.ButtonText(setButtonRect, "BtnSetTimer".Translate(), active: !SettingsApplied))
             ApplyUIValues();
 
-        Rect resetButtonRect = buttonsRect with { y = setButtonRect.y + (inRect.height - 36f) / 2f, xMin = setButtonRect.xMax + 4f, width = 36f, height = 36f };
+        Rect resetButtonRect = buttonsRect with { y = setButtonRect.y + (footerRect.height - 36f) / 2f, xMin = setButtonRect.xMax + 4f, width = 36f, height = 36f };
         if (!SettingsApplied)
             if (Widgets.ButtonImageFitted(resetButtonRect, ContentFinder<Texture2D>.Get("UI/Widgets/RotLeft")))
                 ResetUIValues();

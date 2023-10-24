@@ -29,7 +29,6 @@ public class ITab_CountdownTimers : ITab
             _ => null
         };
 
-    //TODO: add research check
     public override bool IsVisible
     {
         get

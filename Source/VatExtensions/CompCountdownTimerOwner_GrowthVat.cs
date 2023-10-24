@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using GrowthVatsOverclocked.ClassExtensions;
 using GrowthVatsOverclocked.CountdownTimers;
 using GrowthVatsOverclocked.Data;
@@ -19,23 +18,6 @@ namespace GrowthVatsOverclocked.VatExtensions;
 
 public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
 {
-    private class VatTimerResearchMod : ResearchMod
-    {
-        private readonly CompCountdownTimerOwner_GrowthVat owner;
-
-        public VatTimerResearchMod(CompCountdownTimerOwner_GrowthVat owner) { this.owner = owner; }
-
-        public override void Apply()
-        {
-            //only apply in-game, not on game load
-            if (Current.ProgramState != ProgramState.Playing)
-                return;
-
-            owner.ejectCountdownTimer.SetEnabled(true);
-            owner.recallCountdownTimer.SetEnabled(false);
-        }
-    }
-
     private const string ejectTimerID = "EjectTimer";
     private const string recallTimerID = "RecallTimer";
 
@@ -49,12 +31,12 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
 
     public override bool TimerTabVisible => base.TimerTabVisible && GVODefOf.VatTimersResearch.IsFinished;
 
-    public override int VatTimeFactor => Vat.GetComp<CompOverclockedGrowthVat>()?.ModeGrowthSpeed ?? Building_GrowthVat.AgeTicksPerTickInGrowthVat;
+    public override int TimeFactor => Vat.GetComp<CompOverclockedGrowthVat>()?.ModeGrowthSpeed ?? Building_GrowthVat.AgeTicksPerTickInGrowthVat;
 
     public override void PostSpawnSetup(bool respawningAfterLoad)
     {
         base.PostSpawnSetup(respawningAfterLoad);
-        ejectCountdownTimer ??= new CountdownTimer(this, ejectTimerID, EjectCallback, 18, CountdownTimer.SpanType.YearSpan, CountdownTimer.TickType.PawnAgeTick);
+        ejectCountdownTimer ??= new CountdownTimer(this, ejectTimerID, EjectCallback, 1, CountdownTimer.SpanType.YearSpan, CountdownTimer.TickType.VatTimeTick);
         recallCountdownTimer ??= new CountdownTimer(this, recallTimerID, RecallCallback, 3, CountdownTimer.SpanType.DaySpan, CountdownTimer.TickType.GameTimeTick);
     }
 
@@ -63,20 +45,6 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
         base.PostExposeData();
         Scribe_Deep.Look(ref ejectCountdownTimer, nameof(ejectCountdownTimer), this, ejectTimerID, new Action(EjectCallback));
         Scribe_Deep.Look(ref recallCountdownTimer, nameof(recallCountdownTimer), this, recallTimerID, new Action(RecallCallback));
-
-
-        if (Scribe.mode != LoadSaveMode.LoadingVars)
-            return;
-
-        FieldInfo researchModsField = typeof(ResearchProjectDef).GetField("researchMods", BindingFlags.NonPublic | BindingFlags.Instance);
-        if (researchModsField == null)
-            return;
-
-        if (researchModsField.GetValue(GVODefOf.VatTimersResearch) is not List<ResearchMod> currentMods)
-            currentMods = new List<ResearchMod>();
-
-        currentMods.Add(new VatTimerResearchMod(this));
-        researchModsField.SetValue(GVODefOf.VatTimersResearch, currentMods);
     }
 
     public override IEnumerable<CountdownTimer> GetTimers()
@@ -119,6 +87,7 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
         return true;
     }
 
+
     public override AcceptanceReport ValidateSettings(float newSpanAmount, CountdownTimer.SpanType newSpanType, CountdownTimer.TickType newTickType)
     {
         float spanTicks = newSpanAmount * CountdownTimer.TicksPerSpan(newSpanType);
@@ -128,14 +97,14 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
         {
             case CountdownTimer.TickType.GameTimeTick:
             {
-                if (AssignedPawn.ageTracker.AgeBiologicalTicks + spanTicks >= ageTicksForAutoEject)
+                if (AssignedPawn.ageTracker.AgeBiologicalTicks + spanTicks * TimeFactor >= ageTicksForAutoEject)
                     return "NotValidReason_PawnOverEighteen".Translate(AssignedPawn.Named("PAWN"));
 
                 break;
             }
             case CountdownTimer.TickType.VatTimeTick:
             {
-                if (AssignedPawn.ageTracker.AgeBiologicalTicks + spanTicks * VatTimeFactor >= ageTicksForAutoEject)
+                if (AssignedPawn.ageTracker.AgeBiologicalTicks + spanTicks >= ageTicksForAutoEject)
                     return "NotValidReason_PawnOverEighteen".Translate(AssignedPawn.Named("PAWN"));
 
                 break;
@@ -162,7 +131,7 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
 
         return tickType switch
         {
-            CountdownTimer.TickType.VatTimeTick => (int)pawn.ageTracker.vatGrowTicks * VatTimeFactor,
+            CountdownTimer.TickType.VatTimeTick => (int)pawn.ageTracker.vatGrowTicks * TimeFactor,
             CountdownTimer.TickType.PawnAgeTick => startTicks ? 0 : (int)pawn.ageTracker.AgeBiologicalTicks,
             _ => -1
         };
