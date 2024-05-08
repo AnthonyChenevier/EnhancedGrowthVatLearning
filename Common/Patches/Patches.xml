@@ -98,7 +98,7 @@
                 <description>My vat child is learning</description>
             </li>
             <li Class="PreceptComp_SituationalThought">
-                <thought>ChildLabor_Disapproved_ChildVatModeNotPlay</thought>
+                <thought>ChildLabor_Disapproved_ChildVatModePlay</thought>
                 <description>My vat child is playing</description>
             </li>
         </value>
