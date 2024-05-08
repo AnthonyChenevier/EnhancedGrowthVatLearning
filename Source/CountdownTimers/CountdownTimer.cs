@@ -57,6 +57,7 @@ public class CountdownTimer : IExposable
 
     public bool IsEnabled => enabled;
     public bool IsRunning => startTick >= 0;
+    private bool IsClipboard => name == "_";
     public int TicksRemaining => Mathf.Max(startTick + countdownTicks - ParentTicks(), 0);
 
     public string CurrentSetting => $"{countdownTicks.ToStringTicksToPeriod()} ({tickType.ToString().Translate()})";
@@ -119,6 +120,8 @@ public class CountdownTimer : IExposable
         }
     }
 
+    public string Name => name;
+
     //used for copy-paste only
     internal CountdownTimer() : this(null, "_", null) { }
 
@@ -133,7 +136,6 @@ public class CountdownTimer : IExposable
         this(parent, name, onCountdownCallback) =>
         Set(defaultSpanAmount, defaultSpanType, defaultTickType);
 
-    private bool IsClipboard() => name == "_";
 
     public void CopyFrom(CountdownTimer other)
     {
@@ -147,7 +149,7 @@ public class CountdownTimer : IExposable
         if (parent != null)
             return parent.ValidateSettings(newSpanAmount, newSpanType, newTickType);
 
-        if (!IsClipboard())
+        if (!IsClipboard)
             Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
 
         return false;

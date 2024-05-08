@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace GrowthVatsOverclocked.CountdownTimers;
@@ -56,7 +57,7 @@ public abstract class CompCountdownTimerOwner : ThingComp, ICountdownTimerParent
             Command_Toggle gizmo = new()
             {
                 defaultLabel = "ToggleTimer_Label".Translate(timer.Label), defaultDesc = "ToggleTimer_Desc".Translate(timer.Label, timer.CurrentSetting, timer.Desc),
-                //icon = ContentFinder<Texture2D>.Get("UI/Gizmos/TimerControlGizmo"),
+                icon = ContentFinder<Texture2D>.Get($"UI/Gizmos/TimerControlGizmo{timer.Name}"),
                 activateSound = timer.IsEnabled ? SoundDefOf.Checkbox_TurnedOff : SoundDefOf.Checkbox_TurnedOn, isActive = () => timer.IsEnabled,
                 toggleAction = () => { timer.SetEnabled(!timer.IsEnabled); },
             };
