@@ -101,7 +101,7 @@ internal static class ListingHelper
         if (!l.BoundingRectCached.HasValue || contentRect.Overlaps(l.BoundingRectCached.Value))
         {
             //do slider
-            float num = Widgets.HorizontalSlider_NewTemp(contentRect.LeftPart(0.75f).Rounded(), val, min, max, true, roundTo: roundTo);
+            float num = Widgets.HorizontalSlider(contentRect.LeftPart(0.75f).Rounded(), val, min, max, true, roundTo: roundTo);
             if (num != val)
                 SoundDefOf.DragSlider.PlayOneShotOnCamera();
 
@@ -157,7 +157,7 @@ internal static class ListingHelper
             Text.Anchor = textAnchor;
 
             //do slider
-            float num = Widgets.HorizontalSlider_NewTemp(midRect, val, min, max, true, roundTo: roundTo);
+            float num = Widgets.HorizontalSlider(midRect, val, min, max, true, roundTo: roundTo);
             if (num != val)
                 SoundDefOf.DragSlider.PlayOneShotOnCamera();
 
