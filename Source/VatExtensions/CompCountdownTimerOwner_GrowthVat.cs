@@ -90,9 +90,11 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
 
     public override AcceptanceReport ValidateSettings(float newSpanAmount, CountdownTimer.SpanType newSpanType, CountdownTimer.TickType newTickType)
     {
+        if (AssignedPawn == null)
+            return true;
+
         float spanTicks = newSpanAmount * CountdownTimer.TicksPerSpan(newSpanType);
         int ageTicksForAutoEject = 18 * GenDate.TicksPerYear;
-
         switch (newTickType)
         {
             case CountdownTimer.TickType.GameTimeTick:
