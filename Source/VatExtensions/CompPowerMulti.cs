@@ -44,6 +44,9 @@ public class CompPowerMulti : ThingComp
 
     public static void SetGlobalSetting_PowerConsumption(string profileKey, float powerConsumption)
     {
+        if (Current.ProgramState != ProgramState.Playing)
+            return;
+
         IEnumerable<CompProperties_PowerMulti> powerMultis = DefDatabase<ThingDef>.AllDefs.Where(t => t.GetCompProperties<CompProperties_PowerMulti>() is not null)
                                                                                   .Select(t => t.GetCompProperties<CompProperties_PowerMulti>());
 

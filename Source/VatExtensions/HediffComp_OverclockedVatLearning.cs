@@ -87,9 +87,13 @@ public class HediffComp_OverclockedVatLearning : HediffComp
     //change severity per day for all active hediffs of this type (for changing settings mid-game)
     public static void SetGlobalSetting_SeverityPerDay(float severityPerDay)
     {
+        if (Current.ProgramState != ProgramState.Playing)
+            return;
+
         HediffCompProperties_SeverityPerDay compProps =
             (HediffCompProperties_SeverityPerDay)HediffDefOf.VatLearning.comps.FirstOrDefault(c => c.compClass == typeof(HediffCompProperties_SeverityPerDay));
 
-        compProps.severityPerDay = severityPerDay;
+        if (compProps != null)
+            compProps.severityPerDay = severityPerDay;
     }
 }
