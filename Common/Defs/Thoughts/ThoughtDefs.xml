@@ -3,8 +3,8 @@
     <!-- child labor thoughts -->
     <!-- Encouraged -->
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_EnhancedVatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Encouraged_ChildVatModeNotPlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModeNotPlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -19,8 +19,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Encouraged_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <defName>ChildLabor_Encouraged_ChildVatModePlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModePlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -36,7 +36,7 @@
 
     <ThoughtDef>
         <defName>ChildLabor_Encouraged_TeenInGrowthVat</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_TeenInGrowthVat</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -52,8 +52,8 @@
 
     <!-- Disapproved -->
     <ThoughtDef>
-        <defName>ChildLabor_Disapproved_EnhancedVatLearning</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatLearning</workerClass>
+        <defName>ChildLabor_Disapproved_ChildVatModeNotPlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModeNotPlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -68,8 +68,8 @@
     </ThoughtDef>
 
     <ThoughtDef>
-        <defName>ChildLabor_Disapproved_EnhancedVatPlaying</defName>
-        <workerClass>EnhancedGrowthVatLearning.Thoughts.ThoughtWorker_Precept_VatPlaying</workerClass>
+        <defName>ChildLabor_Disapproved_ChildVatModePlay</defName>
+        <workerClass>GrowthVatsOverclocked.Thoughts.ThoughtWorker_Precept_ChildVatModePlay</workerClass>
         <developmentalStageFilter>Adult</developmentalStageFilter>
         <doNotApplyToQuestLodgers>true</doNotApplyToQuestLodgers>
         <stackLimit>3</stackLimit>
@@ -79,6 +79,41 @@
                 <label>vat children using play suite</label>
                 <description>Our children's personal growth isn't being stifled even though they are growing so fast.</description>
                 <baseMoodEffect>+2</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+
+    <!-- Other thoughts -->
+    <!-- Vat-juice effect thoughts -->
+    <ThoughtDef>
+        <defName>VatJuiceEffectChild</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Baby, Child</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. I should probably be in a growth vat.</description>
+            </li>
+        </stages>
+    </ThoughtDef>
+
+    <ThoughtDef>
+        <defName>VatJuiceEffectAdult</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>VatJuiceEffect</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <nullifyingHediffs>
+            <li>GoJuiceHigh</li>
+        </nullifyingHediffs>
+        <stages>
+            <li>
+                <label>effected by vat-juice</label>
+                <description>I'm feeling the effects of vat-juice. So much more addictive than go-juice and none of the satisfaction. Why did I do this again?</description>
+                <baseMoodEffect>-2</baseMoodEffect>
             </li>
         </stages>
     </ThoughtDef>

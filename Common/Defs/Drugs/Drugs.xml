@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ThingDef ParentName="MakeableDrugBase">
+        <defName>VatJuice</defName>
+        <label>vat-juice</label>
+        <description>A synthetic drug developed for quickly deploying front-line space marines during the later stages of interplanetary warfare. A derivative of go-juice developed as a way to increase the speed and efficiency of vat-growing front line troops. \n\nThe military chemists who created it were never able to remove its addictiveness. Some saw this as a downside; others saw it as a benefit.</description>
+        <descriptionHyperlinks>
+            <HediffDef>VatJuiceEffect</HediffDef>
+            <HediffDef>GoJuiceAddiction</HediffDef>
+        </descriptionHyperlinks>
+        <graphicData>
+            <texPath>Things/Item/Drug/VatJuice</texPath>
+            <graphicClass>Graphic_StackCount</graphicClass>
+        </graphicData>
+        <rotatable>false</rotatable>
+        <statBases>
+            <WorkToMake>600</WorkToMake>
+            <MarketValue>200</MarketValue>
+            <Mass>0.1</Mass>
+        </statBases>
+        <techLevel>Spacer</techLevel>
+        <ingestible>
+            <drugCategory>Medical</drugCategory>
+            <foodType>Processed, Fluid</foodType>
+            <baseIngestTicks>80</baseIngestTicks>
+            <ingestSound>Ingest_Inject</ingestSound>
+            <ingestHoldOffsetStanding>
+                <northDefault>
+                    <offset>(0.18,0,0)</offset>
+                </northDefault>
+            </ingestHoldOffsetStanding>
+            <ingestCommandString>Inject {0}</ingestCommandString>
+            <ingestReportString>Injecting {0}.</ingestReportString>
+            <useEatingSpeedStat>false</useEatingSpeedStat>
+            <chairSearchRadius>0</chairSearchRadius>
+            <babiesCanIngest>true</babiesCanIngest>
+            <outcomeDoers>
+                <li Class="GrowthVatsOverclocked.Drugs.IngestionOutcomeDoer_GiveHediff_Level">
+                    <hediffDef>VatJuiceEffect</hediffDef>
+                    <severity>1</severity>
+                </li>
+            </outcomeDoers>
+        </ingestible>
+        <recipeMaker>
+            <researchPrerequisites>
+                <li>GoJuiceProduction</li>
+                <li>GrowthVats</li>
+            </researchPrerequisites>
+            <recipeUsers>
+                <li>DrugLab</li>
+            </recipeUsers>
+            <soundWorking>Recipe_Drug</soundWorking>
+        </recipeMaker>
+        <costList>
+            <GoJuice>5</GoJuice>
+            <HemogenPack>1</HemogenPack>
+        </costList>
+        <comps>
+            <li Class="CompProperties_Drug">
+                <chemical>GoJuice</chemical>
+                <addictiveness>0.25</addictiveness>
+                <needLevelOffset>0.1</needLevelOffset>
+                <listOrder>200</listOrder>
+                <overdoseSeverityOffset>0.05~0.1</overdoseSeverityOffset>
+                <largeOverdoseChance>0.005</largeOverdoseChance>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <HediffDef>
+        <defName>VatJuiceEffect</defName>
+        <hediffClass>GrowthVatsOverclocked.Drugs.Hediff_LevelWithComps</hediffClass>
+        <modExtensions>
+            <li Class="GrowthVatsOverclocked.DefModExtension_HediffTickInGrowthVat"/>
+        </modExtensions>
+        <label>effected by vat-juice</label>
+        <labelNoun>a vat-juice effect</labelNoun>
+        <description>Vat-juice in the bloodstream. It supercharges vat growth by 25% per injection for 3 days, but is based on refined go-juice so has intense addictive effects. Young adults have a chance of developing vat growing pains when under the effects of the drug.</description>
+        <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
+        <minSeverity>0</minSeverity>
+        <isBad>false</isBad>
+        <levelIsQuantity>true</levelIsQuantity>
+        <hediffGivers>
+            <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_RandomFromCauseSeverity">
+                <hediff>VatJuicePain</hediff>
+                <minAge>13</minAge>
+                <minCauseSeverity>1</minCauseSeverity>
+                <causeSeverityMtbDaysCurve>
+                    <points>
+                        <li>(1, 8)</li>
+                        <li>(8, 0.5)</li>
+                    </points>
+                </causeSeverityMtbDaysCurve>
+                <causeSeverityMappingCurve>
+                    <points>
+                        <li>(0, 0)</li>
+                        <li>(6, 1)</li>
+                    </points>
+                </causeSeverityMappingCurve>
+            </li>
+        </hediffGivers>
+        <comps>
+            <li Class="HediffCompProperties_Disappears">
+                <disappearsAfterTicks>180000</disappearsAfterTicks><!-- 3 days. ticks in or out of vat -->
+                <showRemainingTime>true</showRemainingTime>
+                <canUseDecimalsShortForm>true</canUseDecimalsShortForm>
+                <messageOnDisappear>The effects of vat-juice have worn off {PAWN_nameDef}. {PAWN_definite} will need some time out of the vat for the drug to be flushed from {PAWN_possessive} system before re-application.</messageOnDisappear>
+            </li>
+        </comps>
+        <stages>
+            <li>
+                <multiplyStatChangesBySeverity>true</multiplyStatChangesBySeverity>
+                <statOffsets>
+                    <GrowthVatOccupantSpeed MayRequire="Ludeon.RimWorld.Biotech">0.25</GrowthVatOccupantSpeed>
+                </statOffsets>
+            </li>
+        </stages>
+    </HediffDef>
+
+    <HediffDef>
+        <defName>VatJuicePain</defName>
+        <label>vatjuice growing pains</label>
+        <description>Physical pain caused by sustained use of vat-juice to accelerate vat growth. High lifetime dosage increases the severity of the condition. Symptoms include pain, vomiting and reduced physical and mental abilities. While the effect is long-lasting if left untreated, sustained medical attention will reduce symptoms and cure the condition after a few treatments.</description>
+        <descriptionShort>Physical after-effects of accelerated growth in a vat using vat-juice, including generalized pain, nausea and reduced physical capabilities.</descriptionShort>
+        <maxSeverity>1</maxSeverity>
+        <makesSickThought>true</makesSickThought>
+        <stages>
+            <li>
+                <label>minor</label>
+                <vomitMtbDays>1.4</vomitMtbDays>
+                <painOffset>0.1</painOffset>
+            </li>
+            <li>
+                <label>major</label>
+                <minSeverity>0.5</minSeverity>
+                <vomitMtbDays>0.9</vomitMtbDays>
+                <painOffset>0.3</painOffset>
+                <capMods>
+                    <li>
+                        <capacity>Moving</capacity>
+                        <postFactor>0.7</postFactor>
+                    </li>
+                    <li>
+                        <capacity>Manipulation</capacity>
+                        <postFactor>0.75</postFactor>
+                    </li>
+                    <li>
+                        <capacity>Consciousness</capacity>
+                        <postFactor>0.75</postFactor>
+                    </li>
+                </capMods>
+            </li>
+            <li>
+                <label>serious</label>
+                <minSeverity>0.75</minSeverity>
+                <vomitMtbDays>0.4</vomitMtbDays>
+                <painOffset>0.5</painOffset>
+                <capMods>
+                    <li>
+                        <capacity>Moving</capacity>
+                        <postFactor>0.6</postFactor>
+                    </li>
+                    <li>
+                        <capacity>Manipulation</capacity>
+                        <postFactor>0.4</postFactor>
+                    </li>
+                    <li>
+                        <capacity>Consciousness</capacity>
+                        <postFactor>0.6</postFactor>
+                    </li>
+                </capMods>
+            </li>
+        </stages>
+    </HediffDef>
+</Defs>

@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrowthVatsOverclocked", "GrowthVatsOverclocked.csproj", "{FC41E232-A864-437B-8A66-32A408DC6EB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{986808F8-336F-4491-8A8D-D69634ABC21E}"
+	ProjectSection(SolutionItems) = preProject
+		..\About\About.xml = ..\About\About.xml
+		Install.bat = Install.bat
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\LoadFolders.xml = ..\LoadFolders.xml
+		..\Common\Patches\Patches.xml = ..\Common\Patches\Patches.xml
+		..\README.md = ..\README.md
+		..\steam formatted description.txt = ..\steam formatted description.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keys", "Keys", "{8363CB22-6238-4036-8A0F-3A69C701FAEB}"
+	ProjectSection(SolutionItems) = preProject
+		..\Common\Languages\English\Keyed\Keys_LearningSuites.xml = ..\Common\Languages\English\Keyed\Keys_LearningSuites.xml
+		..\Common\Languages\English\Keyed\Keys_Misc.xml = ..\Common\Languages\English\Keyed\Keys_Misc.xml
+		..\Common\Languages\English\Keyed\Keys_Settings.xml = ..\Common\Languages\English\Keyed\Keys_Settings.xml
+		..\Common\Languages\English\Keyed\Keys_TimerTab.xml = ..\Common\Languages\English\Keyed\Keys_TimerTab.xml
+		..\Common\Languages\English\Keyed\Keys_VatTimers.xml = ..\Common\Languages\English\Keyed\Keys_VatTimers.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{8EA6A25C-7A48-433F-A774-CBBE95493E06}"
+	ProjectSection(SolutionItems) = preProject
+		..\Common\Defs\Backstories\BackstoryDefs.xml = ..\Common\Defs\Backstories\BackstoryDefs.xml
+		..\Common\Defs\Drugs\Drugs.xml = ..\Common\Defs\Drugs\Drugs.xml
+		..\Common\Defs\HediffDefs\HediffDefs.xml = ..\Common\Defs\HediffDefs\HediffDefs.xml
+		..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml = ..\Common\Defs\ResearchProjectDefs\ResearchProjectDefs.xml
+		..\Common\Defs\Stats\StatDefs.xml = ..\Common\Defs\Stats\StatDefs.xml
+		..\Common\Defs\Thoughts\ThoughtDefs.xml = ..\Common\Defs\Thoughts\ThoughtDefs.xml
+		..\Common\Defs\VatEffects\Vatshock.xml = ..\Common\Defs\VatEffects\Vatshock.xml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_1.3|Any CPU = Debug_1.3|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Debug_1.3|Any CPU.ActiveCfg = Debug_1.3|Any CPU
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Debug_1.3|Any CPU.Build.0 = Debug_1.3|Any CPU
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC41E232-A864-437B-8A66-32A408DC6EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8363CB22-6238-4036-8A0F-3A69C701FAEB} = {986808F8-336F-4491-8A8D-D69634ABC21E}
+		{8EA6A25C-7A48-433F-A774-CBBE95493E06} = {986808F8-336F-4491-8A8D-D69634ABC21E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {463FA201-6352-4AD6-93FF-2404C780B7EE}
+	EndGlobalSection
+EndGlobal

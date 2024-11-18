@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!-- Vatgrowth exposure - ticks up while pawn is in a growth vat. Ticks faster with use of overclocked learning suites and vatgrowth drugs. When the pawn is a child the condition is harmless and can be easily reduced by spending time out of the vat to socialize and learn in the real world. An adult with high exposure can develop vatshock when they exit the vat, or randomly for a short time afterwards. -->
+    <HediffDef>
+        <defName>VatgrowthExposureHediff</defName>
+        <hediffClass>HediffWithComps</hediffClass>
+        <modExtensions>
+            <li Class="GrowthVatsOverclocked.DefModExtension_HediffTickInGrowthVat"/>
+        </modExtensions>
+        <label>vatgrowth exposure</label>
+        <description>Exposure to accelerated growth in a vat. While this has no direct negative effects in children, extensive time spent in simulated realities and/or under the effect of growth-boosting drugs can cause vatshock when adults leave the vat. Scheduling regular time out of the growth vat for the child to socialize and learn with other real people greatly reduces the risk of vatshock developing.</description>
+        <descriptionHyperlinks>
+            <HediffDef>VatshockHediff</HediffDef>
+        </descriptionHyperlinks>
+        <minSeverity>0</minSeverity>
+        <initialSeverity>0.001</initialSeverity>
+        <maxSeverity>1</maxSeverity>
+        <hediffGivers>
+            <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_RandomFromCauseSeverity">
+                <hediff>VatshockHediff</hediff>
+                <minAge>13</minAge> <!-- kids can get out of vat with no chance of breaking -->
+                <minCauseSeverity>0.5</minCauseSeverity> <!-- default growth pawns won't cause issues -->
+                <partsToAffect>
+                    <li>Brain</li>
+                </partsToAffect>
+                <causeSeverityMtbDaysCurve> <!-- 6 - 1 mtbDays for developing vatshock at any time they are out of the vat depending on exposure severity. -->
+                    <points>
+                        <li>(0.5, 6)</li>
+                        <li>(1, 1)</li>
+                    </points>
+                </causeSeverityMtbDaysCurve>
+            </li>
+            <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_OnVatExit">
+                <hediff>VatshockHediff</hediff>
+                <minAge>13</minAge> <!-- kids can get out of vat with no chance of breaking -->
+                <minCauseSeverity>0.5</minCauseSeverity> <!-- default growth pawns won't cause issues -->
+                <partsToAffect>
+                    <li>Brain</li>
+                </partsToAffect>
+                <causeSeverityEventChanceCurve> <!-- 5% to 75% chance of developing into vatshock upon exiting the vat depending on exposure severity. -->
+                    <points>
+                        <li>(0.5, 0.05)</li>
+                        <li>(1, 0.75)</li>
+                    </points>
+                </causeSeverityEventChanceCurve>
+            </li>
+        </hediffGivers>
+        <stages>
+            <li>
+                <label>safe</label>
+            </li>
+            <li>
+                <minSeverity>0.5</minSeverity>
+                <label>extensive</label>
+            </li>
+            <li>
+                <minSeverity>0.9</minSeverity>
+                <label>extreme</label>
+            </li>
+        </stages>
+        <comps>
+            <!-- hediff does not go down by itself, only through actions. -->
+            <!-- social actions reduce severity by a lot. Even more if other pawn is family.  -->
+            <!-- Learning actions also reduce severity by a large amount. -->
+            <!-- Younger kids reduce severity faster too -->
+            <li Class="GrowthVatsOverclocked.Vatshock.HediffCompProperties_SeverityFromChildhoodEvent">
+                <severityPerSocialAction>-0.05</severityPerSocialAction> <!-- 20 social actions to severity 0-->
+                <severityPerFamilySocialAction>-0.1</severityPerFamilySocialAction> <!-- 10 family social actions -->
+                <severityPerLearningAction>-0.1</severityPerLearningAction> <!-- 10 complete learning actions -->
+                <severityPerRitual>-1</severityPerRitual> <!-- as little as 1 ritual. severity reduction is also directly modified by ritual quality. -->
+                <youngChildModifier>3</youngChildModifier> <!-- young kids only need 1/3 of the actions to reduce-->
+            </li>
+            <!-- Naturally raise to just under 0.5 severity over 18 years growth in vat. -->
+            <!-- Vanilla mode occupants with no vatjuice should never see the hediff this way. -->
+            <!-- VatJuice adds 10% to severity gained each tick per dosage. -->
+            <!-- Learning need fufillment also increases severity gained by a quarter of it's current value. -->
+            <!-- Vanilla occupants get a 0.5% bonus which won't affect if the hediff shows at all. -->
+            <!-- Learning suite users will get at most 75% severity without drugs - dangerous levels, requires a lot of interaction to combat -->
+            <li Class="GrowthVatsOverclocked.Vatshock.HediffCompProperties_SeverityFromVatExposure">
+                <severityPerGrownYear>0.027</severityPerGrownYear>
+                <vatjuicePerDoseSeverityModifier>0.10</vatjuicePerDoseSeverityModifier>
+                <learningNeedSeverityModifier>0.25</learningNeedSeverityModifier>
+            </li>
+        </comps>
+    </HediffDef>
+
+
+    <!-- Vatshock is a psychological disorder that randomly causes low mood and greater risk of certain mental breaks when the pawn is affected by flashbacks of vat life and paranoia. The condition's initial severity is linked to vatgrowth exposure severity and lasts indefinitely, but can be cured through two different mechanisms - a low chance of curing itself when the pawn acts on an inspiration, or a very low chance of it curing itself with a sustained high mood over long periods. Both mechanisms' chances are heavily reduced by bad vatshock memories, so the Counsel ability is an important part of managing the condition. Once memories and mood swings are stabilized the chance of the condition self-curing is greatly increased, as well as reducing the chance of breaks occurring. -->
+    <HediffDef>
+        <defName>VatshockHediff</defName>
+        <label>vatshock</label>
+        <description>Post-Vatgrowth Stress Disorder, also know as vatshock, is caused by extensive use of growth vat simulations and/or vat growth drugs.\n\nVatshock is a persistent psychological disorder that causes negative mood swings and paranoia, leading to existential crisis when sufferers are caught in vivid flashbacks of simulated life. Vatshock cannot be cured directly, but counseling the memories that surface reduces their severity and gives sufferers a much better chance of coming to terms with their past and curing themselves. Working on an inspirational project is also a very good way of providing the positive reinforcement needed to cure the condition but is not guaranteed and best used in conjunction with counseling.</description>
+        <descriptionShort>Psychological stress caused by accelerated development in a growth vat.</descriptionShort>
+        <hediffClass>HediffWithComps</hediffClass>
+        <scenarioCanAdd>true</scenarioCanAdd>
+        <maxSeverity>1</maxSeverity>
+        <comps>
+            <li Class="GrowthVatsOverclocked.Vatshock.HediffCompProperties_Vatshock">
+                <thoughtDef>VatshockFlashback</thoughtDef>
+                <flashbackStartLetterLabel>vatshock flashbacks</flashbackStartLetterLabel>
+                <flashbackStartLetterText>[PAWN_pronoun] has started suffering vatshock flashbacks. Counseling can reduce the negative effects of these memories.</flashbackStartLetterText>
+                <inspirationReasonText>[PAWN_nameDef] has become inspired by nervous energy while suffering from vatshock flashbacks. </inspirationReasonText>
+                <curedLetterLabel>vatshock cured</curedLetterLabel>
+                <curedLetterText>[PAWN_pronoun] has recovered from vatshock and will no longer be plagued with flashbacks.</curedLetterText>
+                <thoughtStageReducers>
+                    <precepts>
+                        <li>GrowthVat_Essential</li> <!-- of course this helps. -->
+                    </precepts>
+                    <traits> <!-- traits can be selected during growth moments that reduce vatshock issues -->
+                        <li>Transhumanist</li>
+                        <li>Psychopath</li>
+                        <li>GreatMemory</li>
+                        <li>FastLearner</li>
+                        <li>SlowLearner</li> <!-- Me for vat grow-grow? Huh?-->
+                    </traits>
+                    <traitDegrees>
+                        <Nerves>2</Nerves> <!-- iron-willed -->
+                        <NaturalMood>2</NaturalMood> <!-- sanguine -->
+                        <NaturalMood>-2</NaturalMood> <!-- also depressive, everything already sucks and if the world is a simulation or not who cares? -->
+                    </traitDegrees>
+                    <genes> <!-- highmates, hussars and genies all have genes that predispose them to dealing with vatshock well. -->
+                        <li>Mood_Sanguine</li>
+                        <li>Aggression_DeadCalm</li>
+                        <li>Aggression_HyperAggressive</li>
+                    </genes>
+                </thoughtStageReducers>
+                <recoveryTokensPerAction>1~2</recoveryTokensPerAction> <!-- 3-6 recovery actions (counseling, completing inspiration) for max reduction and cure chance -->
+                <thoughtChangeSeverityMtbQuadrumCurve>
+                    <points>
+                        <li>(0.1, 4)</li>
+                        <li>(1, 1)</li>
+                    </points>
+                </thoughtChangeSeverityMtbQuadrumCurve>
+                <mtbLifetimeSelfCureChanceCurve>
+                    <points>
+                        <li>(0.1, 0.001)</li>
+                        <li>(1, 0.25)</li>
+                        <li>(1.5, 0.5)</li>
+                    </points>
+                </mtbLifetimeSelfCureChanceCurve>
+                <inspirationFromFlashbackChance>0.125</inspirationFromFlashbackChance>
+                <recoveryCureModifier>0.075</recoveryCureModifier>
+            </li>
+            <li Class="GrowthVatsOverclocked.Vatshock.HediffCompProperties_MentalBreaksFromThoughtStage">
+                <thoughtDef>VatshockFlashback</thoughtDef>
+                <thoughtStageMtbMultiplierCurve> <!-- divisor for break mtbDays based on expressed thought stage. Higher severity means worse breaks more often -->
+                    <points>
+                        <li>(0, 100)</li> <!-- first stage is pretty safe -->
+                        <li>(1, 1)</li>
+                        <li>(2, 1)</li>
+                        <li>(3, 2)</li>
+                        <li>(4, 2)</li>
+                        <li>(5, 3)</li>
+                        <li>(6, 3)</li>
+                    </points>
+                </thoughtStageMtbMultiplierCurve>
+                <cutoffOverMtbDays>35</cutoffOverMtbDays> <!-- past this amount the break will not fire at all-->
+                <thoughtBreaks>
+                    <li>
+                        <mentalBreak>Wander_Sad</mentalBreak>
+                        <mtbDays>6</mtbDays>                        <!-- s0: 06, s1-2: 3.00, s3-4: 2.00, s5-6: 1.2-->
+                    </li>
+                    <li>
+                        <mentalBreak>Wander_OwnRoom</mentalBreak>
+                        <mtbDays>6</mtbDays>                        <!-- s0: 06, s1-2: 3.00, s3-4: 2.00, s5-6: 1.2-->
+                    </li>
+                    <li>
+                        <mentalBreak>IdeoChange</mentalBreak>
+                        <mtbDays>15</mtbDays>                       <!-- s0: 15, s1-2: 7.50, s3-4: 5.00, s5-6: 3-->
+                    </li>
+                    <li>
+                        <mentalBreak>Catatonic</mentalBreak>
+                        <mtbDays>60</mtbDays>                       <!-- s0: .., s1-2: 30.0, s3-4: 20.0, s5-6: 12-->
+                    </li>
+                    <li>
+                        <mentalBreak>RunWild</mentalBreak>
+                        <mtbDays>75</mtbDays>                       <!-- s0: .., s1-2: ...., s3-4: 25.0, s5-6: 15-->
+                    </li>
+                    <li>
+                        <mentalBreak>GiveUpExit</mentalBreak>
+                        <mtbDays>75</mtbDays>                       <!-- s0: .., s1-2: ...., s3-4: 25.0, s5-6: 15-->
+                    </li>
+                </thoughtBreaks>
+            </li>
+        </comps>
+    </HediffDef>
+
+    <!-- Vatshock memories of simulated life that confuse and disorient the pawn. -->
+    <!-- When these memories are at unsafe levels the pawn has a greatly increased chance of certain mental breaks occurring. Counseling these thoughts is the main method used to influence the vatshock hediff's severity and cure rate. -->
+    <!-- When a Counseled thought is added to a pawn that matches the expressed thought stage the thought worker adds 1-2 counseled tokens to the hediff, reduces the max expressible thought stage by this value. Once 6 tokens are collected vatshock memories are stabilized at a safe level and also provide a boost to the condition self-curing. -->
+    <ThoughtDef>
+        <defName>VatshockFlashback</defName>
+        <thoughtClass>Thought_Memory</thoughtClass>
+        <durationDays>3</durationDays>
+        <validWhileDespawned>true</validWhileDespawned>
+        <developmentalStageFilter>Adult</developmentalStageFilter>
+        <stages>
+            <li>
+                <label>foggy vat memories</label> <!-- safe level-->
+                <description>Foggy memories from the growth vat persist. Sometimes I feel like I'm back in the simulation and get a bit disoriented, but I'm pretty sure of who and where I am.</description>
+            </li>
+            <li>
+                <label>confusing vat memories</label> <!-- first counselable level-->
+                <description>I was grown in a vat? I'm still not sure about myself or this place. I have dreams and fading memories of another life that seemed so real.</description>
+                <baseMoodEffect>-10</baseMoodEffect>
+            </li>
+            <li>
+                <label>confusing vat memories</label>
+                <description>I was grown in a vat? I'm still not sure about myself or this place. I have dreams and fading memories of another life that seemed so real.</description>
+                <baseMoodEffect>-15</baseMoodEffect>
+            </li>
+            <li>
+                <label>strong vat memories</label>
+                <description>This place can't be real. The idea that I was grown in a vat isn't believable, is it? I remember so much of my life, even if the memories are hard to recall clearly.</description>
+                <baseMoodEffect>-20</baseMoodEffect>
+            </li>
+            <li>
+                <label>strong vat memories</label>
+                <description>This place can't be real. The idea that I was grown in a vat isn't believable, is it? I remember so much of my life, even if the memories are hard to recall clearly.</description>
+                <baseMoodEffect>-25</baseMoodEffect>
+            </li>
+            <li>
+                <label>overwhelming vat memories</label>
+                <description>These people are trying to brainwash me into believing my whole life was a lie. I must have been captured and now I'm being subjected to some kind of psychological torture. I know the story they are telling me is fake. I wasn't grown in a vat!</description>
+                <baseMoodEffect>-30</baseMoodEffect>
+            </li>
+            <li>
+                <label>overwhelming vat memories</label>
+                <description>These people are trying to brainwash me into believing my whole life was a lie. I must have been captured and now I'm being subjected to some kind of psychological torture. I know the story they are telling me is fake. I wasn't grown in a vat!</description>
+                <baseMoodEffect>-35</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>

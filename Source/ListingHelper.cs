@@ -1,9 +1,12 @@
-﻿using RimWorld;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace EnhancedGrowthVatLearning;
+namespace GrowthVatsOverclocked;
 
 internal static class ListingHelper
 {
@@ -22,6 +25,11 @@ internal static class ListingHelper
         //set up scrolling environment
         Rect innerContentRect = new(0f, 0f, viewRect.width - 20f, contentHeight);
         Rect viewBoundaryRect = new(0f, 0f, viewRect.width - 20f, viewRect.height);
+        if (contentHeight <= viewRect.height)
+        {
+            innerContentRect.width = viewRect.width;
+            viewBoundaryRect.width = viewRect.width;
+        }
 
         Widgets.BeginScrollView(viewRect, ref scrollPosition, innerContentRect);
 
@@ -42,7 +50,6 @@ internal static class ListingHelper
         scrollList.End();
         Widgets.EndScrollView();
     }
-
 
     public static void CheckboxLabeled(this Listing_Standard list, string label, ref bool checkOn, string tooltip, bool tooltipCoversButtonOnly)
     {
@@ -71,6 +78,14 @@ internal static class ListingHelper
         {
             list.CheckboxLabeled(label, ref checkOn, tooltip);
         }
+    }
+
+    internal static void TextFieldNumericLabeledTooltip<T>(this Listing_Standard list, string settingsLabel, ref T val, string tipSignal, ref string buffer, float min, float max)
+        where T : struct
+    {
+        Rect rect = list.GetRect(Text.LineHeight);
+        Widgets.TextFieldNumericLabeled(rect, $"{settingsLabel} ", ref val, ref buffer, min, max);
+        TooltipHandler.TipRegion(rect, tipSignal);
     }
 
 
@@ -179,5 +194,72 @@ internal static class ListingHelper
         Rect r = l.LabeledSliderWithTextField(label, ref valFloat, ref buffer, min, max, roundTo > 1 ? roundTo : 1, tooltip);
         val = (int)valFloat;
         return r;
+    }
+
+    public static void ListSelector(Rect inRect, ref int index, List<string> labelList, bool cycle = true)
+    {
+        Rect backBtnRect = inRect with { y = inRect.y + (inRect.height - 24f) / 2f, width = 24f, height = 24f };
+        if (Widgets.ButtonImage(backBtnRect, ContentFinder<Texture2D>.Get("UI/Widgets/ArrowLeft")))
+        {
+            if (index == 0)
+                index = cycle ? labelList.Count - 1 : index;
+            else
+                index--;
+        }
+
+        Rect fwdBtnRect = backBtnRect with { x = inRect.xMax - 24f };
+        if (Widgets.ButtonImage(fwdBtnRect, ContentFinder<Texture2D>.Get("UI/Widgets/ArrowRight")))
+        {
+            if (index == labelList.Count - 1)
+                index = cycle ? 0 : index;
+            else
+                index++;
+        }
+
+        Rect labelRect = new(backBtnRect.xMax + 2f, inRect.y, inRect.width - 52f, inRect.height);
+        TextAnchor anchor = Text.Anchor;
+        Text.Anchor = TextAnchor.MiddleCenter;
+        Widgets.Label(labelRect, labelList[index].Translate());
+        Text.Anchor = anchor;
+    }
+
+    public static void EnumSelector<T>(Rect inRect, ref T enumValue, List<T> disallowedValues = null, bool cycle = true) where T : Enum
+    {
+        List<string> labelList = disallowedValues == null
+                                     ? Enum.GetNames(typeof(T)).ToList()
+                                     : Enum.GetNames(typeof(T)).Where(n => !disallowedValues.Contains((T)Enum.Parse(typeof(T), n))).ToList();
+
+        int selectedIndex = Mathf.Max(labelList.IndexOf(Enum.GetName(typeof(T), enumValue)), 0);
+
+        ListSelector(inRect, ref selectedIndex, labelList, cycle);
+
+        enumValue = (T)Enum.Parse(typeof(T), labelList[selectedIndex]);
+    }
+}
+
+public class Listing_Tabbed : Listing_Standard
+{
+    private List<TabRecord> _tabs;
+    private Rect _tabRect;
+
+    public Listing_Standard BeginTabSection(List<TabRecord> tabs)
+    {
+        _tabs = tabs;
+        //reserve remaining space for content in main listing
+        _tabRect = GetRect(TabDrawer.TabHeight);
+        _tabRect.yMin += TabDrawer.TabHeight; //shift down by tab size
+        //start content listing. we reduced it's space at the top
+        //to give tabs a position to spawn. We draw the tabs later so their
+        //graphics overlay the section box and merge nicely
+        Rect contentRectInner = listingRect.ContractedBy(4f);
+        Listing_Standard section = BeginSection(contentRectInner.height - curY);
+        return section;
+    }
+
+    public void EndTabSection(Listing_Standard tabSectionList)
+    {
+        EndSection(tabSectionList);
+        //draw tabs now after content to blend the top
+        TabDrawer.DrawTabs(_tabRect, _tabs, 500f);
     }
 }

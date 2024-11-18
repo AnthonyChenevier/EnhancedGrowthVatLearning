@@ -4,7 +4,7 @@ A mod that adds features to increase the learning rate of children being grown i
 [hr][/hr]
 The current [url=https://store.steampowered.com/news/app/294100/view/5940838760383806768]unstable branch[/url] of RW changes a few things that this mod doesn't handle (growth speed sticks at 20x, for one)
 As the changes aren't backwards compatible and I don't think RW's version number will change, I'm holding off on releasing my own update on steam until I know more.
-If you're on the unstable branch I have an active dev branch on GitHub [url=https://github.com/AnthonyChenevier/EnhancedGrowthVatLearning/tree/dev]Here[/url].
+If you're on the unstable branch I have an active dev branch on GitHub [url=https://github.com/AnthonyChenevier/GrowthVatsOverclocked/tree/dev]Here[/url].
 As soon as the changes to RW go live this mod will be updated to match, so if you're not on unstable you have nothing to worry about :)
 
 [h3]Intro[/h3]
@@ -61,6 +61,6 @@ See [url=https://steamcommunity.com/workshop/filedetails/discussion/2887084050/3
 
 [h3]Links[/h3]
 [hr][/hr]
-[url=https://github.com/AnthonyChenevier/EnhancedGrowthVatLearning]Github[/url]
+[url=https://github.com/AnthonyChenevier/GrowthVatsOverclocked]Github[/url]
 
 Thanks for using my mods :D

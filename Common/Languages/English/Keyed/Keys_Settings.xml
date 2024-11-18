@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- Settings -->
+    <GrowthVatsOverclockedSettings>Growth Vats: Overclocked</GrowthVatsOverclockedSettings>
+    <ResetToDefaults_Button>Reset to defaults</ResetToDefaults_Button>
+    <ResetToDefaults_Tooltip>Reset all mod settings to default values.</ResetToDefaults_Tooltip>
+    <RemoveMod_Button>Remove mod</RemoveMod_Button>
+    <RemoveMod_Tooltip>Only works if a game is loaded (not on the main menu).\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</RemoveMod_Tooltip>
+    <AreYouSureModRemoval_Dialog>Are you sure you want to remove Enhanced Growth Vat Learning from your game? Selecting 'OK' will:\n\n- Turn off enhanced learning for all vats on all maps.\n- Set all pawns with custom backstories from this mod to have the vanilla 'vatgrown child' backstory.\n- Remove growth tracker repository from world components so it won't be saved and throw another error on reload.\n\nAfter saving, disabling mod in main menu, then re-loading, log will show a number of harmless errors about the mod research projects and techprints being missing which can be safely ignored (these won't show up again after another save-reload cycle).</AreYouSureModRemoval_Dialog>
+
+    <MainSettings_TabLabel>Global Settings</MainSettings_TabLabel>
+
+    <learningNeedVariance_SettingsLabel>Learning need max variance</learningNeedVariance_SettingsLabel>
+    <learningNeedVariance_Tooltip>The learning need of enhanced vat occupants can vary by a random amount up to this value a set number of times per day. This simulates the occupants doing different tasks or doing very well or badly with their studies.\n\nA higher value here can cause much more variation in the Growth Tier achieved at each growth moment.</learningNeedVariance_Tooltip>
+
+    <learningNeedDailyChangeRate_SettingsLabel>Learning need change rate</learningNeedDailyChangeRate_SettingsLabel>
+    <learningNeedDailyChangeRate_Tooltip>How many times a day to recalculate the learning need for enhanced vat occupants. This can be used to balance the variance rate to make the results more or less predictable over time.</learningNeedDailyChangeRate_Tooltip>
+
+    <generateBackstories_SettingsLabel>Generate custom mode-specific backstories for vatgrown pawns?</generateBackstories_SettingsLabel>
+    <generateBackstories_Tooltip>Toggle if vat time is tracked and used to generate mode-specific backstories when pawns reach teen-age. Hint: Check the pawn's stats while they are children to see tracked time if this is active.</generateBackstories_Tooltip>
+
+    <vatDaysForBackstory_SettingsLabel>Simulated days required for mode backstory</vatDaysForBackstory_SettingsLabel>
+    <vatDaysForBackstory_Tooltip>The number of *simulated* days a child must be in a growth vat in total before it tries to generate a mode-specific backstory when they reach their last growth moment.\n\The default value of 400 days matches the vanilla 'vatgrown child' backstory requirement and is just over half of the maximum amount of time an occupant could spend in the vat before that point (780 days or 13 RW years).</vatDaysForBackstory_Tooltip>
+
+    <overclockedPowerConsumption_SettingsLabel>Overclocked power consumption (Watts)</overclockedPowerConsumption_SettingsLabel>
+    <overclockedPowerConsumption_Tooltip>Power consumption when vat overclocking is enabled.</overclockedPowerConsumption_Tooltip>
+
+    <vatLearningHediffSeverityPerDay_SettingsLabel>Skill gain rate</vatLearningHediffSeverityPerDay_SettingsLabel>
+    <vatLearningHediffSeverityPerDay_Tooltip>The rate at which the 'Enhanced Vat Learning' hediff advances. When the hediff hits 100% the vat occupant receives a set amount of XP in a random skill selected by the learning mode. Default value of 3 will reach 100% 3 times a day - use mode specific settings to tune skills further.</vatLearningHediffSeverityPerDay_Tooltip>
+
+    <ModeSettings_TabLabel>Learning Suite Settings</ModeSettings_TabLabel>
+
+    <ModeLearningNeed_SettingsLabel>{0} mode learning need</ModeLearningNeed_SettingsLabel>
+    <ModeLearningNeed_Tooltip>Learning need is set to this level for vat occupants in {0} mode.</ModeLearningNeed_Tooltip>
+
+    <ModeVatAgingFactor_SettingsLabel>{0} mode aging factor</ModeVatAgingFactor_SettingsLabel>
+    <ModeVatAgingFactor_Tooltip>Vat growth multiplier for {0} mode. Vanilla vat occupants grow at a rate of 20x. Slower growth speed provides more time to learn skills. Growth points averages over growth time are unaffected.</ModeVatAgingFactor_Tooltip>
+
+    <ModeSkillXP_SettingsLabel>Skill XP awarded in {0} mode</ModeSkillXP_SettingsLabel>
+    <ModeSkillXP_Tooltip>How much skill experience to award each time the 'Enhanced Vat Learning' hediff reaches 100% in {0} mode</ModeSkillXP_Tooltip>
+
+    <ModeSkillWeights_SettingsLabel>{0} mode skill selection weights</ModeSkillWeights_SettingsLabel>
+    <ModeSkillWeights_Tooltip>Selection weights for each skill in {0} mode. Change this to influence which skills are randomly given experience during training.</ModeSkillWeights_Tooltip>
+</LanguageData>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <EjectTimerLabel>eject timer</EjectTimerLabel>
+    <EjectTimerDesc>Ejects the registered occupant from the vat when the timer elapses. Note: occupants will be ejected at 18 years old regardless of this.</EjectTimerDesc>
+
+    <RecallTimerLabel>recall timer</RecallTimerLabel>
+    <RecallTimerDesc>Recalls the registered occupant back to the vat when the timer elapses.</RecallTimerDesc>
+
+    <NoStartReason_NoAssignedPawn>No registered occupant for this vat</NoStartReason_NoAssignedPawn>
+
+    <NoStartReason_VatEmpty>No occupant in growth vat</NoStartReason_VatEmpty>
+
+    <NoStartReason_PawnNotOnMap>{PAWN} is not on the same map as the growth vat</NoStartReason_PawnNotOnMap>
+    <NoStartReason_PawnInVat>{PAWN} is already in the growth vat</NoStartReason_PawnInVat>
+    <NoStartReason_PawnHeld>{PAWN} is being held by {0}</NoStartReason_PawnHeld>
+</LanguageData>

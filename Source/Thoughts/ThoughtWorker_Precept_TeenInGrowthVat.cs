@@ -1,6 +1,6 @@
 ﻿// ThoughtWorker_Precept_TeenInGrowthVat.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/17 7:53 PM
 // Last edited by: Anthony Chenevier on 2022/11/17 7:53 PM
@@ -11,7 +11,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace EnhancedGrowthVatLearning.Thoughts;
+namespace GrowthVatsOverclocked.Thoughts;
 
 public class ThoughtWorker_Precept_TeenInGrowthVat : ThoughtWorker_Precept
 {

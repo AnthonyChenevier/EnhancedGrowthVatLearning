@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FC41E232-A864-437B-8A66-32A408DC6EB1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GrowthVatsOverclocked</RootNamespace>
+    <AssemblyName>GrowthVatsOverclocked</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\v1.5\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\v1.4\Assemblies\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_1.3|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\v1.3\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CountdownTimers\ICountdownTimerParent.cs" />
+    <Compile Include="CountdownTimers\CountdownTimerSettings.cs" />
+    <Compile Include="CountdownTimers\TimerSettingsClipboard.cs" />
+    <Compile Include="GrowthVatsOverclockedMod.cs" />
+    <Compile Include="GrowthVatsOverclockedSettings.cs" />
+    <Compile Include="Data\LearningMode.cs" />
+    <Compile Include="Data\GVODefOf.cs" />
+    <Compile Include="GrowthTracker\GrowthTrackerRepository.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_Building_GrowthVat.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_ChoiceLetter_GrowthMoment.cs" />
+    <Compile Include="ClassExtensions\ClassExtensions.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_Pawn_AgeTracker.cs" />
+    <Compile Include="CountdownTimers\ITab_CountdownTimers.cs" />
+    <Compile Include="CountdownTimers\CountdownTimer.cs" />
+    <Compile Include="VatExtensions\CompAssignableToPawn_GrowthVat.cs" />
+    <Compile Include="CountdownTimers\CompCountdownTimerOwner.cs" />
+    <Compile Include="VatExtensions\CompCountdownTimerOwner_GrowthVat.cs" />
+    <Compile Include="VatExtensions\VatOwnershipRepository.cs" />
+    <Compile Include="Vatshock\HediffComp_Vatshock.cs" />
+    <Compile Include="Vatshock\HediffComp_SeverityFromVatExposure.cs" />
+    <Compile Include="Vatshock\HediffComp_SeverityFromChildhoodEvent.cs" />
+    <Compile Include="DefModExtension_HediffTickInGrowthVat.cs" />
+    <Compile Include="HediffGivers\HediffGiver_CauseHediffSeverityBase.cs" />
+    <Compile Include="HediffGivers\HediffGiver_OnVatExit.cs" />
+    <Compile Include="HediffGivers\HediffGiver_RandomFromCauseSeverity.cs" />
+    <Compile Include="Vatshock\HediffComp_MentalBreaksFromThoughtStage.cs" />
+    <Compile Include="ClassExtensions\ClassExtension_BackCompatibility.cs" />
+    <Compile Include="Data\ModSettingsData.cs" />
+    <Compile Include="Drugs\Hediff_LevelWithComps.cs" />
+    <Compile Include="Drugs\IngestionOutcomeDoer_GiveHediff_Level.cs" />
+    <Compile Include="ListingHelper.cs" />
+    <Compile Include="GrowthTracker\StatWorker_VatTime.cs" />
+    <Compile Include="VatExtensions\CompOverclockedGrowthVat.cs" />
+    <Compile Include="VatExtensions\HediffComp_VatGrowingExtended.cs" />
+    <Compile Include="VatExtensions\HediffComp_OverclockedVatLearning.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VatExtensions\CompPowerMulti.cs" />
+    <Compile Include="Thoughts\ThoughtWorker_Precept_ChildVatModes.cs" />
+    <Compile Include="Thoughts\ThoughtWorker_Precept_TeenInGrowthVat.cs" />
+    <Compile Include="GrowthTracker\VatGrowthTracker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Lib.Harmony.2.2.2\lib\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HotSwap">
+      <HintPath>C:\steam\steamapps\common\RimWorld\Mods\HotSwap\Assemblies\HotSwap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ISharpZipLib">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\ISharpZipLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Mono.Posix.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Mono.Security.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>C:\steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(ProjectDir)Install.bat" "C:\steam\steamapps\common\RimWorld" $(ConfigurationName) "$(ProjectDir)" "$(ProjectName)" "About Common v1.4 v1.5" "LoadFolders.xml"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

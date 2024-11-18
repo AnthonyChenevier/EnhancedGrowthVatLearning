@@ -2,7 +2,7 @@
 <Defs>
     <StatDef>
         <defName>VatGrowthTime</defName>
-        <workerClass>EnhancedGrowthVatLearning.Stats.StatWorker_VatTime</workerClass>
+        <workerClass>GrowthVatsOverclocked.GrowthTracker.StatWorker_VatTime</workerClass>
         <label>simulated growth vat time</label>
         <description>Simulated time experienced in growth vats</description>
         <category>PawnMisc</category>

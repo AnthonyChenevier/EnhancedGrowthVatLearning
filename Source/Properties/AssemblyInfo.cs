@@ -1,9 +1,9 @@
 ﻿// AssemblyInfo.cs
 // 
-// Part of EnhancedGrowthVatLearning - EnhancedGrowthVatLearning
+// Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
 // Created by: Anthony Chenevier on 2022/11/03 2:57 AM
-// Last edited by: Anthony Chenevier on 2022/11/11 5:02 PM
+// Last edited by: Anthony Chenevier on 2022/12/30 10:56 AM
 
 
 using System.Reflection;
@@ -12,11 +12,11 @@ using System.Runtime.InteropServices;
 // 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
 // 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
 // 이러한 특성 값을 변경하세요.
-[assembly: AssemblyTitle("EnhancedGrowthVatLearning")]
+[assembly: AssemblyTitle("GrowthVatsOverclocked")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EnhancedGrowthVatLearning")]
+[assembly: AssemblyProduct("GrowthVatsOverclocked")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
