@@ -17,7 +17,9 @@
 		</li>
     </modDependencies>
     <description>
-    <![CDATA[A mod that adds reseach to overclock and upgrade Growth Vats to increase the learning rate of children being grown in them to be nearly as good as growing in the real (Rim)world, and optionally train them in specific skill sets. Also includes optional mechanics making growth vats a more engaging gameplay experience.
+    <![CDATA[A mod that adds reseach to overclock and upgrade Growth Vats to increase the learning rate of children being grown in them to be nearly as good as growing in the real (Rim)world, and optionally train them in specific skill sets. Also includes optional mechanics making growth vats a more engaging gameplay experience. 
+	
+	Now with 1.5 support and Vatshock (beware of growing too fast...)!
     
 See the longer description on the steam workshop for more details]]></description>
 </ModMetaData>
