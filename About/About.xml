@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-    <name>Growth Vats: Overclocked (previously Enhanced Growth Vat Learning)</name>
+    <name>Growth Vats: Overclocked</name>
     <author>MakeItSo</author>
-    <packageId>com.makeitso.GrowthVatsOverclocked</packageId>
+    <packageId>com.makeitso.enhancedgrowthvatlearning</packageId>
     <url>https://github.com/AnthonyChenevier/GrowthVatsOverclocked</url>
     <supportedVersions>
         <li>1.4</li>
