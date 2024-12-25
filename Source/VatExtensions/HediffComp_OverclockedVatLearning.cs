@@ -73,7 +73,7 @@ public class HediffComp_OverclockedVatLearning : HediffComp
         SkillRecord skill = skillTracker.skills.Where(s => !s.TotallyDisabled && skillsMatrix.ContainsKey(s.def.defName))
                                         .RandomElementByWeight(s => Mathf.Pow(skillsMatrix[s.def.defName], 2));
 
-        float modeXPToAward = mode.Settings().skillXP * LearningUtility.LearningRateFactor(Parent.pawn);
+        float modeXPToAward = mode.Settings().skillXP * Parent.pawn.GetStatValue(StatDefOf.LearningRateFactor);
         skill.Learn(modeXPToAward, true);
     }
 
