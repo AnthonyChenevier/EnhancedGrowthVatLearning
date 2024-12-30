@@ -84,6 +84,7 @@
         <hediffGivers>
             <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_RandomFromCauseSeverity">
                 <hediff>VatJuicePain</hediff>
+                <checkSetting>allowVatjuicePain</checkSetting>
                 <minAge>13</minAge>
                 <minCauseSeverity>1</minCauseSeverity>
                 <causeSeverityMtbDaysCurve>
@@ -118,13 +119,22 @@
         </stages>
     </HediffDef>
 
-    <HediffDef>
+    <HediffDef ParentName="DiseaseBase">
         <defName>VatJuicePain</defName>
         <label>vatjuice growing pains</label>
         <description>Physical pain caused by sustained use of vat-juice to accelerate vat growth. High lifetime dosage increases the severity of the condition. Symptoms include pain, vomiting and reduced physical and mental abilities. While the effect is long-lasting if left untreated, sustained medical attention will reduce symptoms and cure the condition after a few treatments.</description>
         <descriptionShort>Physical after-effects of accelerated growth in a vat using vat-juice, including generalized pain, nausea and reduced physical capabilities.</descriptionShort>
+        <minSeverity>0</minSeverity>
         <maxSeverity>1</maxSeverity>
+        <tendable>true</tendable>
         <makesSickThought>true</makesSickThought>
+        <comps>
+            <li Class="HediffCompProperties_TendDuration">
+                <baseTendDurationHours>24</baseTendDurationHours>
+                <tendOverlapHours>2</tendOverlapHours>
+                <severityPerDayTended>-.15</severityPerDayTended>
+            </li>
+        </comps>
         <stages>
             <li>
                 <label>minor</label>

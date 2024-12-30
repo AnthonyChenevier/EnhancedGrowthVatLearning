@@ -41,4 +41,10 @@
 
     <ModeSkillWeights_SettingsLabel>{0} mode skill selection weights</ModeSkillWeights_SettingsLabel>
     <ModeSkillWeights_Tooltip>Selection weights for each skill in {0} mode. Change this to influence which skills are randomly given experience during training.</ModeSkillWeights_Tooltip>
+
+    <vatshock_SettingsLabel>Enable/Disable Vatshock</vatshock_SettingsLabel>
+    <vatshock_Tooltip>Enables or disables Vatshock. Does not retroactively remove from affected pawns - Just use debug mode to remove if required.</vatshock_Tooltip>
+
+    <vatjuicePain_SettingsLabel>Enable/Disable Vatjuice growing pains</vatjuicePain_SettingsLabel>
+    <vatjuicePain_Tooltip>Enables or disables 'Vatjuice growing pains' disease. Does not retroactively remove from affected pawns - Just use debug mode to remove if required.</vatjuicePain_Tooltip>
 </LanguageData>

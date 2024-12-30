@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using GrowthVatsOverclocked.Data;
 using GrowthVatsOverclocked.VatExtensions;
 using RimWorld;
@@ -148,6 +149,11 @@ public class GrowthVatsOverclockedSettings : ModSettings
                                                   100000f);
 
         scrollView.GapLine();
+
+        scrollView.CheckboxLabeled("vatshock_SettingsLabel".Translate(), ref Data.allowVatshock, "vatshock_Tooltip".Translate());
+        scrollView.CheckboxLabeled("vatjuicePain_SettingsLabel".Translate(), ref Data.allowVatjuicePain, "vatjuicePain_Tooltip".Translate());
+
+        scrollView.GapLine();
     }
 
     private void DoModeSettingsSection(Listing_Standard scrollView)
@@ -271,5 +277,11 @@ public class GrowthVatsOverclockedSettings : ModSettings
             HediffComp_OverclockedVatLearning.SetGlobalSetting_SeverityPerDay(Data.learningHediffRate);
             SettingLearningRateDirty = false;
         }
+    }
+
+    public bool CheckBoolSetting(string setting)
+    {
+        FieldInfo info = typeof(ModSettingsData).GetField(setting);
+        return info != null && (bool)info.GetValue(Data);
     }
 }

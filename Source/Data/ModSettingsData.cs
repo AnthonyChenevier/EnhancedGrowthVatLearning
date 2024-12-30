@@ -2,8 +2,8 @@
 // 
 // Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
-// Created by: Anthony Chenevier on 2023/01/03 8:34 PM
-// Last edited by: Anthony Chenevier on 2023/01/03 8:34 PM
+// Created by: Anthony Chenevier on 2024/11/18 11:43 PM
+// Last edited by: Anthony Chenevier on 2024/12/30 6:46 PM
 
 
 using System.Collections.Generic;
@@ -17,8 +17,8 @@ public class ModSettingsData
     {
         public float baseLearningNeed;
         public int growthSpeed;
-        public float skillXP;
         public Dictionary<string, float> skillSelectionWeights;
+        public float skillXP;
 
         public void ExposeData()
         {
@@ -37,6 +37,17 @@ public class ModSettingsData
         }
     }
 
+    public bool allowVatjuicePain;
+
+    public bool allowVatshock;
+
+    public bool generateBackstories;
+
+    public float learningHediffRate;
+    public int learningNeedDailyChangeRate;
+
+    public float learningNeedVariance;
+
     public Dictionary<LearningMode, LearningModeSettings> modeSettings = new()
     {
         { LearningMode.Default, new LearningModeSettings() },
@@ -46,18 +57,8 @@ public class ModSettingsData
         { LearningMode.Play, new LearningModeSettings() },
     };
 
-    public float learningNeedVariance;
-    public int learningNeedDailyChangeRate;
-
     public float overclockedPowerConsumption;
-
-    public bool generateBackstories;
     public float vatDaysForBackstory;
-
-    public float learningHediffRate;
-
-    public bool allowVatshock;
-    public bool allowVatjuicePain;
 
     public ModSettingsData() { SetDefaults(); }
 
@@ -74,7 +75,7 @@ public class ModSettingsData
         learningHediffRate = 3f;
 
         allowVatshock = true;
-        allowVatjuicePain = false;
+        allowVatjuicePain = true;
 
         modeSettings[LearningMode.Default].SetDefaults(0.7f,
                                                        18,
@@ -183,6 +184,9 @@ public class ModSettingsData
 
         Scribe_Values.Look(ref generateBackstories, nameof(generateBackstories));
         Scribe_Values.Look(ref vatDaysForBackstory, nameof(vatDaysForBackstory));
+
+        Scribe_Values.Look(ref allowVatshock, nameof(allowVatshock));
+        Scribe_Values.Look(ref allowVatjuicePain, nameof(allowVatjuicePain));
 
         Scribe_Values.Look(ref learningHediffRate, nameof(learningHediffRate));
     }

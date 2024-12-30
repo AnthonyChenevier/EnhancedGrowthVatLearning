@@ -14,6 +14,7 @@ namespace GrowthVatsOverclocked.HediffGivers;
 public class HediffGiver_RandomFromCauseSeverity : HediffGiver_CauseHediffSeverityBase
 {
     public SimpleCurve causeSeverityMtbDaysCurve; //cause severity -> mtbDays
+    private string checkSetting;
 
     public override void OnIntervalPassed(Pawn pawn, Hediff cause)
     {
@@ -24,5 +25,11 @@ public class HediffGiver_RandomFromCauseSeverity : HediffGiver_CauseHediffSeveri
 
         ApplyCauseSeverity(pawn, cause);
         SendLetter(pawn, cause);
+    }
+
+    protected override bool CanApply(Pawn pawn, Hediff cause)
+    {
+        bool b = GrowthVatsOverclockedMod.Settings.CheckBoolSetting(checkSetting);
+        return b && base.CanApply(pawn, cause);
     }
 }

@@ -18,6 +18,7 @@
         <hediffGivers>
             <li Class="GrowthVatsOverclocked.HediffGivers.HediffGiver_RandomFromCauseSeverity">
                 <hediff>VatshockHediff</hediff>
+                <checkSetting>allowVatshock</checkSetting>
                 <minAge>13</minAge> <!-- kids can get out of vat with no chance of breaking -->
                 <minCauseSeverity>0.5</minCauseSeverity> <!-- default growth pawns won't cause issues -->
                 <partsToAffect>

@@ -1,4 +1,4 @@
-﻿// Hediff_TimedLevel.cs
+﻿// Hediff_LevelWithComps.cs
 // 
 // Part of GrowthVatsOverclocked - GrowthVatsOverclocked
 // 
