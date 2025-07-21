@@ -85,7 +85,6 @@
         </comps>
     </HediffDef>
 
-
     <!-- Vatshock is a psychological disorder that randomly causes low mood and greater risk of certain mental breaks when the pawn is affected by flashbacks of vat life and paranoia. The condition's initial severity is linked to vatgrowth exposure severity and lasts indefinitely, but can be cured through two different mechanisms - a low chance of curing itself when the pawn acts on an inspiration, or a very low chance of it curing itself with a sustained high mood over long periods. Both mechanisms' chances are heavily reduced by bad vatshock memories, so the Counsel ability is an important part of managing the condition. Once memories and mood swings are stabilized the chance of the condition self-curing is greatly increased, as well as reducing the chance of breaks occurring. -->
     <HediffDef>
         <defName>VatshockHediff</defName>
