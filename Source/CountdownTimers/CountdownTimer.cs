@@ -149,10 +149,11 @@ public class CountdownTimer : IExposable
         if (parent != null)
             return parent.ValidateSettings(newSpanAmount, newSpanType, newTickType);
 
-        if (!IsClipboard)
-            Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
+        if (IsClipboard)
+            return true;
 
-        return false;
+        Log.Error("GrowthVatsOverclocked :: Attempted to access null timer parent. Using default values. ");
+        return "No timer owner or non-clipboard timer incorrectly accessed";
     }
 
     public void Set(float newSpanAmount, SpanType newSpanType, TickType newTickType, bool showMessage = false)
