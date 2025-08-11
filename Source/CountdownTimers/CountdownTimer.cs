@@ -58,6 +58,8 @@ public class CountdownTimer : IExposable
     public bool IsEnabled => enabled;
     public bool IsRunning => startTick >= 0;
     private bool IsClipboard => name == "_";
+    public string Name => name;
+
     public int TicksRemaining => Mathf.Max(startTick + countdownTicks - ParentTicks(), 0);
 
     public string CurrentSetting => $"{countdownTicks.ToStringTicksToPeriod()} ({tickType.ToString().Translate()})";
@@ -119,8 +121,6 @@ public class CountdownTimer : IExposable
             return "TimerStopped".Translate(stoppedReason).Colorize(ColorLibrary.RedReadable);
         }
     }
-
-    public string Name => name;
 
     //used for copy-paste only
     internal CountdownTimer() : this(null, "_", null) { }

@@ -54,13 +54,16 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
     }
 
     public override IEnumerable<CountdownTimerSettings> GetSettings() =>
-        settings ??= new List<CountdownTimerSettings> { new(ejectCountdownTimer), new(recallCountdownTimer, CountdownTimer.TickType.VatTimeTick) };
+        settings ??= [new CountdownTimerSettings(ejectCountdownTimer), new CountdownTimerSettings(recallCountdownTimer, CountdownTimer.TickType.VatTimeTick)];
 
     public override AcceptanceReport TimerCanStart(CountdownTimer timer)
     {
         Pawn pawn = AssignedPawn;
         if (pawn == null || pawn.Dead)
             return "NoStartReason_NoAssignedPawn".Translate();
+
+        if (CompAssignableToPawn_GrowthVat.IsPawnNewborn(pawn))
+            return "NoStartReason_PawnIsNewborn".Translate();
 
         if (timer == ejectCountdownTimer && !Vat.innerContainer.Contains(pawn))
             return "NoStartReason_VatEmpty".Translate();
@@ -75,12 +78,7 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
             else //!Spawned
             {
                 if (pawn.ParentHolder is { } holder)
-                {
-                    if (holder == Vat)
-                        return "NoStartReason_PawnInVat".Translate(pawn.Named("PAWN"));
-
-                    return "NoStartReason_PawnHeld".Translate(pawn.Named("PAWN"), (Thing)holder);
-                }
+                    return holder == Vat ? "NoStartReason_PawnInVat".Translate(pawn.Named("PAWN")) : "NoStartReason_PawnHeld".Translate(pawn.Named("PAWN"), (Thing)holder);
             }
         }
 
@@ -139,6 +137,8 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
         };
     }
 
+    public override void Clear() { }
+
 
     //timed action methods
     private void EjectCallback()
@@ -156,15 +156,29 @@ public class CompCountdownTimerOwner_GrowthVat : CompCountdownTimerOwner
     //hooks for vat entrance and exit
     public void Notify_PawnEnteredVat()
     {
-        if (recallCountdownTimer.IsRunning)
-            recallCountdownTimer.Stop();
+        //if (CompAssignableToPawn_GrowthVat.IsPawnNewborn(AssignedPawn))
+        //{
+        //    ejectCountdownTimer.Stop();
+        //    recallCountdownTimer.Stop();
+        //    return;
+        //}
 
         if (ejectCountdownTimer.IsEnabled)
             ejectCountdownTimer.Start();
+
+        if (recallCountdownTimer.IsRunning)
+            recallCountdownTimer.Stop();
     }
 
     public void Notify_PawnExitedVat()
     {
+        //if (CompAssignableToPawn_GrowthVat.IsPawnOverage(AssignedPawn))
+        //{
+        //    ejectCountdownTimer.Stop();
+        //    recallCountdownTimer.Stop();
+        //    return;
+        //}
+
         if (ejectCountdownTimer.IsRunning)
             ejectCountdownTimer.Stop();
 

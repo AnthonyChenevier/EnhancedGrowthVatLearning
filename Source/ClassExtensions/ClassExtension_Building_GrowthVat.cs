@@ -23,7 +23,7 @@ public static class ClassExtension_Building_GrowthVat
 {
     //Public Accessors
     public static void FinishPawn_Public(this Building_GrowthVat vat) =>
-        typeof(Building_GrowthVat).GetMethod("FinishPawn", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod).Invoke(vat, null);
+        typeof(Building_GrowthVat).GetMethod("FinishPawn", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod)?.Invoke(vat, null);
 
 
     //Harmony Patches 

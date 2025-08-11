@@ -7,6 +7,7 @@
     <RecallTimerDesc>Recalls the registered occupant back to the vat when the timer elapses.</RecallTimerDesc>
 
     <NoStartReason_NoAssignedPawn>No registered occupant for this vat</NoStartReason_NoAssignedPawn>
+    <NoStartReason_PawnIsNewborn>Newborns are not subject to vat timers</NoStartReason_PawnIsNewborn>
 
     <NoStartReason_VatEmpty>No occupant in growth vat</NoStartReason_VatEmpty>
 

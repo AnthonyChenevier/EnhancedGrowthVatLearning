@@ -9,7 +9,6 @@
 // Last edited by: Anthony Chenevier on 2023/03/02 1:01 PM
 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -29,6 +28,9 @@ public class CompAssignableToPawn_GrowthVat : CompAssignableToPawn
     public Pawn AssignedPawn => AssignedPawns.FirstOrDefault();
 
 
+    public static bool IsPawnOverage(Pawn pawn) => pawn.ageTracker.AgeBiologicalYearsFloat >= MaxVatAge;
+    public static bool IsPawnNewborn(Pawn pawn) => pawn.ageTracker.CurLifeStage == LifeStageDefOf.HumanlikeBaby;
+
     //CompAssignableToPawn method overrides
     protected override bool ShouldShowAssignmentGizmo() => false; //unused
     public override AcceptanceReport CanAssignTo(Pawn pawn)
@@ -36,8 +38,8 @@ public class CompAssignableToPawn_GrowthVat : CompAssignableToPawn
       if (Vat.selectedEmbryo != null)
         return "EmbryoSelected".Translate();
 
-      if (pawn.ageTracker.AgeBiologicalYearsFloat >= MaxVatAge)
-        return "TooOld".Translate(pawn.Named("PAWN"), MaxVatAge.Named("AGEYEARS"));
+      if (IsPawnOverage(pawn))
+          return "TooOld".Translate(pawn.Named("PAWN"), MaxVatAge.Named("AGEYEARS"));
       
       return pawn.IsColonist && !pawn.IsQuestLodger();
     }

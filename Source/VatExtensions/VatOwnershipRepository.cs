@@ -26,7 +26,7 @@ public static class Pawn_Ownership_HarmonyPatch
 
 public static class Pawn_OwnershipExtensions
 {
-    public static Pawn Pawn(this Pawn_Ownership ownership) => (Pawn)typeof(Pawn_Ownership).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ownership);
+    private static Pawn Pawn(this Pawn_Ownership ownership) => (Pawn)typeof(Pawn_Ownership).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(ownership);
 
     public static bool ClaimGrowthVat(this Pawn_Ownership own, Building_GrowthVat newVat) => GrowthVatsOverclockedMod.VatOwnership.ClaimGrowthVat(own.Pawn(), newVat);
     public static bool UnclaimGrowthVat(this Pawn_Ownership own) => GrowthVatsOverclockedMod.VatOwnership.UnclaimGrowthVat(own.Pawn());
@@ -41,19 +41,15 @@ public class VatOwnershipRepository : WorldComponent
 
     private void SetAssignedGrowthVat(Pawn ownerPawn, Building_GrowthVat vat)
     {
-        if (vat == null)
-        {
-            vatAssignedPawns.Remove(ownerPawn);
-            return;
-        }
-
-        if (vatAssignedPawns.ContainsKey(ownerPawn))
+        if (vat != null)
             vatAssignedPawns[ownerPawn] = vat;
         else
-            vatAssignedPawns.Add(ownerPawn, vat);
+            vatAssignedPawns.Remove(ownerPawn);
     }
 
+    //required for loading saves. Don't delete even though it has no references.
     public VatOwnershipRepository(World world) : base(world) { }
+
     public VatOwnershipRepository() : base(Find.World) { }
 
     public bool ClaimGrowthVat(Pawn ownerPawn, Building_GrowthVat newVat)

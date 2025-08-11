@@ -35,6 +35,8 @@ public abstract class CompCountdownTimerOwner : ThingComp, ICountdownTimerParent
             timedAction.Check();
     }
 
+    public abstract void Clear();
+
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
         if (TimerTabVisible)

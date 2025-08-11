@@ -11,6 +11,7 @@ using System.Reflection;
 using GrowthVatsOverclocked.VatExtensions;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace GrowthVatsOverclocked.ClassExtensions;
@@ -22,9 +23,15 @@ public static class ClassExtension_Pawn_AgeTracker
     [HarmonyPatch("BirthdayBiological")]
     public static void BirthdayBiological_Prefix(Pawn ___pawn, int birthdayAge)
     {
+        if (___pawn.ownership.AssignedGrowthVat() == null)
+            return;
+
         //remove ownership of vat if over 18
-        if (birthdayAge >= 18f && ___pawn.ownership.AssignedGrowthVat() != null)
+        if (birthdayAge >= 18f)
             ___pawn.ownership.UnclaimGrowthVat();
+
+        if (Mathf.Approximately(birthdayAge, ___pawn.ageTracker.LifeStageMinAge(LifeStageDefOf.HumanlikeChild)))
+            ___pawn.ownership.AssignedGrowthVat().GetComp<CompCountdownTimerOwner_GrowthVat>().Notify_PawnEnteredVat();
     }
 
     //override to use enhanced growth point rate if enhanced learning is enabled, and to modify
@@ -43,7 +50,7 @@ public static class ClassExtension_Pawn_AgeTracker
 
         //if overclocking is enabled, get normal growth point value for learning need level and scale it by the daily growth point factor (comp growth speed/child aging rate).
         //Run it through the GrowthPointsPerDayAtLearningLevel method to scale result for storyteller settings and age like natural aged kids' need.
-        return (float)methodInfo.Invoke(__instance, new object[] { learning.CurLevel * (comp.StatDerivedGrowthSpeed / Find.Storyteller.difficulty.childAgingRate) });
+        return (float)methodInfo.Invoke(__instance, [learning.CurLevel * (comp.StatDerivedGrowthSpeed / Find.Storyteller.difficulty.childAgingRate)]);
     }
 
 
