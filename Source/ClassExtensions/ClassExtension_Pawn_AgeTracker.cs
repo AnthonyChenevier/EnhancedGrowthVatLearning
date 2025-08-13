@@ -19,10 +19,11 @@ namespace GrowthVatsOverclocked.ClassExtensions;
 [HarmonyPatch(typeof(Pawn_AgeTracker))]
 public static class ClassExtension_Pawn_AgeTracker
 {
-    [HarmonyPrefix]
+    [HarmonyPostfix]
     [HarmonyPatch("BirthdayBiological")]
-    public static void BirthdayBiological_Prefix(Pawn ___pawn, int birthdayAge)
+    public static void BirthdayBiological_Postfix(Pawn ___pawn, int birthdayAge)
     {
+        Debug.LogWarning("testing patch");
         if (___pawn.ownership.AssignedGrowthVat() == null)
             return;
 

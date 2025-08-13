@@ -54,7 +54,8 @@ public class VatOwnershipRepository : WorldComponent
 
     public bool ClaimGrowthVat(Pawn ownerPawn, Building_GrowthVat newVat)
     {
-        Pawn assignedPawn = newVat.GetAssignedPawn();
+        //Pawn assignedPawn = newVat.GetAssignedPawn();
+        Pawn assignedPawn = GetAssignedPawn(newVat);
         if (assignedPawn == ownerPawn)
             return false;
 
@@ -65,6 +66,25 @@ public class VatOwnershipRepository : WorldComponent
         newVat.GetComp<CompAssignableToPawn>().ForceAddPawn(ownerPawn);
         SetAssignedGrowthVat(ownerPawn, newVat);
         return true;
+    }
+
+    Pawn GetAssignedPawn(Building_GrowthVat vat)
+    {
+        if (vatAssignedPawns.NullOrEmpty() || !vatAssignedPawns.ContainsValue(vat))
+        {
+            CompAssignableToPawn comp = vat.GetComp<CompAssignableToPawn>();
+            List<Pawn> assignedPawns = comp.AssignedPawns.ToList();
+            foreach (Pawn pawn in assignedPawns)
+                comp.ForceRemovePawn(pawn);
+
+            return null;
+        }
+
+        foreach ((Pawn pawn, Building_GrowthVat value) in vatAssignedPawns)
+            if (value == vat)
+                return pawn;
+
+        return null;
     }
 
     public bool UnclaimGrowthVat(Pawn ownerPawn)
@@ -80,6 +100,7 @@ public class VatOwnershipRepository : WorldComponent
     public override void ExposeData()
     {
         base.ExposeData();
+
         Scribe_Collections.Look(ref vatAssignedPawns, nameof(vatAssignedPawns), LookMode.Reference, LookMode.Reference);
         if (Scribe.mode != LoadSaveMode.PostLoadInit)
             return;
