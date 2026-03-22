@@ -188,7 +188,9 @@ public class GrowthVatsOverclockedSettings : ModSettings
             scrollView.Label("ModeSkillWeights_SettingsLabel".Translate(mode.Label()), -1f, "ModeSkillWeights_Tooltip".Translate(mode.Label()));
             foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefs)
             {
-                float setting = settings.skillSelectionWeights[skill.defName];
+                if (!settings.skillSelectionWeights.TryGetValue(skill.defName, out float setting))
+                    continue;
+
                 scrollView.TextFieldNumericLabeled($"{skill.LabelCap} ", ref setting, ref skillBuffers[k++], 5, 50);
                 settings.skillSelectionWeights[skill.defName] = setting;
             }
